@@ -1,22 +1,49 @@
 /* src/styles/global.css */
-:root{
-  --bg-dark: #0b1220;
-  --card-bg: #ffffff;
-  --text: #0f172a;
-  --muted: #6b7280;
-  --accent: #111827;
-  --success: #dcfce7;
-  --danger: #fee2e2;
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Variables de tema (igual que antes) */
+:root {
+  --background: oklch(1 0 0);
+  --foreground: oklch(0.25 0 0);
+  --card: oklch(0.99 0.02 85);
+  --card-foreground: oklch(0.25 0 0);
+  --primary: oklch(48.308% 0.2513 304.79);
+  --primary-foreground: oklch(1 0 0);
+  --secondary: oklch(48.308% 0.2513 304.79);
+  --secondary-foreground: oklch(1 0 0);
+  --muted: oklch(0.99 0.02 85);
+  --muted-foreground: oklch(0.25 0 0);
+  --accent: oklch(30.126% 0.13406 330.83);
+  --accent-foreground: oklch(1 0 0);
+  --destructive: oklch(43.4% 0.2206 306.024);
+  --destructive-foreground: oklch(1 0 0);
+  --border: oklch(0.25 0 0);
+  --input: oklch(0.99 0.02 85);
+  --ring: oklch(0.65 0.15 65);
+  --radius-sm: calc(0.5rem - 4px);
+  --radius-md: calc(0.5rem - 2px);
+  --radius-lg: 0.5rem;
+  --radius-xl: calc(0.5rem + 4px);
+  --sidebar: oklch(1 0 0);
+  --sidebar-foreground: oklch(0.25 0 0);
 }
 
-*{box-sizing:border-box}
-html,body,#root{height:100%}
-body{
-  margin:0;
-  font-family: Inter, "Segoe UI", Roboto, Arial, sans-serif;
-  background: var(--bg-dark);
-  color: var(--text);
-  -webkit-font-smoothing:antialiased;
+/* Base layer: aplica solo utilidades válidas */
+@layer base {
+  /* Box sizing por defecto */
+  *, *::before, *::after { box-sizing: border-box; }
+
+  /* Altura completa para root */
+  html, body, #root { height: 100%; }
+
+  /* Fondo y color de texto usando las variables */
+  body {
+    background: var(--background);
+    color: var(--foreground);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    font-family: Inter, "Segoe UI", Roboto, Arial, sans-serif;
+  }
 }
-a{ color: var(--accent); text-decoration: none; }
-a:hover{ text-decoration: underline; }
