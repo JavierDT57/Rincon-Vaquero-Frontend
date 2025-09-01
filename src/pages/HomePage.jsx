@@ -20,7 +20,7 @@ export default function HomePage() {
         <h1>Hola, {user.nombre} {user.apellidos} 👋</h1>
         <p>Rol: <b>{user.rol}</b></p>
         <div style={{ marginTop: 12 }}>
-          <button className="rv-button" onClick={() => { logout(); navigate('/login'); }}>
+          <button className="rv-button" onClick={() => { logout(); navigate('/logout'); }}>
             Cerrar sesión
           </button>
         </div>
