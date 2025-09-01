@@ -1,10 +1,10 @@
-// Utilidad para resolver base URL tanto en Vite como en CRA
+// src/api/users.js
 const API_BASE =
   (typeof import.meta !== 'undefined' && import.meta.env && import.meta.env.VITE_API_BASE) ||
   (typeof process !== 'undefined' && process.env && process.env.REACT_APP_API_BASE) ||
   '';
 
-const BASE = API_BASE ? API_BASE.replace(/\/$/, '') : ''; // sin slash final
+const BASE = API_BASE ? API_BASE.replace(/\/$/, '') : '';
 
 async function request(path, { method = 'GET', body, headers = {} } = {}) {
   const res = await fetch(`${BASE}${path}`, {
@@ -13,13 +13,8 @@ async function request(path, { method = 'GET', body, headers = {} } = {}) {
     body: body ? JSON.stringify(body) : undefined,
   });
 
-  // intenta parsear json (aunque haya error HTTP)
   let data = null;
-  try {
-    data = await res.json();
-  } catch (e) {
-    // no-op
-  }
+  try { data = await res.json(); } catch (_) {}
 
   if (!res.ok) {
     const msg = (data && (data.mensaje || data.error)) || `Error ${res.status}`;
@@ -40,7 +35,6 @@ export function recoverPassword(payload) {
   return request('/api/users/recover-password', { method: 'POST', body: payload });
 }
 
-// Solo para uso privado, si alguna vez lo quieres desde UI admin:
 export function createAdmin(payload) {
   return request('/api/users/create-admin', { method: 'POST', body: payload });
 }
