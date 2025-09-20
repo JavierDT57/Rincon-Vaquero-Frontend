@@ -1,4 +1,4 @@
 // src/pages/RecoverPage.jsx
 import React from 'react';
-import RecoverContainer from '../containers/RecoverContainer';
+import RecoverContainer from '../../containers/Login/RecoverContainer';
 export default function RecoverPage() { return <RecoverContainer />; }

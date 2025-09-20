@@ -1,10 +1,10 @@
 import React, { useState } from "react"
-import Button from "../atoms/Button"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../molecules/Card"
-import Field from "../molecules/Field"
+import Button from "../../atoms/Button"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../../molecules/Card"
+import Field from "../../molecules/Field"
 import { Mail, Lock, MapPin } from "lucide-react"
-import { loginUser } from "../../api/users"
-import useAuth from "../../hooks/useAuth"
+import { loginUser } from "../../../api/users"
+import useAuth from "../../../hooks/useAuth"
 import { useNavigate } from "react-router-dom"
 
 export default function LoginForm({ onRegister, onForgotPassword }) {

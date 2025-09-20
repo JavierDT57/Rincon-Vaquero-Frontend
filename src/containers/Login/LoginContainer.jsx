@@ -1,13 +1,16 @@
 import React from "react"
-import RegisterForm from "../components/organisms/RegisterForm"
+import LoginForm from "../../components/organisms/login/LoginForm"
 import { useNavigate } from "react-router-dom"
 
-export default function RegisterContainer() {
+export default function LoginContainer() {
   const navigate = useNavigate()
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-card to-background flex items-center justify-center p-4">
       <div className="w-full max-w-md">
-        <RegisterForm onLogin={() => navigate("/login")} />
+        <LoginForm
+          onRegister={() => navigate("/register")}
+          onForgotPassword={() => navigate("/recover")}
+        />
       </div>
     </div>
   )

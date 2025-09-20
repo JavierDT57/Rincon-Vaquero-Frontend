@@ -1,8 +1,8 @@
 // src/pages/HomePage.jsx
 import React, { useEffect } from 'react';
-import useAuth from '../hooks/useAuth';
+import useAuth from '../../hooks/useAuth';
 import { useNavigate } from 'react-router-dom';
-import '../styles/components.css';
+import '../../styles/components.css';
 
 export default function HomePage() {
   const { user, logout } = useAuth();

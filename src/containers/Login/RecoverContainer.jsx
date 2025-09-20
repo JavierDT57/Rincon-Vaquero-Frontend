@@ -1,5 +1,5 @@
 import React from "react"
-import ForgotPasswordForm from "../components/organisms/ForgotPasswordForm"
+import ForgotPasswordForm from "../../components/organisms/login/ForgotPasswordForm"
 import { useNavigate } from "react-router-dom"
 
 export default function RecoverContainer() {

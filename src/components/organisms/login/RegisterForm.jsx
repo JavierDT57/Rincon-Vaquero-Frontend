@@ -1,9 +1,9 @@
 import React, { useState } from "react"
-import Button from "../atoms/Button"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../molecules/Card"
-import Field from "../molecules/Field"
+import Button from "../../atoms/Button"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../../molecules/Card"
+import Field from "../../molecules/Field"
 import { Mail, Lock, User, MapPin } from "lucide-react"
-import { registerUser } from "../../api/users"
+import { registerUser } from "../../../api/users"
 
 export default function RegisterForm({ onLogin }) {
   const [form, setForm] = useState({ nombre:"", apellidos:"", email:"", password:"", confirmPassword:"" })

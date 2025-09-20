@@ -1,9 +1,9 @@
 import React, { useState } from "react"
-import Button from "../atoms/Button"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../molecules/Card"
-import Field from "../molecules/Field"
+import Button from "../../atoms/Button"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../../molecules/Card"
+import Field from "../../molecules/Field"
 import { Mail, ArrowLeft, MapPin } from "lucide-react"
-import { recoverPassword } from "../../api/users"
+import { recoverPassword } from "../../../api/users"
 
 export default function ForgotPasswordForm({ onBackToLogin }) {
   const [email, setEmail] = useState("")

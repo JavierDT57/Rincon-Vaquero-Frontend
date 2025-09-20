@@ -2,10 +2,10 @@
 import React from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import AuthProvider from './context/AuthContext';
-import LoginPage from './pages/LoginPage';
-import RegisterPage from './pages/RegisterPage';
-import RecoverPage from './pages/RecoverPage';
-import HomePage from './pages/HomePage';
+import LoginPage from './pages/Login/LoginPage';
+import RegisterPage from './pages/Login/RegisterPage';
+import RecoverPage from './pages/Login/RecoverPage';
+import HomePage from './pages/Home/HomePage';
 
 export default function App() {
   return (
