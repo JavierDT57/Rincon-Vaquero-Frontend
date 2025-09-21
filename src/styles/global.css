@@ -47,3 +47,53 @@
     font-family: Inter, "Segoe UI", Roboto, Arial, sans-serif;
   }
 }
+
+/* ===== Carousel tweaks (añadir al final de src/styles/global.css) ===== */
+@layer components {
+  .hero-bg {
+    background-repeat: no-repeat;
+    background-size: cover;
+    will-change: transform;
+    filter: saturate(1.05) contrast(1.02);
+  }
+
+  .hero-heading {
+    /* heading gigante, responsive */
+    @apply text-5xl md:text-6xl lg:text-8xl xl:text-[96px] font-extrabold leading-tight tracking-tight uppercase drop-shadow-[0_6px_18px_rgba(0,0,0,0.5)];
+  }
+
+  .hero-cta {
+    @apply bg-white/10 text-white border border-white/20 px-8 py-3 rounded-full backdrop-blur-sm shadow-lg;
+  }
+
+  /* mini thumbnails center */
+  .carousel-thumb {
+    width: 64px;
+    height: 44px;
+    border-radius: 8px;
+    background-size: cover;
+    background-position: center;
+    border: 3px solid rgba(255,255,255,0.85);
+    box-shadow: 0 8px 18px rgba(0,0,0,0.45);
+    transition: transform .28s ease, box-shadow .28s ease, border-color .2s;
+    opacity: 0.9;
+  }
+  .carousel-thumb:hover { transform: translateY(-6px) scale(1.02); }
+  .carousel-thumb.active {
+    transform: translateY(-8px) scale(1.05);
+    border-color: rgba(99,102,241,1); /* purple ring */
+    box-shadow: 0 14px 30px rgba(0,0,0,0.6);
+  }
+
+  /* small fine-tune for cards */
+  .card .card-content img { display: block; }
+}
+
+/* En mobile, reduce heading size for legibility */
+@media (max-width: 640px) {
+  .hero-heading { font-size: 2.2rem; line-height: 1.05; text-transform: none; }
+  .carousel-thumb { width: 48px; height: 36px; border-width: 2px; }
+}
+
+/* fix navbar overlap: make sure main content starts below nav */
+main { padding-top: 72px; } /* ajusta si tu navbar es más alto */
