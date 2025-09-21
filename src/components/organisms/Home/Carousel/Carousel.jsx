@@ -1,14 +1,14 @@
 // src/components/organisms/Carousel/Carousel.jsx
 import React, { useState, useEffect } from "react";
-import { Card, CardContent } from "../../molecules/Card";
-import Button from "../../atoms/Button";
+import { Card, CardContent } from "../../../molecules/Card";
+import Button from "../../../atoms/Button";
 import { MapPin } from "lucide-react";
 
 /* IMPORTA AQUI TUS IMÁGENES desde src/assets */
-import elNidoImg from "../../../assets/marrakech-desert-landscape-with-camels-and-sand-du.jpg";
-import yosemiteImg from "../../../assets/yosemite-national-park-mountains-and-waterfalls-la.jpg";
-import santoriniImg from "../../../assets/santorini-sunset.png";
-import kyotoImg from "../../../assets/kyoto-japan-temples-bamboo-forest-traditional-arch.jpg";
+import elNidoImg from "../../../../assets/marrakech-desert-landscape-with-camels-and-sand-du.jpg";
+import yosemiteImg from "../../../../assets/yosemite-national-park-mountains-and-waterfalls-la.jpg";
+import santoriniImg from "../../../../assets/santorini-sunset.png";
+import kyotoImg from "../../../../assets/kyoto-japan-temples-bamboo-forest-traditional-arch.jpg";
 
 const destinations = [
  {

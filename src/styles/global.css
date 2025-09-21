@@ -3,6 +3,7 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Login */
 /* Variables de tema (igual que antes) */
 :root {
   --background: oklch(1 0 0);
@@ -48,7 +49,7 @@
   }
 }
 
-/* ===== Carousel tweaks (añadir al final de src/styles/global.css) ===== */
+/* Carousel  */
 @layer components {
   .hero-bg {
     background-repeat: no-repeat;
@@ -97,3 +98,55 @@
 
 /* fix navbar overlap: make sure main content starts below nav */
 main { padding-top: 72px; } /* ajusta si tu navbar es más alto */
+
+/*cultura */
+:root {
+  /* Fondo y texto base */
+  --background: oklch(0.98 0.01 85);
+  --foreground: oklch(0.15 0.02 45);
+
+  /* Colores principales */
+  --primary: oklch(48.308% 0.2513 304.79);
+  --primary-foreground: oklch(0.98 0.01 85);
+
+  /* Secundario */
+  --secondary: oklch(0.85 0.08 65);
+  --secondary-foreground: oklch(0.25 0.02 45);
+
+  /* Texto atenuado */
+  --muted: oklch(0.92 0.02 75);
+  --muted-foreground: oklch(0.55 0.02 45);
+
+  /* Bordes */
+  --border: oklch(0.88 0.02 75);
+}
+
+.dark {
+  --background: oklch(0.145 0 0);
+  --foreground: oklch(0.985 0 0);
+
+  --primary: oklch(0.985 0 0);
+  --primary-foreground: oklch(0.205 0 0);
+
+  --secondary: oklch(0.269 0 0);
+  --secondary-foreground: oklch(0.985 0 0);
+
+  --muted: oklch(0.269 0 0);
+  --muted-foreground: oklch(0.708 0 0);
+
+  --border: oklch(0.269 0 0);
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-border: var(--border);
+}
+
+

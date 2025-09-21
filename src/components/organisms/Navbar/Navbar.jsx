@@ -39,7 +39,7 @@ export function Navbar() {
                   key={item}
                   href="#"
                   className={`px-3 py-2 text-sm font-medium transition-colors duration-300 hover:text-purple-400 ${
-                    isScrolled ? "text-gray-800 hover:text-purple-600" : "text-black hover:text-white"
+                    isScrolled ? "text-gray-800 hover:text-purple-600" : "text-black hover:text-purple-700"
                   }`}
                 >
                   {item}
