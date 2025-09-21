@@ -4,6 +4,7 @@ import Carousel from '../../components/organisms/Home/Carousel/Carousel';
 import { CultureSection } from '../../components/organisms/Home/Cultura/Cultura';
 import { MapaInteractivo} from '../../components/organisms/Home/Mapa/Mapa';
 import { ClimaYEpoca } from '../../components/organisms/Home/Clima/Clima';
+import { TestimoniosYFotos } from '../../components/organisms/Home/Testimonios/Testimonios';
 
 export default function HomeContainer() {
   return (
@@ -12,6 +13,7 @@ export default function HomeContainer() {
       <CultureSection />
       <MapaInteractivo />
       <ClimaYEpoca />
+      <TestimoniosYFotos/>
     </div>
   );
 }

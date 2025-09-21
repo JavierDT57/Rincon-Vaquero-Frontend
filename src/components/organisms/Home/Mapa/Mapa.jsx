@@ -1,5 +1,3 @@
-"use client"
-
 import { useState } from "react"
 import { Card, CardContent } from "../../../molecules/Card";
 import Button from "../../../atoms/Button"
