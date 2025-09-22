@@ -7,6 +7,8 @@ import RegisterPage from './pages/Login/RegisterPage';
 import RecoverPage from './pages/Login/RecoverPage';
 import HomePage from './pages/Home/HomePage';
 import AppLayout from './components/Layout/AppLayout';
+import DestinosPage from "./pages/Destinos/DestinosPage";
+import DestinoDetallePage from "./pages/Destinos/DestinoDetallePage";
 
 export default function App() {
   return (
@@ -16,7 +18,12 @@ export default function App() {
           {/* Rutas que usan el layout con Navbar */}
           <Route element={<AppLayout />}>
             <Route path="/" element={<HomePage />} />
-          </Route>
+          
+
+        {/* Rutas para seccion Destinos */}
+         <Route path="/destinos" element={<DestinosPage/>} /> 
+         <Route path="/destinos/:id" element={<DestinoDetallePage/>} /> 
+         </Route>
 
           {/* Rutas de autenticación SIN layout */}
           <Route path="/login" element={<LoginPage />} />

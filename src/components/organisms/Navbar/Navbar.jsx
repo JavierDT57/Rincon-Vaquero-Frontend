@@ -1,13 +1,19 @@
 // src/components/organisms/Navbar/Navbar.jsx
 import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom"
 import Button from '../../atoms/Button'
 import { Menu, X } from "lucide-react"
 
 export function Navbar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
 
-  // si quieres conservar comportamiento móvil, mantenemos el toggle
+const navItems = [
+  { label: "Destinos",     to: "/destinos" },
+  { label: "Tienda",       to: "/tienda" },
+  { label: "Avisos",       to: "/avisos" },
+  { label: "Tradiciones",  to: "/tradiciones" },
+  { label: "Estadisticas", to: "/estadisticas" },
+];
   return (
     <nav
       className={`fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-md shadow-md`}
@@ -23,14 +29,18 @@ export function Navbar() {
           {/* Desktop Navigation */}
           <div className="hidden md:block">
             <div className="ml-10 flex items-baseline space-x-8">
-              {["Destinos", "Tienda", "Avisos", "Tradiciones" ,"Estadisticas"].map((item) => (
-                <a
-                  key={item}
-                  href="#"
-                  className="px-3 py-2 text-sm font-medium text-gray-800 hover:text-purple-600 transition-colors"
+              {navItems.map((item) => (
+                <NavLink
+                  key={item.to}
+                  to={item.to}
+                  className={({ isActive }) =>
+                    `px-3 py-2 text-sm font-medium transition-colors ${
+                      isActive ? "text-purple-600" : "text-gray-800 hover:text-purple-600"
+                    }`
+                  }
                 >
-                  {item}
-                </a>
+                  {item.label}
+                </NavLink>
               ))}
             </div>
           </div>
@@ -59,14 +69,19 @@ export function Navbar() {
         {isMobileMenuOpen && (
           <div className="md:hidden">
             <div className="px-2 pt-2 pb-3 space-y-1 rounded-lg mt-2 bg-white/95 backdrop-blur-md">
-              {["Destinos","Tienda","Avisos","Tradiciones","Estadisticas"].map((item) => (
-                <a
-                  key={item}
-                  href="#"
-                  className="block px-3 py-2 text-base font-medium text-gray-800 hover:text-purple-600 transition-colors"
+              {navItems.map((item) => (
+                <NavLink
+                  key={item.to}
+                  to={item.to}
+                  onClick={() => setIsMobileMenuOpen(false)} // cierra el menú al navegar
+                  className={({ isActive }) =>
+                    `block px-3 py-2 text-base font-medium transition-colors ${
+                      isActive ? "text-purple-600" : "text-gray-800 hover:text-purple-600"
+                    }`
+                  }
                 >
-                  {item}
-                </a>
+                  {item.label}
+                </NavLink>
               ))}
               <div className="px-3 py-2">
                 <Link to="/login">
