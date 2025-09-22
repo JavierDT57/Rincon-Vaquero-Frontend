@@ -9,6 +9,7 @@ import HomePage from './pages/Home/HomePage';
 import AppLayout from './components/Layout/AppLayout';
 import DestinosPage from "./pages/Destinos/DestinosPage";
 import DestinoDetallePage from "./pages/Destinos/DestinoDetallePage";
+import TradicionesPage from "./pages/Tradiciones/TradicionesPage";
 
 export default function App() {
   return (
@@ -23,6 +24,8 @@ export default function App() {
         {/* Rutas para seccion Destinos */}
          <Route path="/destinos" element={<DestinosPage/>} /> 
          <Route path="/destinos/:id" element={<DestinoDetallePage/>} /> 
+         <Route path="/tradiciones" element={<TradicionesPage />} />
+
          </Route>
 
           {/* Rutas de autenticación SIN layout */}

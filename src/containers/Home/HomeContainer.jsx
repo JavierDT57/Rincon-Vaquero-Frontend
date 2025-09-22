@@ -15,7 +15,6 @@ export default function HomeContainer() {
       <MapaInteractivo />
       <ClimaYEpoca />
       <TestimoniosYFotos />
-      <Footer />
     </div>
   );
 }
