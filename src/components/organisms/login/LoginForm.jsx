@@ -21,7 +21,7 @@ export default function LoginForm({ onRegister, onForgotPassword }) {
     try {
       const data = await loginUser({ email, password })
       setUser(data.user)
-      navigate("/home")
+      navigate("/")
     } catch (err) {
       setError(err.message || "Error al iniciar sesión")
     } finally {

@@ -13,6 +13,7 @@ import TradicionesPage from "./pages/Tradiciones/TradicionesPage";
 import SemanaSantaPage from "./pages/Tradiciones/SemanaSantaPage";
 import FiestaPatronalPage from "./pages/Tradiciones/FiestaPatronalPage";
 import NavidadPage from "./pages/Tradiciones/NavidadPage";
+import AvisosPage from "./pages/Avisos/AvisosPage";
 
 
 export default function App() {
@@ -35,6 +36,10 @@ export default function App() {
               <Route path="semana-santa" element={<SemanaSantaPage />} />
               <Route path="navidad" element={<NavidadPage />} />
             </Route>
+
+            {/* Avisos */  }
+            <Route path="avisos" element={<AvisosPage />} />
+
           </Route>
 
           {/* Rutas SIN layout */}
