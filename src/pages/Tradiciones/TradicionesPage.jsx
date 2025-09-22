@@ -12,7 +12,6 @@ export default function TradicionesPage() {
             Una muestra de las celebraciones y costumbres que nos representan.
           </p>
         </div>
-
         <TradicionesContainer />
       </div>
     </main>
