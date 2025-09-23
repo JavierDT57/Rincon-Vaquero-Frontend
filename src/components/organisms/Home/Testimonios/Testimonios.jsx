@@ -4,72 +4,40 @@ import Button from "../../../atoms/Button"
 import { Badge } from "../../../atoms/badge";
 import { ChevronLeft, ChevronRight, Star, Quote, MapPin, Calendar } from "lucide-react"
 
+import olaverde from "../../../../assets/Home/campo1.jpeg";
+import rio2 from "../../../../assets/Home/rio2.jpg";
+import tequio1 from "../../../../assets/Home/tequio1.png";
+
 const testimonios = [
   {
     id: 1,
     nombre: "María González",
     origen: "Ciudad de México",
-    fecha: "Noviembre 2024",
+    fecha: "Abril 2025",
     rating: 5,
     testimonio:
-      "Lo que más me gustó fue la autenticidad del pueblo. Cada rincón respira historia y las personas son increíblemente amables. El mole rinconeño es simplemente espectacular.",
-    foto: "/placeholder.svg?height=400&width=600",
-    experiencia: "Fin de semana familiar",
+      "Lo que más me gustó fue la autenticidad del pueblo. El rio en semana santa es espectacular y la gente es muy amable.",
+    foto: rio2,
   },
   {
     id: 2,
-    nombre: "Carlos Mendoza",
-    origen: "Guadalajara",
-    fecha: "Octubre 2024",
+    nombre: "Jonatan Badillo",
+    origen: "Puebla",
+    fecha: "Agosto 2025",
     rating: 5,
     testimonio:
-      "Como fotógrafo, quedé fascinado con los colores y la luz de Rincón Vaquero. El Festival de Día de Muertos fue una experiencia única que jamás olvidaré.",
-    foto: "/placeholder.svg?height=400&width=600",
-    experiencia: "Fotografía cultural",
+      "Increible el ambiente que se vive un partido de la ola verde.",
+    foto: olaverde,
   },
   {
     id: 3,
     nombre: "Ana Ruiz",
-    origen: "Monterrey",
-    fecha: "Marzo 2024",
+    origen: "Oaxaca",
+    fecha: "Marzo 2025",
     rating: 5,
     testimonio:
-      "El Festival de Jacarandas fue mágico. Todo el pueblo se viste de morado y la energía es increíble. Las artesanías son de una calidad excepcional.",
-    foto: "/placeholder.svg?height=400&width=600",
-    experiencia: "Festival de primavera",
-  },
-  {
-    id: 4,
-    nombre: "Roberto Silva",
-    origen: "Puebla",
-    fecha: "Julio 2024",
-    rating: 5,
-    testimonio:
-      "La fiesta patronal fue espectacular. La devoción de la gente, la música, los fuegos artificiales... todo se combina para crear una atmósfera única.",
-    foto: "/placeholder.svg?height=400&width=600",
-    experiencia: "Fiesta patronal",
-  },
-  {
-    id: 5,
-    nombre: "Laura Jiménez",
-    origen: "Querétaro",
-    fecha: "Diciembre 2024",
-    rating: 5,
-    testimonio:
-      "Las posadas navideñas me transportaron a mi infancia. La calidez humana y las tradiciones bien conservadas hacen de este lugar algo muy especial.",
-    foto: "/placeholder.svg?height=400&width=600",
-    experiencia: "Tradiciones navideñas",
-  },
-  {
-    id: 6,
-    nombre: "Diego Morales",
-    origen: "Tijuana",
-    fecha: "Agosto 2024",
-    rating: 5,
-    testimonio:
-      "El mezcal artesanal y la gastronomía local superaron todas mis expectativas. Cada comida fue una aventura de sabores auténticos.",
-    foto: "/placeholder.svg?height=400&width=600",
-    experiencia: "Turismo gastronómico",
+      "EL apoyo comunitario y de la empresa Cruz Azul, ayuda a mantener el rio y todo el pueblo limpio.",
+    foto: tequio1,
   },
 ]
 

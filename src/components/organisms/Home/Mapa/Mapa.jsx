@@ -4,7 +4,7 @@ import Button from "../../../atoms/Button"
 import { MapPin, Navigation, Phone, Clock } from "lucide-react"
 
 /* IMPORTA AQUI TUS IMÁGENES desde src/assets */
-import iglesia from "../../../../assets/Iglesia.jpeg";
+import iglesia from "../../../../assets/Home/Iglesia.jpeg";
 
 export function MapaInteractivo() {
   const [mapaClicked, setMapaClicked] = useState(false)

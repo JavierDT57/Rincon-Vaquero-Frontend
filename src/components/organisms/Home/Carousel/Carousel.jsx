@@ -5,10 +5,10 @@ import Button from "../../../atoms/Button";
 import { MapPin } from "lucide-react";
 
 /* IMPORTA AQUI TUS IMÁGENES desde src/assets */
-import iglesia from "../../../../assets/iglesia1.jpg";
-import fiesta from "../../../../assets/fiesta1.jpg";
-import rio from "../../../../assets/rio1.jpg";
-import salón from "../../../../assets/salon1.jpg";
+import iglesia from "../../../../assets/Home/iglesia1.jpg";
+import fiesta from "../../../../assets/Home/fiesta1.jpg";
+import rio from "../../../../assets/Home/rio1.jpg";
+import salón from "../../../../assets/Home/salon1.jpg";
 
 const destinations = [
  {

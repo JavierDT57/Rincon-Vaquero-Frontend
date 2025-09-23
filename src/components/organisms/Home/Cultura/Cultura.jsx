@@ -3,7 +3,7 @@ import { Card, CardContent } from "../../../molecules/Card";
 import { Calendar, Users, Music } from "lucide-react"
 
 /* IMPORTA AQUI TUS IMÁGENES desde src/assets */
-import tehuana from "../../../../assets/tehuanas.jpg";
+import tehuana from "../../../../assets/Home/tehuanas.jpg";
 
 export function CultureSection() {
   const culturalEvents = [
