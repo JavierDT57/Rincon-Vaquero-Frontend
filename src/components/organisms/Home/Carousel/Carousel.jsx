@@ -5,86 +5,112 @@ import Button from "../../../atoms/Button";
 import { MapPin } from "lucide-react";
 
 /* IMPORTA AQUI TUS IMÁGENES desde src/assets */
-import elNidoImg from "../../../../assets/marrakech-desert-landscape-with-camels-and-sand-du.jpg";
-import yosemiteImg from "../../../../assets/yosemite-national-park-mountains-and-waterfalls-la.jpg";
-import santoriniImg from "../../../../assets/santorini-sunset.png";
-import kyotoImg from "../../../../assets/kyoto-japan-temples-bamboo-forest-traditional-arch.jpg";
+import iglesia from "../../../../assets/iglesia1.jpg";
+import fiesta from "../../../../assets/fiesta1.jpg";
+import rio from "../../../../assets/rio1.jpg";
+import salon from "../../../../assets/salon1.jpg";
 
 const destinations = [
  {
     id: 1,
-    title: "EL NIDO ISLAND",
-    location: "Palawan, Philippines",
-    description: "Experience the pinnacle of exceptional service at the world's best island this summer.",
-    backgroundImage: elNidoImg,
-    buttonText: "Explore",
+    title: "Iglesia",
+    location: "Rincon Vaquero",
+    description: "Un lugar de fe y tradición, símbolo de la identidad cultural del pueblo.",
+    backgroundImage: iglesia,
+    buttonText: "Explorar",
     carouselItems: [
       {
-        title: "MAYON VOLCANO",
-        subtitle: "Albay, Philippines",
-        image: yosemiteImg,
+        title: "Salon",
+        subtitle: "Rincon Vaquero",
+        image: fiesta,
       },
       {
-        title: "BORACAY ISLAND",
-        subtitle: "Boracay, Philippines",
-        image: santoriniImg,
+        title: "Paso del Mango",
+        subtitle: "Rincon Vaquero",
+        image: rio,
       },
       {
-        title: "CHOCO HILLS",
-        subtitle: "Bohol, Philippines",
-        image: kyotoImg,
+        title: "Salon",
+        subtitle: "Rincon Vaquero",
+        image: salon,
       },
     ],
   },
   {
     id: 2,
-    title: "Boracay Island, Aklan",
-    location: "Boracay, Philippines",
+    title: "Salon",
+    location: "Rincon Vaquero",
     description:
-      "Boracay, one of the top islands in the Philippines, is popular for its pristine white sand beaches, vibrant nightlife, crystal clear and azure waters, and a stunning sunset. Boracay is the most iconic island in the Philippines and has won multiple awards in previous years.",
-    backgroundImage: yosemiteImg,
-    buttonText: "Discover Location",
+      "El salón del pueblo, escenario de eventos, bailes y asambleas que fortalecen la unión vecinal.",
+    backgroundImage: fiesta,
+    buttonText: "Explorar",
     carouselItems: [
       {
-        title: "EL NIDO ISLAND",
-        subtitle: "Palawan, Philippines",
-        image: elNidoImg,
+        title: "Iglesia",
+        subtitle: "Rincon Vaquero",
+        image: iglesia,
       },
       {
-        title: "CHOCO HILLS",
-        subtitle: "Bohol, Philippines",
-        image: kyotoImg,
+        title: "Salon",
+        subtitle: "Rincon Vaquero",
+        image: salon,
       },
       {
-        title: "MAYON VOLCANO",
-        subtitle: "Albay, Philippines",
-        image: santoriniImg,
+        title: "Paso del mango",
+        subtitle: "Rincon Vaquero",
+        image: rio,
       },
     ],
   },
   {
     id: 3,
-    title: "SANTORINI ISLAND",
-    location: "Santorini, Greece",
+    title: "Paso del mango",
+    location: "Rincon Vaquero",
     description:
-      "Discover the breathtaking beauty of Santorini with its iconic white-washed buildings, stunning sunsets, and crystal-clear waters.",
-    backgroundImage: santoriniImg,
-    buttonText: "Explore",
+      "El río que da vida a la comunidad, reflejando la calma de la naturaleza y el día a día rural.",
+    backgroundImage: rio,
+    buttonText: "Explorar",
     carouselItems: [
       {
-        title: "KYOTO TEMPLES",
+        title: "Salon",
         subtitle: "Kyoto, Japan",
-        image: kyotoImg,
+        image: salon,
       },
       {
-        title: "EL NIDO ISLAND",
-        subtitle: "Palawan, Philippines",
-        image: elNidoImg,
+        title: "Iglesia",
+        subtitle: "Rincon Vaquero",
+        image: iglesia,
       },
       {
-        title: "BORACAY ISLAND",
-        subtitle: "Boracay, Philippines",
-        image: yosemiteImg,
+        title: "Salon",
+        subtitle: "Rincon Vaquero",
+        image: fiesta,
+      },
+    ],
+  },
+  {
+    id: 4,
+    title: "Salon",
+    location: "Rincon Vaquero",
+    description:
+      "Espacio central para reuniones y celebraciones, donde la comunidad comparte sus tradiciones.",
+    backgroundImage: salon,
+    buttonText: "Explorar",
+    carouselItems: [
+      {
+        title: "Paso del mango",
+        subtitle: "Rincon Vaquero",
+        image: rio,
+      },
+      {
+        title: "Iglesia",
+        subtitle: "Rincon Vaquero",
+        image: iglesia,
+      },
+      {
+        title: "Salon",
+        subtitle: "Rincon Vaquero",
+        image: fiesta,
       },
     ],
   },
@@ -177,7 +203,7 @@ export default function Carousel() {
                 </div>
 
                 {/* Two smaller cards */}
-                {currentDestination.carouselItems.slice(1, 3).map((item, index) => (
+                {currentDestination.carouselItems.slice(1, 4).map((item, index) => (
                   <div
                     key={index}
                     className="cursor-pointer transition-all duration-500 transform hover:scale-105 bg-white/10 backdrop-blur-sm border border-white/20 rounded-lg overflow-hidden"

@@ -5,7 +5,6 @@ import { CultureSection } from '../../components/organisms/Home/Cultura/Cultura'
 import { MapaInteractivo} from '../../components/organisms/Home/Mapa/Mapa';
 import { ClimaYEpoca } from '../../components/organisms/Home/Clima/Clima';
 import { TestimoniosYFotos } from '../../components/organisms/Home/Testimonios/Testimonios';
-import { Footer } from '../../components/organisms/Footer/Footer';
 
 export default function HomeContainer() {
   return (

@@ -14,7 +14,7 @@ import SemanaSantaPage from "./pages/Tradiciones/SemanaSantaPage";
 import FiestaPatronalPage from "./pages/Tradiciones/FiestaPatronalPage";
 import NavidadPage from "./pages/Tradiciones/NavidadPage";
 import AvisosPage from "./pages/Avisos/AvisosPage";
-
+import EstadisticasPage from "./pages/Estadisticas/EstadisticasPage";
 
 export default function App() {
   return (
@@ -24,6 +24,11 @@ export default function App() {
           {/* Todo esto usa la Navbar del AppLayout */}
           <Route path="/" element={<AppLayout />}>
             <Route index element={<HomePage />} />
+
+            {/* Rutas SIN layout */}
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/register" element={<RegisterPage />} />
+            <Route path="/recover" element={<RecoverPage />} />
 
             {/* Destinos */}
             <Route path="destinos" element={<DestinosPage />} />
@@ -40,12 +45,12 @@ export default function App() {
             {/* Avisos */  }
             <Route path="avisos" element={<AvisosPage />} />
 
+            {/* Dashboard */  }
+            <Route path="estadisticas" element={<EstadisticasPage />} />
+
           </Route>
 
-          {/* Rutas SIN layout */}
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/register" element={<RegisterPage />} />
-          <Route path="/recover" element={<RecoverPage />} />
+
 
           {/* 404 */}
           <Route path="*" element={<div style={{ padding: 24 }}>404 - Página no encontrada</div>} />
