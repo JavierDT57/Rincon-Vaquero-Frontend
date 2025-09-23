@@ -31,41 +31,28 @@ const FALLBACK_SEMANA = ["Hoy", "Mañana", "Miércoles", "Jueves", "Viernes", "S
   })
 );
 
-// Tu bloque estático de “Mejores Épocas” (idéntico a tu diseño)
+// Bloque estático 
 const mejoresEpocas = [
   {
-    meses: "Marzo - Mayo",
-    titulo: "Primavera Mágica",
-    descripcion: "Jacarandas en flor y ferias tradicionales. Clima perfecto para caminar.",
-    temperatura: "18-25°C",
-    actividades: ["Festival de Jacarandas", "Feria de Artesanías", "Senderismo"],
-    color: "bg-green-100 text-green-800",
+    meses: "Marzo – Abril",
+    titulo: "Semana Santa",
+    descripcion:
+      "Días de fe y tradición: viacrucis, procesiones y vendimia en el rio. El pueblo se vive con intensidad y calidez comunitaria.",
+    temperatura: "Caluroso",
+    actividades: ["Viacrucis","Ir al rio","Ir al Baile en la noche", "Disfrutar musica en vivo"], 
+    color: "bg-purple-100 text-purple-800",
   },
   {
-    meses: "Octubre - Diciembre",
-    titulo: "Temporada Dorada",
-    descripcion: "Día de Muertos y posadas navideñas. Cielos despejados y noches frescas.",
-    temperatura: "15-22°C",
-    actividades: ["Día de Muertos", "Las Posadas", "Observación de estrellas"],
-    color: "bg-orange-100 text-orange-800",
-  },
-  {
-    meses: "Enero - Febrero",
-    titulo: "Invierno Seco",
-    descripcion: "Días soleados y noches frías. Ideal para fogatas y chocolate caliente.",
-    temperatura: "10-20°C",
-    actividades: ["Carnaval", "Danzas tradicionales", "Gastronomía caliente"],
-    color: "bg-blue-100 text-blue-800",
-  },
-  {
-    meses: "Junio - Septiembre",
-    titulo: "Temporada de Lluvias",
-    descripcion: "Paisajes verdes y cascadas. Perfecto para fotografía de naturaleza.",
-    temperatura: "20-28°C",
-    actividades: ["Fotografía", "Cascadas", "Festivales de música"],
-    color: "bg-teal-100 text-teal-800",
+    meses: "Mayo",
+    titulo: "Fiestas de la Santa Cruz",
+    descripcion:
+      "Celebración patronal que reúne a todos: la Cruz se adorna, hay rezos, música y convivencia que fortalecen la identidad del pueblo.",
+    temperatura: "Caluroso",
+    actividades: ["Lavada de ornamentos", "Labrada de velas", "Calenda","Santa Cruz", "Lavada de ollas"],
+    color: "bg-emerald-100 text-emerald-800",
   },
 ];
+
 
 export function ClimaYEpoca({ climaActual, semana, loading = false, error = null }) {
   const actual = climaActual ?? FALLBACK_ACTUAL;
