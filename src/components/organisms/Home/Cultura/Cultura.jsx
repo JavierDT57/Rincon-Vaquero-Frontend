@@ -16,14 +16,14 @@ export function CultureSection() {
     },
     {
       title: "Fiesta de la Santa Cruz",
-      date: "Febrero",
-      description: "Celebración tradicional con bailables, música y gastronomía típica.",
+      date: "Mayo",
+      description: "Celebración tradicional en honor a la santa cruz con bailables y música.",
       icon: Music,
     },
     {
       title: "Navidad",
       date: "Diciembre",
-      description: "Gran celebración con juegos mecánicos, conciertos y exposición artesanal.",
+      description: "Fiesta navideña con posadas tradicionales, pastorelas y la llegada del Niño Dios",
       icon: Calendar,
     },
   ]
@@ -50,7 +50,7 @@ export function CultureSection() {
                       <div>
                         <div className="flex items-center gap-2 mb-2">
                           <h3 className="text-lg font-semibold">{event.title}</h3>
-                          <span className="text-sm bg-secondary px-2 py-1 rounded-full">{event.date}</span>
+                          <span className="text-sm bg-secondary px-2 py-2 rounded-full">{event.date}</span>
                         </div>
                         <p className="text-muted-foreground leading-relaxed">{event.description}</p>
                       </div>

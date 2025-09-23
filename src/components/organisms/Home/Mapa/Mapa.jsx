@@ -11,8 +11,12 @@ export function MapaInteractivo() {
 
   const handleMapaClick = () => {
     setMapaClicked(true)
-    // Aquí iría la lógica para abrir el mapa real
-    console.log("Abriendo ubicación en Google Maps...")
+    // Abre en otra pestaña el link de Google Maps
+    window.open(
+      "https://maps.app.goo.gl/TNd4Lg2ib6wy5UCo7", 
+      "_blank", 
+      "noopener,noreferrer"
+    )
   }
 
   return (
@@ -25,8 +29,8 @@ export function MapaInteractivo() {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-          <div className="relative">
+        <div className="grid grid-cols-1  gap-12 items-center justify-center">
+          <div className="relative justify-center">
             <Card className="overflow-hidden">
               <div
                 className="relative h-96 bg-cover bg-center cursor-pointer group"
@@ -61,7 +65,7 @@ export function MapaInteractivo() {
               {mapaClicked && (
                 <div className="p-4 bg-green-50 border-t border-green-200">
                   <p className="text-sm text-green-700 text-center">
-                    ¡Perfecto! El mapa se abriría en una nueva ventana
+                    ¡Perfecto! El mapa se abrio en una nueva ventana
                   </p>
                 </div>
               )}
