@@ -8,7 +8,7 @@ import { MapPin } from "lucide-react";
 import iglesia from "../../../../assets/iglesia1.jpg";
 import fiesta from "../../../../assets/fiesta1.jpg";
 import rio from "../../../../assets/rio1.jpg";
-import salon from "../../../../assets/salon1.jpg";
+import salón from "../../../../assets/salon1.jpg";
 
 const destinations = [
  {
@@ -20,7 +20,7 @@ const destinations = [
     buttonText: "Explorar",
     carouselItems: [
       {
-        title: "Salon",
+        title: "Salón",
         subtitle: "Rincon Vaquero",
         image: fiesta,
       },
@@ -30,15 +30,15 @@ const destinations = [
         image: rio,
       },
       {
-        title: "Salon",
+        title: "Salón",
         subtitle: "Rincon Vaquero",
-        image: salon,
+        image: salón,
       },
     ],
   },
   {
     id: 2,
-    title: "Salon",
+    title: "Salón",
     location: "Rincon Vaquero",
     description:
       "El salón del pueblo, escenario de eventos, bailes y asambleas que fortalecen la unión vecinal.",
@@ -51,9 +51,9 @@ const destinations = [
         image: iglesia,
       },
       {
-        title: "Salon",
+        title: "Salón",
         subtitle: "Rincon Vaquero",
-        image: salon,
+        image: salón,
       },
       {
         title: "Paso del mango",
@@ -72,9 +72,9 @@ const destinations = [
     buttonText: "Explorar",
     carouselItems: [
       {
-        title: "Salon",
+        title: "Salón",
         subtitle: "Kyoto, Japan",
-        image: salon,
+        image: salón,
       },
       {
         title: "Iglesia",
@@ -82,7 +82,7 @@ const destinations = [
         image: iglesia,
       },
       {
-        title: "Salon",
+        title: "Salón",
         subtitle: "Rincon Vaquero",
         image: fiesta,
       },
@@ -90,11 +90,11 @@ const destinations = [
   },
   {
     id: 4,
-    title: "Salon",
+    title: "Salón",
     location: "Rincon Vaquero",
     description:
       "Espacio central para reuniones y celebraciones, donde la comunidad comparte sus tradiciones.",
-    backgroundImage: salon,
+    backgroundImage: salón,
     buttonText: "Explorar",
     carouselItems: [
       {
@@ -108,7 +108,7 @@ const destinations = [
         image: iglesia,
       },
       {
-        title: "Salon",
+        title: "Salón",
         subtitle: "Rincon Vaquero",
         image: fiesta,
       },
