@@ -1,17 +1,25 @@
 import { useState } from "react";
 import DestinosGrid from "../../components/organisms/Destinos/DestinosGrid.jsx";
+import olaverde from "../../assets/Destinos/campo1.jpeg";
+import primaria1 from "../../assets/Destinos/primaria1.jpg";
+import cancha1 from "../../assets/Destinos/cancha1.jpg";
+import iglesia1 from "../../assets/Destinos/iglesia1.jpg";
+import salon1 from "../../assets/Destinos/salon1.jpg";
+import rio1 from "../../assets/Destinos/rio1.jpg";
+
 
 export default function DestinosContainer() {
   const [hovered, setHovered] = useState(null);
 
+  
   // Asegúrate de que estas imágenes existan en /public
   const destinos = [
-    { id:"campo-futbol",     title:"Campo Fútbol",      description:"El corazón deportivo de la comunidad", image:"/soccer-field-with-green-grass-and-goal-posts.jpg",         color:"green" },
-    { id:"escuela-primaria", title:"Escuela Primaria",  description:"Donde comienzan los sueños",           image:"/elementary-school-building-with-children-playing.jpg",     color:"blue" },
-    { id:"cancha",           title:"Cancha",            description:"Espacio de encuentro y diversión",     image:"/basketball-court-with-hoops-and-painted-lines.jpg",        color:"orange" },
-    { id:"iglesia",          title:"Iglesia",           description:"Centro espiritual de la comunidad",     image:"/beautiful-church-with-bell-tower-and-stained-glass.jpg",  color:"purple" },
-    { id:"salon",            title:"Salón",             description:"Lugar de celebraciones y eventos",      image:"/elegant-event-hall-with-tables-and-decorations.jpg",       color:"pink" },
-    { id:"rio",              title:"Río",               description:"La belleza natural que nos rodea",      image:"/peaceful-river-with-trees-and-rocks-along-the-bank.jpg",   color:"teal" },
+    { id:"campo-futbol",     title:"Campo Fútbol",      description:"El corazón deportivo de la comunidad", image:olaverde,},
+    { id:"escuela-primaria", title:"Escuela Primaria",  description:"Donde comienzan los sueños",           image:primaria1,},
+    { id:"cancha",           title:"Cancha",            description:"Espacio de encuentro y diversión",     image:cancha1,},
+    { id:"iglesia",          title:"Iglesia",           description:"Centro espiritual de la comunidad",     image:iglesia1,},
+    { id:"salon",            title:"Salón",             description:"Lugar de celebraciones y eventos",      image:salon1,},
+    { id:"rio",              title:"Río",               description:"La belleza natural que nos rodea",      image:rio1,},
   ];
 
   return (
