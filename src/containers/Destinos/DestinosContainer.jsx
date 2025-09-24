@@ -12,7 +12,7 @@ export default function DestinosContainer() {
   const [hovered, setHovered] = useState(null);
 
   
-  // Asegúrate de que estas imágenes existan en /public
+  
   const destinos = [
     { id:"campo-futbol",     title:"Campo Fútbol",      description:"El corazón deportivo de la comunidad", image:olaverde,},
     { id:"escuela-primaria", title:"Escuela Primaria",  description:"Donde comienzan los sueños",           image:primaria1,},
