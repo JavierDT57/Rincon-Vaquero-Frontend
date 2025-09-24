@@ -2,6 +2,19 @@
 import React from "react";
 import { useInRouterContext, useNavigate } from "react-router-dom";
 
+import rio2 from "../../../assets/Tradiciones/rio2.jpg";
+import cruz from "../../../assets/Tradiciones/cruz.jpg";
+import rio3 from "../../../assets/Tradiciones/rio3.jpg";
+import tapada from "../../../assets/Tradiciones/tapada.jpg";
+import dr from "../../../assets/Tradiciones/dr.jpg";
+import viacrusis from "../../../assets/Tradiciones/viacrusis.jpeg";
+import sg from "../../../assets/Tradiciones/sg.jpeg";
+import drr from "../../../assets/Tradiciones/drr.jpg";
+const rawSvg = `
+<svg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='currentColor' stroke-width='1.5'>
+  <path stroke-linecap='round' stroke-linejoin='round' d='M9 12.75 11.25 15 15 9.75M21 12c0 1.268-.63 2.39-1.593 3.068a3.745 3.745 0 0 1-1.043 3.296 3.745 3.745 0 0 1-3.296 1.043A3.745 3.745 0 0 1 12 21c-1.268 0-2.39-.63-3.068-1.593a3.746 3.746 0 0 1-3.296-1.043 3.745 3.745 0 0 1-1.043-3.296A3.745 3.745 0 0 1 3 12c0-1.268.63-2.39 1.593-3.068a3.745 3.745 0 0 1 1.043-3.296 3.746 3.746 0 0 1 3.296-1.043A3.746 3.746 0 0 1 12 3c1.268 0 2.39.63 3.068 1.593a3.746 3.746 0 0 1 3.296 1.043 3.746 3.746 0 0 1 1.043 3.296A3.745 3.745 0 0 1 21 12Z'/>
+</svg>`;
+
 /** Botón Volver que funciona dentro o fuera del Router */
 function BackButton({ className = "" }) {
   const inRouter = useInRouterContext();
@@ -45,7 +58,7 @@ function HeroBanner({ image, title, subtitle }) {
 function InfoSection({ title, children, image, imageRight = true }) {
   return (
     <section className="mx-auto max-w-6xl px-4">
-      <div className="grid gap-6 md:grid-cols-12 items-center">
+      <div className="grid gap-6 md:grid-cols-12 items-centCalloutCarder">
         <div className={`md:col-span-7 ${imageRight ? "order-1" : "order-2 md:order-1"}`}>
           <div className="pl-5 border-l-4 border-indigo-500">
             <h2 className="text-xl font-semibold text-slate-900">{title}</h2>
@@ -100,81 +113,238 @@ export default function SemanaSanta() {
   return (
     <div className="bg-zinc-50 text-slate-900">
       <HeroBanner
-        title="Semana Santa"
-        subtitle="Tradición de fe y comunidad"
-        // Reemplaza por tu asset local si prefieres: /tradiciones/semana-santa-hero.jpg
-        image="https://images.unsplash.com/photo-1519681393784-d120267933ba?q=80&w=1600&auto=format&fit=crop"
+        title="Semana Santa en Rincón Vaquero"
+        subtitle="Fe, río y tradición comunitaria"
+        image={rio2}
       />
-      <div className="mx-auto max-w-6xl px-4 py-10 space-y-10">
+
+      <div className="mx-auto max-w-6xl px-4 py-10 space-y-12">
+        {/* Qué es */}
         <InfoSection
           title="¿Qué es la Semana Santa?"
           imageRight
-          image="https://images.unsplash.com/photo-1496318447583-f524534e9ce1?q=80&w=1200&auto=format&fit=crop"
+          image={cruz}
         >
           La Semana Santa conmemora la Pasión, Muerte y Resurrección de Jesucristo.
-          En nuestra comunidad se vive con procesiones, oraciones y actividades que
-          fomentan el encuentro y la solidaridad.
+          En Rincón Vaquero se vive con procesiones, oraciones y actividades que
+          fortalecen la unión del pueblo. Durante toda la semana hay misas diarias y
+          el Domingo de Resurrección se celebra una misa especial para cerrar las
+          actividades.
         </InfoSection>
 
+        {/* Río: corazón de la celebración */}
         <InfoSection
-          title="¿Cómo la celebramos?"
+          title="El río: corazón de la Semana Santa"
           imageRight={false}
-          image="https://images.unsplash.com/photo-1517512006864-7edc3b933137?q=80&w=1200&auto=format&fit=crop"
+          image={rio3}
         >
-          Iniciamos con la bendición de palmas el Domingo de Ramos. Durante la semana
-          se realizan viacrucis y momentos de reflexión. La Vigilia Pascual celebra
-          la esperanza y la vida nueva.
+          El río es el ícono del pueblo y recibe visitantes de comunidades vecinas
+          para bañarse y convivir. Es único en la zona por sus cuatro nacederos de
+          agua, y además tiene un papel práctico: desde uno de esos nacederos se
+          bombea agua para la comunidad a través de la red de tuberías.
+          <br />
+          <br />
+          En Semana Santa el comité organiza vendimia de alimentos y controla el
+          acceso al río para recaudar fondos de mantenimiento y eventos. El cobro se
+          realiza durante todos los días de la semana mayor, excepto a las personas
+          del propio pueblo. Hay tres días especialmente fuertes de vendimia y
+          afluencia.
         </InfoSection>
 
+        {/* Tradición: Tapada */}
+        <InfoSection
+          title="La “Tapada”: tradición que nos reúne"
+          imageRight
+          image={tapada}
+        >
+          La <strong>tapada</strong> consiste en que vecinas y vecinos se organizan
+          para cerrar parcialmente el flujo del río y embalsar una sección, creando
+          una poza más honda y segura para el baño. Es un trabajo comunitario que
+          vuelve el río un punto aún más atractivo durante la semana mayor y
+          reafirma la identidad de Rincón Vaquero.
+        </InfoSection>
+
+        {/* Recomendaciones */}
         <section className="space-y-4">
           <h2 className="text-2xl font-semibold">Recomendaciones</h2>
           <div className="grid gap-6 md:grid-cols-12 items-center">
             <div className="md:col-span-8">
               <CalloutCard>
-                Lleva ropa cómoda y sobria, agua para hidratarte y respeta los
-                momentos de silencio. Si participas en procesiones, utiliza calzado
-                adecuado para trayectos largos.
+                Lleva ropa cómoda y sobria para los actos religiosos, traje de baño
+                adecuado si visitas el río, efectivo para la vendimia, y agua para
+                hidratarte. Respeta las indicaciones del
+                comité. Evita envases de vidrio, no uses detergentes en el río,
+                cuida los nacederos y deposita la basura en los contenedores.
               </CalloutCard>
             </div>
             <div className="md:col-span-4">
-              <img
-                src="https://images.unsplash.com/photo-1488085061387-422e29b40080?q=80&w=1200&auto=format&fit=crop"
-                alt="Recomendaciones"
-                className="w-full h-40 object-cover rounded-lg"
-              />
+            <img
+              alt="check"
+              src={`data:image/svg+xml;utf8,${encodeURIComponent(rawSvg)}`}
+              width="130"   
+            />
+
             </div>
           </div>
         </section>
 
+        {/* Momentos clave */}
         <section className="space-y-5">
           <h2 className="text-2xl font-semibold">Momentos clave</h2>
+
           <DayCard
             day="D.R."
             title="Domingo de Ramos"
-            image="https://images.unsplash.com/photo-1523413651479-597eb2da0ad6?q=80&w=1200&auto=format&fit=crop"
+            image={dr}
           >
-            Bendición de palmas y procesión de entrada. Se recuerda la entrada
-            triunfal de Jesús en Jerusalén.
+            Bendición de palmas y procesión de entrada para recordar la entrada de
+            Jesús en Jerusalén. Da inicio a la semana con ambiente de comunidad.
           </DayCard>
+
           <DayCard
-            day="V.C."
-            title="Viacrucis"
-            image="https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?q=80&w=1200&auto=format&fit=crop"
+            day="V.S."
+            title="Viernes Santo — Viacrucis por el pueblo"
+            image={viacrusis}
           >
-            Recorrido meditativo por las estaciones que recuerdan el camino hacia el Calvario.
+            Recorrido meditativo por 14 estaciones, casa por casa, que representan
+            los momentos clave de la Pasión y muerte de Jesucristo. Participa todo
+            el pueblo.
           </DayCard>
+
           <DayCard
-            day="V.P."
-            title="Vigilia Pascual"
-            image="https://images.unsplash.com/photo-1494390248081-4e521a5940db?q=80&w=1200&auto=format&fit=crop"
+            day="S.G."
+            title="Sábado en el río — Tapada y convivencia"
+            image={sg}
           >
-            Celebración nocturna con el fuego nuevo, lecturas y canto del Aleluya. Culmina con un ambiente de fiesta y comunidad.
+            Convivencia familiar en el río, con la tapada comunitaria. Vendimia de alimentos y control de acceso
+            para recaudar fondos.
+          </DayCard>
+
+          <DayCard
+            day="D.Res."
+            title="Domingo de Resurrección"
+            image={drr}
+          >
+            Misa solemne para concluir la Semana Santa y celebrar la esperanza.
           </DayCard>
         </section>
 
+        {/* Acceso y cuotas */}
+        <section className="space-y-4">
+          <h2 className="text-2xl font-semibold">Acceso y cuotas en el río</h2>
+          <div className="grid gap-4 md:grid-cols-2">
+            <div className="rounded-xl border bg-white p-5 shadow-sm">
+              <h3 className="font-semibold text-lg">Personas del pueblo</h3>
+              <p className="text-sm text-slate-600 mt-1">
+                <strong>Sin cobro</strong> durante toda la Semana Santa.
+              </p>
+              <p className="text-sm text-slate-600">
+                Apoya respetando las normas y participando en las jornadas de
+                limpieza y organización.
+              </p>
+            </div>
+            <div className="rounded-xl border bg-white p-5 shadow-sm">
+              <h3 className="font-semibold text-lg">Visitantes</h3>
+              <p className="text-sm text-slate-600 mt-1">
+                <strong>Cobro de acceso</strong> todos los días de Semana Santa.
+              </p>
+              <p className="text-sm text-slate-600">
+                Los recursos se destinan a mantenimiento del río, eventos y mejoras
+                comunitarias coordinadas por el comité.
+              </p>
+            </div>
+          </div>
+          <CalloutCard>
+            Hay <strong>tres días de mayor afluencia</strong> y vendimia continua;
+            organiza tu visita con tiempo y sigue las indicaciones del personal del
+            comité para un acceso ágil y seguro.
+          </CalloutCard>
+        </section>
+
+        {/* Vendimia */}
+        <section className="space-y-4">
+          <h2 className="text-2xl font-semibold">Vendimia y recaudación</h2>
+          <p className="text-slate-700">
+            La vendimia se realiza durante <strong>tres días principales</strong>.
+            Encontrarás alimentos preparados, bebidas y antojitos coordinados por
+            el comité del pueblo. Tu consumo ayuda a recaudar fondos para el
+            mantenimiento del espacio y actividades comunitarias.
+          </p>
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {[
+              { title: "Día 1", desc: "Puntos de venta desde la mañana hasta la tarde." },
+              { title: "Día 2", desc: "Mayor variedad de alimentos y convivencia familiar." },
+              { title: "Día 3", desc: "Cierre de vendimia y conteo de recaudación." },
+            ].map((item) => (
+              <div key={item.title} className="rounded-xl border bg-white p-5 shadow-sm">
+                <h3 className="font-semibold">{item.title}</h3>
+                <p className="text-sm text-slate-600">{item.desc}</p>
+              </div>
+            ))}
+          </div>
+        </section>
+
         <Divider />
-        {/* Aquí puedes agregar un carrusel o galería si lo necesitas */}
+
+        {/* Normas del río */}
+        <section className="space-y-4">
+          <h2 className="text-2xl font-semibold">Normas del río</h2>
+          <ul className="list-disc pl-5 space-y-1 text-slate-700">
+            <li>Cuidar los nacederos y no introducir detergentes ni sustancias químicas.</li>
+            <li>Evitar envases de vidrio; usar bolsas o termos reutilizables.</li>
+            <li>Depositar la basura en contenedores y mantener limpias las orillas.</li>
+            <li>Seguir señalización y recomendaciones de seguridad del comité.</li>
+            <li>Supervisar a niñas y niños en zonas profundas o con corriente.</li>
+          </ul>
+        </section>
+
+        {/* FAQ */}
+        <section className="space-y-3">
+          <h2 className="text-2xl font-semibold">Preguntas frecuentes</h2>
+          <div className="grid gap-3">
+            <details className="rounded-lg border bg-white p-4">
+              <summary className="cursor-pointer font-medium">
+                ¿Las personas del pueblo pagan acceso al río?
+              </summary>
+              <p className="mt-2 text-slate-700">
+                No. Las personas del propio pueblo están exentas de pago durante
+                toda la Semana Santa.
+              </p>
+            </details>
+            <details className="rounded-lg border bg-white p-4">
+              <summary className="cursor-pointer font-medium">
+                ¿Puedo llevar alimentos o bebidas?
+              </summary>
+              <p className="mt-2 text-slate-700">
+                Sí, siempre que mantengas limpia el área y evites envases de
+                vidrio. También puedes apoyar consumiendo en la vendimia.
+              </p>
+            </details>
+            <details className="rounded-lg border bg-white p-4">
+              <summary className="cursor-pointer font-medium">
+                ¿Cómo puedo participar en la tapada?
+              </summary>
+              <p className="mt-2 text-slate-700">
+                Acércate al comité del pueblo. Ellos coordinan horarios, seguridad
+                y logística para las labores comunitarias.
+              </p>
+            </details>
+            <details className="rounded-lg border bg-white p-4">
+              <summary className="cursor-pointer font-medium">
+                ¿Habrá atención de primeros auxilios?
+              </summary>
+              <p className="mt-2 text-slate-700">
+                Se coordina apoyo básico y puntos de información. En caso de
+                emergencia sigue las indicaciones del personal del comité.
+              </p>
+            </details>
+          </div>
+        </section>
+
+        <Divider />
+        {/* Aquí puedes agregar una galería o carrusel de fotos del río y la tapada */}
       </div>
     </div>
   );
 }
+
