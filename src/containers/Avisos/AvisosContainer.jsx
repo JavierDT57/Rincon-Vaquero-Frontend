@@ -29,7 +29,7 @@ export default function AvisosContainer() {
 
   // Header bg (constante memorizada)
   const headerBg = useMemo(
-    () => "https://images.unsplash.com/photo-1444703686981-a3abbc4d4fe3?q=80&w=2000&auto=format&fit=crop",
+    () => "bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500",
     []
   );
 

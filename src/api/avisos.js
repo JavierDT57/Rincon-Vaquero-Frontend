@@ -15,7 +15,7 @@ const mockAvisos = [
     texto:
       "El próximo viernes habrá corte de agua de 8:00 a 16:00 por mantenimiento. Recomendamos almacenar lo necesario y cerrar bien las llaves para evitar fugas. Gracias por su comprensión.",
     imagenUrl:
-      "https://images.unsplash.com/photo-1504384308090-c894fdcc538d?q=80&w=1600&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1551836022-1f1f1f1f1f1f?q=80&w=1600&auto=format&fit=crop",
     fecha: new Date().toISOString(),
   },
   {
@@ -24,7 +24,7 @@ const mockAvisos = [
     texto:
       "Se convoca a toda la comunidad a la asamblea general del domingo a las 10:00 en el auditorio. Se revisarán temas de seguridad, presupuesto y actividades culturales.",
     imagenUrl:
-      "https://images.unsplash.com/photo-1521737604893-d14cc237f11d?q=80&w=1600&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1551836022-1f1f1f1f1f1f?q=80&w=1600&auto=format&fit=crop",
     fecha: new Date(Date.now() - 1 * 86400000).toISOString(),
   },
   {
