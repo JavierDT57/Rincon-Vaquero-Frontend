@@ -28,7 +28,6 @@ function BackButton({ className = "" }) {
 }
 
 export default function AvisosHeader({
-  headerBg,
   layout,
   onToggleLayout,
   onOpenModal,
@@ -62,7 +61,7 @@ export default function AvisosHeader({
         );
 
   return (
-    <section className="relative">
+    <section className="relative left-1/2 right-1/2 -mx-[50vw] w-screen mb-6 sm:mb-8">
       {/* Hero: mismo alto y composición que Fiesta */}
       <div className="relative h-[40vh] md:h-[40vh] min-h-[260px] w-full overflow-hidden">
 

@@ -90,32 +90,9 @@ export default function DashboardPueblo() {
     { name: "Otra", value: OTRA },
   ];
 
-  const headerBg =
-    "";
-
   return (
     <div className="min-h-screen bg-white text-slate-900">
-      {/* Header con imagen y overlay morado */}
-      <section className="relative -mt-16">
-        <div className="h-56 w-full overflow-hidden">
-          <img src={headerBg} alt="" className="h-full w-full object-cover" />
-          <div className="absolute inset-0 bg-[radial-gradient(100rem_40rem_at_0%_0%,rgba(168,85,247,.45),transparent),radial-gradient(100rem_40rem_at_100%_0%,rgba(217,70,239,.45),transparent)]" />
-          <div className="absolute inset-0 bg-black/35" />
-        </div>
-        <div className="absolute inset-0 flex items-center">
-          <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
-            <div className="flex items-start justify-between">
-              <div>
-                <h1 className="text-3xl font-bold text-white drop-shadow-sm">Dashboard del Pueblo</h1>
-                <p className="text-white/90">Estadísticas demográficas, sociales y de salud</p>
-              </div>
-              <div className="hidden md:block rounded-xl bg-white/15 px-3 py-2 text-white text-sm backdrop-blur">POB. Total: <b>{POBTOT}</b></div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Contenido */}
+      {/* Contenido (el header ahora vive en el componente de header aparte) */}
       <main className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 items-stretch">
           {/* Población por sexo */}
