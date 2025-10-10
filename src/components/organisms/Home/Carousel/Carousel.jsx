@@ -135,7 +135,7 @@ export default function Carousel() {
 
 
   return (
-    <div className="relative h-screen w-full overflow-hidden">
+    <div className="relative w-full overflow-hidden h-[60vh] md:h-[50vh]">
       <div
         className="absolute inset-0 bg-cover bg-center transition-all duration-1000 ease-in-out"
         style={{ backgroundImage: `url(${currentDestination.backgroundImage})` }}

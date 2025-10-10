@@ -91,7 +91,7 @@ export default function DashboardPueblo() {
   ];
 
   const headerBg =
-    "https://images.unsplash.com/photo-1444703686981-a3abbc4d4fe3?q=80&w=2000&auto=format&fit=crop";
+    "";
 
   return (
     <div className="min-h-screen bg-white text-slate-900">
