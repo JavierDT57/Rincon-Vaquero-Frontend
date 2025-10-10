@@ -136,6 +136,7 @@ export default function Carousel() {
 
   return (
     <div className="relative w-full overflow-hidden h-[60vh] md:h-[50vh]">
+      {/* Fondo */}
       <div
         className="absolute inset-0 bg-cover bg-center transition-all duration-1000 ease-in-out"
         style={{ backgroundImage: `url(${currentDestination.backgroundImage})` }}
@@ -143,46 +144,53 @@ export default function Carousel() {
         <div className="absolute inset-0 bg-black/40" />
       </div>
 
+      {/* TEXTO: overlay arriba-izquierda (ya no usa mx-auto) */}
+      <div className="absolute top-10 left-0 z-20 px-4 sm:px-6 lg:px-20 py-6">
+        <div className="text-white space-y-8 max-w-xl">
+          <div className="flex items-center space-x-2 text-white/80">
+            <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
+              />
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
+              />
+            </svg>
+            <span className="text-lg">{currentDestination.location}</span>
+          </div>
+
+          <div className="space-y-4">
+            <h1 className="text-5xl md:text-7xl font-bold leading-tight tracking-tight">
+              {currentDestination.title}
+            </h1>
+
+            <p className="text-lg md:text-xl text-white/90 max-w-2xl leading-relaxed">
+              {currentDestination.description}
+            </p>
+          </div>
+
+          <button className="bg-white/20 hover:bg-white/30 text-white border border-white/30 backdrop-blur-sm font-medium px-8 py-3 rounded-full transition-all duration-300">
+            {currentDestination.buttonText}
+          </button>
+        </div>
+      </div>
+      {/* /TEXTO */}
+
+      {/* Contenido principal (cards) */}
       <div className="relative z-10 h-full flex items-center">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
+        <div className="w-full px-4 sm:px-6 lg:px-40">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-            {/* Left Side - Title and Description */}
-            <div className="text-white space-y-8">
-              <div className="flex items-center space-x-2 text-white/80">
-                <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
-                  />
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
-                  />
-                </svg>
-                <span className="text-lg">{currentDestination.location}</span>
-              </div>
+            {/* Placeholder para mantener las cards en la columna derecha */}
+            <div className="hidden lg:block" />
 
-              <div className="space-y-4">
-                <h1 className="text-5xl md:text-7xl font-bold leading-tight tracking-tight">
-                  {currentDestination.title}
-                </h1>
-
-                <p className="text-lg md:text-xl text-white/90 max-w-2xl leading-relaxed">
-                  {currentDestination.description}
-                </p>
-              </div>
-
-              <button className="bg-white/20 hover:bg-white/30 text-white border border-white/30 backdrop-blur-sm font-medium px-8 py-3 rounded-full transition-all duration-300">
-                {currentDestination.buttonText}
-              </button>
-            </div>
-
-            <div className="flex justify-end">
-              <div className="grid grid-cols-2 gap-4 max-w-md">
+             <div className="flex justify-end lg:justify-self-end">
+                <div className="grid grid-cols-2 gap-4 max-w-md">
                 {/* Main large card */}
                 <div
                   className="col-span-2 cursor-pointer transition-all duration-500 transform hover:scale-105 bg-white/10 backdrop-blur-sm border border-white/20 rounded-lg overflow-hidden"
@@ -225,9 +233,12 @@ export default function Carousel() {
                 ))}
               </div>
             </div>
+
           </div>
         </div>
       </div>
+
+
 
       <div className="absolute bottom-8 left-8 z-20 flex space-x-3">
         {destinations.map((_, index) => (
