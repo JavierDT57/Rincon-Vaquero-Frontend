@@ -36,6 +36,78 @@ const mockAvisos = [
       "https://images.unsplash.com/photo-1515165562835-c3b8c3a01ab0?q=80&w=1600&auto=format&fit=crop",
     fecha: new Date(Date.now() - 2 * 86400000).toISOString(),
   },
+    {
+    id: crypto.randomUUID(),
+    titulo: "Corte de agua programado",
+    texto:
+      "El próximo viernes habrá corte de agua de 8:00 a 16:00 por mantenimiento. Recomendamos almacenar lo necesario y cerrar bien las llaves para evitar fugas. Gracias por su comprensión.",
+    imagenUrl:
+      "https://images.unsplash.com/photo-1551836022-1f1f1f1f1f1f?q=80&w=1600&auto=format&fit=crop",
+    fecha: new Date().toISOString(),
+  },
+    {
+    id: crypto.randomUUID(),
+    titulo: "Corte de agua programado",
+    texto:
+      "El próximo viernes habrá corte de agua de 8:00 a 16:00 por mantenimiento. Recomendamos almacenar lo necesario y cerrar bien las llaves para evitar fugas. Gracias por su comprensión.",
+    imagenUrl:
+      "https://images.unsplash.com/photo-1551836022-1f1f1f1f1f1f?q=80&w=1600&auto=format&fit=crop",
+    fecha: new Date().toISOString(),
+  },
+    {
+    id: crypto.randomUUID(),
+    titulo: "Corte de agua programado",
+    texto:
+      "El próximo viernes habrá corte de agua de 8:00 a 16:00 por mantenimiento. Recomendamos almacenar lo necesario y cerrar bien las llaves para evitar fugas. Gracias por su comprensión.",
+    imagenUrl:
+      "https://images.unsplash.com/photo-1551836022-1f1f1f1f1f1f?q=80&w=1600&auto=format&fit=crop",
+    fecha: new Date().toISOString(),
+  },
+    {
+    id: crypto.randomUUID(),
+    titulo: "Corte de agua programado",
+    texto:
+      "El próximo viernes habrá corte de agua de 8:00 a 16:00 por mantenimiento. Recomendamos almacenar lo necesario y cerrar bien las llaves para evitar fugas. Gracias por su comprensión.",
+    imagenUrl:
+      "https://images.unsplash.com/photo-1551836022-1f1f1f1f1f1f?q=80&w=1600&auto=format&fit=crop",
+    fecha: new Date().toISOString(),
+  },
+    {
+    id: crypto.randomUUID(),
+    titulo: "Corte de agua programado",
+    texto:
+      "El próximo viernes habrá corte de agua de 8:00 a 16:00 por mantenimiento. Recomendamos almacenar lo necesario y cerrar bien las llaves para evitar fugas. Gracias por su comprensión.",
+    imagenUrl:
+      "https://images.unsplash.com/photo-1551836022-1f1f1f1f1f1f?q=80&w=1600&auto=format&fit=crop",
+    fecha: new Date().toISOString(),
+  },
+    {
+    id: crypto.randomUUID(),
+    titulo: "Corte de agua programado",
+    texto:
+      "El próximo viernes habrá corte de agua de 8:00 a 16:00 por mantenimiento. Recomendamos almacenar lo necesario y cerrar bien las llaves para evitar fugas. Gracias por su comprensión.",
+    imagenUrl:
+      "https://images.unsplash.com/photo-1551836022-1f1f1f1f1f1f?q=80&w=1600&auto=format&fit=crop",
+    fecha: new Date().toISOString(),
+  },
+    {
+    id: crypto.randomUUID(),
+    titulo: "Corte de agua programado",
+    texto:
+      "El próximo viernes habrá corte de agua de 8:00 a 16:00 por mantenimiento. Recomendamos almacenar lo necesario y cerrar bien las llaves para evitar fugas. Gracias por su comprensión.",
+    imagenUrl:
+      "https://images.unsplash.com/photo-1551836022-1f1f1f1f1f1f?q=80&w=1600&auto=format&fit=crop",
+    fecha: new Date().toISOString(),
+  },
+    {
+    id: crypto.randomUUID(),
+    titulo: "Corte de agua programado",
+    texto:
+      "El próximo viernes habrá corte de agua de 8:00 a 16:00 por mantenimiento. Recomendamos almacenar lo necesario y cerrar bien las llaves para evitar fugas. Gracias por su comprensión.",
+    imagenUrl:
+      "https://images.unsplash.com/photo-1551836022-1f1f1f1f1f1f?q=80&w=1600&auto=format&fit=crop",
+    fecha: new Date().toISOString(),
+  },
 ];
 
 // GET /avisos

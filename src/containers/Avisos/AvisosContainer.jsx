@@ -88,7 +88,8 @@ export default function AvisosContainer() {
   };
 
   return (
-    <div className="bg-white text-slate-900 rounded-2xl ring-1 ring-black/5 overflow-hidden">
+    <>
+      {/* Banner full-width, fuera del card */}
       <AvisosHeader
         headerBg={headerBg}
         layout={layout}
@@ -97,43 +98,44 @@ export default function AvisosContainer() {
         total={avisos.length}
       />
 
-      <section className="px-4 sm:px-6 lg:px-8 py-8">
-        {layout === "grid" ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 items-stretch gap-6">
-            {avisos.map((a) => (
-              <AvisoCard
-                key={a.id}
-                aviso={a}
-                expanded={expanded.has(a.id)}
-                onToggle={() => toggleExpand(a.id)}
-              />
-            ))}
-          </div>
-        ) : (
-          <div className="space-y-6">
-            {avisos.map((a) => (
-              <AvisoCardList
-                key={a.id}
-                aviso={a}
-                expanded={expanded.has(a.id)}
-                onToggle={() => toggleExpand(a.id)}
-              />
-            ))}
-          </div>
-        )}
-      </section>
+      {/* Contenido en container y dentro del card blanco */}
+      <div className="container mx-auto px-4 pb-12">
+        <div className="bg-white text-slate-900 rounded-2xl ring-1 ring-black/5">
+          <section className="px-4 sm:px-6 lg:px-8 py-8">
+            {layout === "grid" ? (
+              <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                {avisos.map((a) => (
+                  <AvisoCard key={a.id} aviso={a} />
+                ))}
+              </div>
+            ) : (
+              <div className="space-y-3">
+                {avisos.map((a) => (
+                  <AvisoCardList
+                    key={a.id}
+                    aviso={a}
+                    expanded={expanded.has(a.id)}
+                    onToggle={() => toggleExpand(a.id)}
+                  />
+                ))}
+              </div>
+            )}
+          </section>
+        </div>
 
-      <AvisosModal
-        isOpen={isOpen}
-        onClose={closeModal}
-        onSubmit={onSubmitNuevoAviso}
-        formTitulo={formTitulo}
-        setFormTitulo={setFormTitulo}
-        formTexto={formTexto}
-        setFormTexto={setFormTexto}
-        onFileChange={onFileChange}
-        formPreview={formPreview}
-      />
-    </div>
+        <AvisosModal
+          isOpen={isOpen}
+          onClose={closeModal}
+          onSubmit={onSubmitNuevoAviso}
+          formTitulo={formTitulo}
+          setFormTitulo={setFormTitulo}
+          formTexto={formTexto}
+          setFormTexto={setFormTexto}
+          onFileChange={onFileChange}
+          formPreview={formPreview}
+        />
+      </div>
+    </>
   );
+
 }
