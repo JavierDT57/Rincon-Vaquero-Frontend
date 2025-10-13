@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import AvisosHeader from "../../components/organisms/Avisos/AvisosHeader.jsx";
 import AvisosModal from "../../components/organisms/Avisos/AvisosModal.jsx";
 import AvisoCard from "../../components/molecules/AvisoCard.jsx";
@@ -18,20 +18,26 @@ export default function AvisosContainer() {
   const [formImagenFile, setFormImagenFile] = useState(null);
   const [formPreview, setFormPreview] = useState("");
 
-  // Carga inicial (mock por ahora; luego apuntas a tus endpoints)
+  // Helper: normaliza la respuesta del backend (array directo o {data: [...]})
+  const asArray = (resp) => {
+    if (Array.isArray(resp)) return resp;
+    if (Array.isArray(resp?.data)) return resp.data;
+    return [];
+  };
+
+  // Carga inicial desde el endpoint real
   useEffect(() => {
     let mounted = true;
-    fetchAvisos().then((data) => {
-      if (mounted) setAvisos(data);
-    }).catch(console.error);
+    (async () => {
+      try {
+        const data = await fetchAvisos();
+        if (mounted) setAvisos(asArray(data));
+      } catch (err) {
+        console.error("Error cargando avisos:", err);
+      }
+    })();
     return () => { mounted = false; };
   }, []);
-
-  // Header bg (constante memorizada)
-  const headerBg = useMemo(
-    () => "bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500",
-    []
-  );
 
   // Handlers UI
   const toggleLayout = () => setLayout((l) => (l === "grid" ? "list" : "grid"));
@@ -57,41 +63,49 @@ export default function AvisosContainer() {
     setFormPreview(file ? URL.createObjectURL(file) : "");
   };
 
-  // Crear aviso (local + hook para API real)
-  const onSubmitNuevoAviso = async (e) => {
-    e.preventDefault();
-    const payload = {
-      titulo: formTitulo.trim(),
-      texto: formTexto.trim(),
-      imagenUrl: formPreview || "",
-    };
-    if (!payload.titulo || !payload.texto) return;
+  // Crear aviso (optimista + POST real + refresh)
+const onSubmitNuevoAviso = async (e) => {
+  e.preventDefault();
+  const titulo = formTitulo.trim();
+  const texto  = formTexto.trim();
+  if (!titulo || !texto) return;
 
-    // 1) Optimista local
-    const nuevoLocal = {
-      id: crypto.randomUUID(),
-      titulo: payload.titulo,
-      texto: payload.texto,
-      imagenUrl: payload.imagenUrl,
-      fecha: new Date().toISOString(),
-    };
-    setAvisos((prev) => [nuevoLocal, ...prev]);
-    closeModal();
-
-    // 2) Cuando tengas endpoint:
-    try {
-      // await createAviso(payload); // descomenta al tener API
-    } catch (err) {
-      console.error(err);
-      // rollback si hace falta
-    }
+  // Optimista local
+  const tempId = (crypto?.randomUUID?.() || Math.random().toString(36).slice(2));
+  const nuevoLocal = {
+    id: tempId,
+    titulo,
+    texto,
+    imagenUrl: formPreview || "",
+    fecha: new Date().toISOString(),
   };
+  setAvisos((prev) => [nuevoLocal, ...prev]);
+
+  try {
+    // ⬅️ POST REAL a http://localhost:5000/avisos (con FormData e imagen opcional)
+    await createAviso({ titulo, texto, imagen: formImagenFile });
+
+    // Refresca lista desde tu BD
+    const data = await fetchAvisos();
+    setAvisos(Array.isArray(data) ? data : (Array.isArray(data?.data) ? data.data : []));
+    // Limpia modal
+    setIsOpen(false);
+    setFormTitulo("");
+    setFormTexto("");
+    setFormImagenFile(null);
+    setFormPreview("");
+  } catch (err) {
+    console.error(err);
+    alert(`No se pudo publicar el aviso: ${err.message || err}`);
+    // rollback del optimista si falla
+    setAvisos((prev) => prev.filter((a) => a.id !== tempId));
+  }
+};
 
   return (
     <>
       {/* Banner full-width, fuera del card */}
       <AvisosHeader
-        headerBg={headerBg}
         layout={layout}
         onToggleLayout={toggleLayout}
         onOpenModal={openModal}
@@ -105,17 +119,17 @@ export default function AvisosContainer() {
             {layout === "grid" ? (
               <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
                 {avisos.map((a) => (
-                  <AvisoCard key={a.id} aviso={a} />
+                  <AvisoCard key={a.id || a._id} aviso={a} />
                 ))}
               </div>
             ) : (
               <div className="space-y-3">
                 {avisos.map((a) => (
                   <AvisoCardList
-                    key={a.id}
+                    key={a.id || a._id}
                     aviso={a}
-                    expanded={expanded.has(a.id)}
-                    onToggle={() => toggleExpand(a.id)}
+                    expanded={expanded.has(a.id || a._id)}
+                    onToggle={() => toggleExpand(a.id || a._id)}
                   />
                 ))}
               </div>
@@ -137,5 +151,4 @@ export default function AvisosContainer() {
       </div>
     </>
   );
-
 }
