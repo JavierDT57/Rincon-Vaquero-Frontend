@@ -15,6 +15,7 @@ import FiestaPatronalPage from "./pages/Tradiciones/FiestaPatronalPage";
 import NavidadPage from "./pages/Tradiciones/NavidadPage";
 import AvisosPage from "./pages/Avisos/AvisosPage";
 import EstadisticasPage from "./pages/Estadisticas/EstadisticasPage";
+import TestimoniosPage from "./pages/Testimonios/TestimoniosPage";
 
 export default function App() {
   return (
@@ -47,6 +48,10 @@ export default function App() {
 
             {/* Dashboard */  }
             <Route path="estadisticas" element={<EstadisticasPage />} />
+
+            {/* Testimonios */}
+            <Route path="/testimonios" element={<TestimoniosPage />} />
+
 
           </Route>
 

@@ -6,6 +6,7 @@ import { MapaInteractivo} from '../../components/organisms/Home/Mapa/Mapa';
 import { ClimaYEpoca } from '../../components/organisms/Home/Clima/Clima';
 import ClimaYEpocaContainer from '../Clima/ClimaYEpocaContainer';
 import { TestimoniosYFotos } from '../../components/organisms/Home/Testimonios/Testimonios';
+import TestimoniosContainer from '../Testimonios/TestimoniosContainer';
 
 export default function HomeContainer() {
   return (
