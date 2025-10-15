@@ -16,6 +16,7 @@ import NavidadPage from "./pages/Tradiciones/NavidadPage";
 import AvisosPage from "./pages/Avisos/AvisosPage";
 import EstadisticasPage from "./pages/Estadisticas/EstadisticasPage";
 import TestimoniosPage from "./pages/Testimonios/TestimoniosPage";
+import AdminPanelPage from "./pages/admin/AdminPanelPage";
 
 export default function App() {
   return (
@@ -51,6 +52,9 @@ export default function App() {
 
             {/* Testimonios */}
             <Route path="/testimonios" element={<TestimoniosPage />} />
+
+            {/* Panel de administración */}
+            <Route path="/admin" element={<AdminPanelPage />} />
 
 
           </Route>

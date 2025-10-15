@@ -13,6 +13,7 @@ const navItems = [
   { label: "Avisos",       to: "/avisos" },
   { label: "Tradiciones",  to: "/tradiciones" },
   { label: "Estadisticas", to: "/estadisticas" },
+  { label: "Administración",     to: "/admin" },
 ];
   return (
     <nav
