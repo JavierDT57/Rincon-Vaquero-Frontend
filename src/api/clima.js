@@ -5,22 +5,23 @@ export async function getForecast({ lat, lon, timezone = "auto" }) {
     longitude: String(lon),
     timezone,
     current_weather: "true",
-    // 👇 AÑADE humedad y uv_index en hourly
+    // 👇 CORREGIDO: relative_humidity_2m (con "_")
     hourly: [
       "apparent_temperature",
-      "relativehumidity_2m",     // ✅ humedad
-      "uv_index",                // ✅ UV horario
+      "relative_humidity_2m",     // ✅ humedad (correcto)
+      "uv_index",
       "precipitation_probability",
-      "weathercode"
+      "weathercode",
     ].join(","),
-    // 👇 AÑADE uv_index_max en daily (fallback para noches)
     daily: [
       "temperature_2m_max",
       "temperature_2m_min",
       "precipitation_probability_max",
       "weathercode",
-      "uv_index_max"            // ✅ UV diario (máximo)
+      "uv_index_max",
     ].join(","),
+    // opcional: fuerza 7 días
+    forecast_days: "7",
   });
 
   const url = `https://api.open-meteo.com/v1/forecast?${params.toString()}`;

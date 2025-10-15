@@ -1,116 +1,108 @@
-import { useEffect, useMemo, useState } from "react";
-import { getForecast } from "../api/clima";
+import { useEffect, useState } from "react";
+import { getForecast } from "../api/clima.js";
 
-const WTEXT = (code) => {
-  if (code === 0) return "Despejado";
-  if ([1, 2].includes(code)) return "Parcialmente nublado";
-  if ([3, 45, 48].includes(code)) return "Nublado";
-  if ((code >= 51 && code <= 67) || (code >= 80 && code <= 82) || [95,96,99].includes(code)) return "Lluvia";
-  if (code >= 71 && code <= 86) return "Nieve";
-  return "Condición variable";
+/* Helpers */
+const uvLabel = (n) => {
+  if (n == null || Number.isNaN(Number(n))) return "—";
+  const v = Number(n);
+  if (v < 3) return "Bajo";
+  if (v < 6) return "Moderado";
+  if (v < 8) return "Alto";
+  if (v < 11) return "Muy alto";
+  return "Extremo";
+};
+const WMO_DESC = { 0:"Despejado",1:"Parcialmente despejado",2:"Mayormente nublado",3:"Nublado",
+  45:"Niebla",48:"Niebla con escarcha",51:"Llovizna ligera",53:"Llovizna",55:"Llovizna intensa",
+  56:"Llovizna helada",57:"Llovizna helada intensa",61:"Lluvia ligera",63:"Lluvia",65:"Lluvia intensa",
+  66:"Lluvia helada",67:"Lluvia helada intensa",80:"Chubascos ligeros",81:"Chubascos",82:"Chubascos fuertes",
+  95:"Tormenta",96:"Tormenta con granizo",99:"Tormenta fuerte con granizo"
+};
+const isRainCode = (c)=>[51,53,55,56,57,61,63,65,66,67,80,81,82,95,96,99].includes(Number(c));
+const iconFromCode = (c)=> (Number(c)===0 ? "sun" : isRainCode(c) ? "rain" : "cloud");
+const diaES = (d, tz)=> new Date(`${d}T12:00:00`).toLocaleDateString("es-MX",{weekday:"long", timeZone:tz||"UTC"});
+
+const findHourIndex = (times=[], iso="")=>{
+  let idx = times.indexOf(iso);
+  if (idx >= 0) return idx;
+  if (iso) idx = times.indexOf(iso.slice(0,13)+":00");
+  if (idx >= 0) return idx;
+  if (!times.length) return -1;
+  const t = new Date(iso).getTime();
+  let best=0, diff=Infinity;
+  times.forEach((x,i)=>{ const d = Math.abs(new Date(x).getTime()-t); if(d<diff){diff=d; best=i;}});
+  return best;
+};
+const avgWindow = (arr, i, w=1) => {
+  if (!arr || i < 0) return null;
+  let s=0,c=0;
+  for (let k=i-w; k<=i+w; k++){
+    if (k>=0 && k<arr.length && Number.isFinite(Number(arr[k]))){
+      s+=Number(arr[k]); c++;
+    }
+  }
+  return c? s/c : null;
 };
 
-const WICON = (code) => {
-  if (code === 0) return "sun";
-  if ([1,2,3,45,48].includes(code)) return "cloud";
-  return "rain";
-};
-
-const uvLabel = (uv) =>
-  uv == null ? "—" :
-  uv < 3 ? "Bajo" :
-  uv < 6 ? "Moderado" :
-  uv < 8 ? "Alto" :
-  uv < 11 ? "Muy alto" : "Extremo";
-
-const dayLabel = (idx) =>
-  idx === 0 ? "Hoy" : idx === 1 ? "Mañana" :
-  new Date(Date.now() + idx * 86400000).toLocaleDateString("es-MX", { weekday: "long" });
-
-export function useClimaOpenMeteo({ lat, lon }) {
-  const [data, setData] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+export function useClimaOpenMeteo({ lat, lon, timezone = "auto" }) {
+  const [state, setState] = useState({ climaActual:null, semana:[], loading:true, error:null });
 
   useEffect(() => {
-    let abort = false;
-    (async () => {
-      try {
-        setLoading(true);
-        const json = await getForecast({ lat, lon });
-        if (!abort) setData(json);
-      } catch (e) {
-        if (!abort) setError(e);
-      } finally {
-        if (!abort) setLoading(false);
+    let cancel=false;
+    (async ()=>{
+      try{
+        setState(s=>({...s, loading:true, error:null}));
+        const data = await getForecast({ lat, lon, timezone });
+        if (cancel) return;
+
+        const { current_weather, hourly, daily, timezone: tz } = data;
+        const idx = findHourIndex(hourly?.time, current_weather?.time);
+
+        // Suavizados ±1h
+        const hum = avgWindow(hourly?.relative_humidity_2m, idx, 1);
+        const precipH = avgWindow(hourly?.precipitation_probability, idx, 1);
+        const app = hourly?.apparent_temperature?.[idx];
+        const windH = hourly?.windspeed_10m?.[idx];
+
+        const hoy = current_weather.time.slice(0,10);
+        const dIdx = daily?.time?.indexOf(hoy) ?? -1;
+        const uvMaxDia = dIdx>=0 ? daily?.uv_index_max?.[dIdx] : null;
+        const precipMaxDia = dIdx>=0 ? daily?.precipitation_probability_max?.[dIdx] : null;
+
+        const uvAhora = current_weather.is_day === 0 ? "Bajo" : uvLabel(hourly?.uv_index?.[idx] ?? uvMaxDia);
+
+        // RealFeel: por la noche si la diferencia <= 2°C, igualamos a temp
+        const temp = Math.round(current_weather.temperature);
+        const appRounded = Number.isFinite(app) ? Math.round(app) : temp;
+        const sens = (current_weather.is_day===0 && Math.abs(appRounded-temp)<=2) ? temp : appRounded;
+
+        const code = current_weather.weathercode;
+        const descripcion = WMO_DESC[code] ?? (isRainCode(code) ? "Lluvia" : "Mayormente nublado");
+
+        const climaActual = {
+          temperatura: `${temp}°C`,
+          sensacion: `${sens}°C`,
+          humedad: hum!=null ? `${Math.round(hum)}%` : "—",
+          viento: `${Math.round(windH ?? current_weather.windspeed)} km/h`,
+          uv: uvAhora,
+          lluvia: precipH!=null ? `${Math.round(precipH)}%`
+                                : (precipMaxDia!=null ? `${Math.round(precipMaxDia)}%` : "—"),
+          descripcion,
+        };
+
+        const semana = (daily?.time ?? []).map((d,i)=>({
+          dia: diaES(d, tz),
+          tMax: Math.round(daily.temperature_2m_max[i]),
+          tMin: Math.round(daily.temperature_2m_min[i]),
+          icon: iconFromCode(daily.weathercode?.[i]),
+        }));
+
+        setState({ climaActual, semana, loading:false, error:null });
+      }catch(e){
+        if(!cancel) setState(s=>({...s, loading:false, error:e?.message||String(e)}));
       }
     })();
-    return () => { abort = true; };
-  }, [lat, lon]);
+    return ()=>{ cancel=true; };
+  }, [lat, lon, timezone]);
 
-  const vm = useMemo(() => {
-    if (!data) return { climaActual: null, semana: [] };
-
-    // Índice de la hora actual según Open-Meteo (respeta timezone=auto)
-    const idxNow = data.hourly.time.indexOf(data.current_weather.time);
-
-    const temp  = Math.round(data.current_weather.temperature);
-    const feels = Math.round(data.hourly.apparent_temperature?.[idxNow] ?? temp);
-
-    // ✅ HUMEDAD (porcentaje) — SOLO corregimos esto, sin tocar idxNow
-    let rh = data.hourly.relativehumidity_2m?.[idxNow];
-    if (rh == null) {
-      const hourlyTimes = data.hourly.time || [];
-      const cw = data.current_weather.time || "";
-      // 1) Coincidencia por hora (YYYY-MM-DDTHH)
-      let altIdx = hourlyTimes.findIndex(t => t.slice(0,13) === cw.slice(0,13));
-      // 2) Si no hay, toma el índice más cercano en tiempo
-      if (altIdx === -1 && hourlyTimes.length) {
-        const target = new Date(cw).getTime();
-        let best = 0, bestDiff = Infinity;
-        for (let i = 0; i < hourlyTimes.length; i++) {
-          const diff = Math.abs(new Date(hourlyTimes[i]).getTime() - target);
-          if (diff < bestDiff) { bestDiff = diff; best = i; }
-        }
-        altIdx = best;
-      }
-      rh = data.hourly.relativehumidity_2m?.[altIdx];
-    }
-    const humedadStr = (rh ?? rh === 0) ? `${Math.round(rh)}%` : "—";
-
-    // ✅ VIENTO (km/h)
-    const wind = Math.round(data.current_weather.windspeed);
-
-    // ✅ UV horario con fallback al máximo diario (útil de noche)
-    let uv = data.hourly.uv_index?.[idxNow];
-    if (uv == null) uv = data.daily.uv_index_max?.[0];
-
-    // ✅ Probabilidad de lluvia (prioriza horario, si no el máximo diario)
-    const popHr = data.hourly.precipitation_probability?.[idxNow];
-    const popDy = data.daily.precipitation_probability_max?.[0];
-    const lluviaPct = (popHr ?? popDy ?? 0);
-
-    const wcode = data.current_weather.weathercode;
-
-    const climaActual = {
-      temperatura: `${temp}°C`,
-      sensacion: `${feels}°C`,
-      humedad: humedadStr,            // ← corregido
-      viento: `${wind} km/h`,
-      uv: uvLabel(uv),
-      lluvia: `${lluviaPct}%`,
-      descripcion: WTEXT(wcode),
-    };
-
-    const semana = data.daily.time.slice(0, 7).map((_, i) => ({
-      dia: dayLabel(i),
-      tMax: Math.round(data.daily.temperature_2m_max[i]),
-      tMin: Math.round(data.daily.temperature_2m_min[i]),
-      icon: WICON(data.daily.weathercode[i]),
-    }));
-
-    return { climaActual, semana };
-  }, [data]);
-
-  return { ...vm, loading, error };
+  return state;
 }
