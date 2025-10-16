@@ -19,6 +19,7 @@ export default function AdminPanel({
   loading = {},
   error = {},
   onEdit = () => {},
+  onSuspend = () => {},
   onDelete = () => {},
 }) {
   return (
@@ -41,6 +42,9 @@ export default function AdminPanel({
               usuarios={usuarios}
               loading={!!loading.usuarios}
               error={error.usuarios}
+                    onEdit={(item) => onEdit("usuarios", item)}
+        onSuspend={(id) => onSuspend(id)}
+        onDelete={(id) => onDelete("usuarios", id)}
             />
           )}
           {active === "avisos" && (
@@ -103,20 +107,87 @@ function Sidebar({ active, onSelect }) {
 }
 
 /** ------------------------ USUARIOS (placeholder) ------------------------ */
-function UsuariosList({ usuarios = [], loading, error }) {
+function UsuariosList({ usuarios = [], loading, error, onEdit, onSuspend, onDelete }) {
   return (
     <section>
-      <SectionTitle titleBlack="Lista de" titlePurple="Usuarios" />
+      <SectionTitle titleBlack="Gestionar" titlePurple="Usuarios" />
       {loading && <ListSkeleton lines={3} />}
       {error && <ErrorBox msg={error} />}
-      {!loading && !error && (
-        <div className="border border-dashed border-slate-300 rounded-2xl p-8 text-slate-500">
-          Próximamente. (Conectarás tu GET /api/usuarios cuando esté listo.)
+
+      <ul className="space-y-4">
+        {usuarios?.map((u) => {
+          const nombre = u.nombre || "";
+          const apellidos = u.apellidos || u.apellido || "";
+          const email = u.email || u.correo || "";
+          const rol = u.rol || u.role || "usuario";
+          const activo = u.activo ?? u.active ?? true;
+
+          return (
+            <li key={u.id} className="bg-white border border-slate-200 rounded-2xl overflow-hidden">
+              <div className="flex gap-4 p-4 items-center">
+                {/* Silueta */}
+                <div className="w-16 h-16 rounded-xl border border-slate-200 bg-slate-50 grid place-items-center shrink-0">
+                  <svg viewBox="0 0 24 24" className="w-9 h-9 text-slate-400">
+                    <path fill="currentColor" d="M12 12a5 5 0 1 0-5-5 5 5 0 0 0 5 5Zm0 2c-5 0-9 2.5-9 5.5A1.5 1.5 0 0 0 4.5 21h15A1.5 1.5 0 0 0 21 19.5C21 16.5 17 14 12 14Z"/>
+                  </svg>
+                </div>
+
+                {/* Info */}
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-start justify-between gap-3">
+                    <h3 className="text-lg font-semibold text-slate-900 truncate">
+                      {nombre} {apellidos}
+                    </h3>
+                    <span className={`shrink-0 text-[12px] px-3 py-1 rounded-full border ${
+                      activo ? "bg-green-50 text-green-700 border-green-200" : "bg-amber-50 text-amber-700 border-amber-200"
+                    }`}>
+                      {activo ? "Activo" : "Suspendido"}
+                    </span>
+                  </div>
+
+                  <div className="mt-1 text-sm text-slate-600">
+                    <div className="truncate"><span className="text-slate-500">Correo:</span> {email}</div>
+                    <div className="truncate"><span className="text-slate-500">Rol:</span> {rol}</div>
+                  </div>
+
+                  {/* Acciones */}
+                  <div className="mt-3 flex items-center gap-2">
+                    <button
+                      className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-blue-600 text-white hover:bg-blue-700"
+                      onClick={() => onEdit?.(u)}
+                    >
+                      Editar
+                    </button>
+                    <button
+                      className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-orange-500 text-white hover:bg-orange-600"
+                      onClick={() => onSuspend?.(u.id)}
+                    >
+                      Suspender
+                    </button>
+                    <button
+                      className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-red-600 text-white hover:bg-red-700"
+                      onClick={() => onDelete?.(u.id)}
+                    >
+                      Eliminar
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </li>
+          );
+        })}
+      </ul>
+
+      {!loading && !error && usuarios?.length === 0 && (
+        <div className="border border-dashed border-slate-300 rounded-2xl p-8 text-center text-slate-500 mt-4">
+          No hay usuarios para mostrar.
         </div>
       )}
     </section>
   );
 }
+
+
 
 /** ------------------------ AVISOS ------------------------ */
 function AvisosList({ data = [], loading, error, onEdit, onDelete }) {
