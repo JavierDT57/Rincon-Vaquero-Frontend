@@ -2,6 +2,8 @@ import React, { useEffect, useState, useCallback } from "react";
 import AdminPanel from "../../components/organisms/Admin/AdminPanel";
 import AvisosModal from "../../components/organisms/Avisos/AvisosModal";
 import TestimoniosModal from "../../components/organisms/Home/Testimonios/TestimoniosModal";
+// 🟣 Importa helpers
+import { absUrl, normalizeAviso, normalizeTestimonio } from "../../api/adminMedia";
 
 const API_BASE = import.meta?.env?.VITE_API_BASE || "http://localhost:5000/api";
 
@@ -10,7 +12,7 @@ export default function AdminPanelContainer() {
 
   const [avisos, setAvisos] = useState([]);
   const [testimonios, setTestimonios] = useState([]);
-  const [usuarios, setUsuarios] = useState([]); // placeholder
+  const [usuarios, setUsuarios] = useState([]);
 
   const [loading, setLoading] = useState({ avisos: true, testimonios: true, usuarios: false });
   const [error, setError] = useState({ avisos: null, testimonios: null, usuarios: null });
@@ -70,7 +72,8 @@ export default function AdminPanelContainer() {
     try {
       const resp = await fetchJSON(`${API_BASE}/avisos`);
       const items = Array.isArray(resp?.data) ? resp.data : resp;
-      setAvisos(items || []);
+      // 🟣 normaliza para agregar item.imgSrc absoluto
+      setAvisos((items || []).map(normalizeAviso));
     } catch (e) {
       setError((s) => ({ ...s, avisos: String(e?.message || e) }));
     } finally {
@@ -84,7 +87,8 @@ export default function AdminPanelContainer() {
     try {
       const resp = await fetchJSON(`${API_BASE}/testimonios`);
       const items = Array.isArray(resp?.data) ? resp.data : resp;
-      setTestimonios(items || []);
+      // 🟣 normaliza para agregar item.imgSrc absoluto
+      setTestimonios((items || []).map(normalizeTestimonio));
     } catch (e) {
       setError((s) => ({ ...s, testimonios: String(e?.message || e) }));
     } finally {
@@ -136,13 +140,15 @@ export default function AdminPanelContainer() {
       if (tipo === "avisos") {
         setFormTitulo(data.titulo || "");
         setFormTexto(data.texto || "");
-        setFormPreview(data.imgurl || data.imagen || null);
+        // 🟣 preview con URL absoluta desde backend
+        setFormPreview(absUrl(data.imgurl || data.imagen || data.image_url));
       } else {
         setFormNombre(data.nombre || "");
         setFormLocalidad(data.localidad || "");
         setFormComentario(data.comentario || "");
         setFormRating(Number(data.rating || 5));
-        setFormPreview(data.imagenurl || data.imgurl || null);
+        // 🟣 preview con URL absoluta desde backend
+        setFormPreview(absUrl(data.imagenurl || data.imagen_url || data.imgurl));
       }
       setFile(null);
       setIsEditOpen(true);
@@ -182,7 +188,7 @@ export default function AdminPanelContainer() {
       fd.append("localidad", formLocalidad || "");
       fd.append("comentario", formComentario);
       fd.append("rating", String(formRating));
-      if (file) fd.append("imagenurl", file); // nombre del campo según tu Postman
+      if (file) fd.append("imagenurl", file);
     }
 
     try {
@@ -217,7 +223,7 @@ export default function AdminPanelContainer() {
         onDelete={handleDelete}
       />
 
-      {/* Modales de EDICIÓN (reutilizando tus componentes) */}
+      {/* Modales de EDICIÓN */}
       {isEditOpen && editTipo === "avisos" && (
         <AvisosModal
           isOpen={true}
@@ -227,7 +233,7 @@ export default function AdminPanelContainer() {
           setFormTitulo={setFormTitulo}
           formTexto={formTexto}
           setFormTexto={setFormTexto}
-          onFileChange={onAvisoFileChange}   // el modal te envía File | null
+          onFileChange={onAvisoFileChange}
           formPreview={formPreview}
         />
       )}
@@ -245,7 +251,7 @@ export default function AdminPanelContainer() {
           setFormComentario={setFormComentario}
           formRating={formRating}
           setFormRating={setFormRating}
-          onFileChange={onTestimonioFileChange} // el modal te envía el evento change
+          onFileChange={onTestimonioFileChange}
           formPreview={formPreview}
         />
       )}
