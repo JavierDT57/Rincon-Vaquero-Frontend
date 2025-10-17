@@ -4,24 +4,20 @@ import AvisosModal from "../../components/organisms/Avisos/AvisosModal";
 import TestimoniosModal from "../../components/organisms/Home/Testimonios/TestimoniosModal";
 import UsuariosModal from "../../components/organisms/Usuarios/UsuariosModal";
 
-// helpers imágenes (avisos/testimonios)
 import { absUrl, normalizeAviso, normalizeTestimonio } from "../../api/adminMedia";
 
-// API usuarios
-import {
-  fetchUsers,
-  fetchUserById,
-  updateUser,
-  suspendUser,
-  deleteUserHard,
-} from "../../api/users";
+const API_BASE = (import.meta?.env?.VITE_API_BASE || "http://localhost:5000/api").replace(/\/$/, "");
 
-const API_BASE = import.meta?.env?.VITE_API_BASE || "http://localhost:5000/api";
+// === helpers ===
+const toBool = (v) => v === true || v === 1 || v === "1" || v === "true";
+const normalizeUser = (u) => ({
+  ...u,
+  isActiveBool: toBool(u?.isActive ?? u?.activo ?? u?.active),
+});
 
 export default function AdminPanelContainer() {
   const [active, setActive] = useState("avisos");
 
-  // data
   const [avisos, setAvisos] = useState([]);
   const [testimonios, setTestimonios] = useState([]);
   const [usuarios, setUsuarios] = useState([]);
@@ -29,31 +25,26 @@ export default function AdminPanelContainer() {
   const [loading, setLoading] = useState({ avisos: true, testimonios: true, usuarios: true });
   const [error, setError] = useState({ avisos: null, testimonios: null, usuarios: null });
 
-  // ====== Estado para EDITAR aviso/testimonio ======
+  // ====== edición avisos/testimonios ======
   const [isEditOpen, setIsEditOpen] = useState(false);
-  const [editTipo, setEditTipo] = useState(null); // 'avisos' | 'testimonios'
+  const [editTipo, setEditTipo] = useState(null);
   const [editId, setEditId] = useState(null);
-
-  // AVISOS
   const [formTitulo, setFormTitulo] = useState("");
   const [formTexto, setFormTexto] = useState("");
-
-  // TESTIMONIOS
   const [formNombre, setFormNombre] = useState("");
   const [formLocalidad, setFormLocalidad] = useState("");
   const [formComentario, setFormComentario] = useState("");
   const [formRating, setFormRating] = useState(5);
-
-  // Imagen
   const [file, setFile] = useState(null);
   const [formPreview, setFormPreview] = useState(null);
 
-  // ====== Estado para EDITAR usuario ======
+  // ====== edición usuarios ======
   const [isUserOpen, setIsUserOpen] = useState(false);
   const [userId, setUserId] = useState(null);
   const [userNombre, setUserNombre] = useState("");
   const [userApellidos, setUserApellidos] = useState("");
-  const [userReadonly, setUserReadonly] = useState({ email: "", rol: "", activo: true });
+  const [userActivo, setUserActivo] = useState(true); // ← se mapea desde isActive
+  const [userReadonly, setUserReadonly] = useState({ email: "", rol: "" });
 
   const resetEdit = () => {
     setIsEditOpen(false);
@@ -65,26 +56,29 @@ export default function AdminPanelContainer() {
     setFormNombre(""); setFormLocalidad(""); setFormComentario(""); setFormRating(5);
   };
 
-  // ====== Data fetch base ======
+  // ====== fetch base ======
   const fetchJSON = useCallback(async (url, opts = {}) => {
     const res = await fetch(url, {
-      method: "GET",
-      mode: "cors",
+      method: opts.method || "GET",
       credentials: "include",
-      headers: { Accept: "application/json" },
-      ...opts,
+      mode: "cors",
+      headers: {
+        Accept: "application/json",
+        ...(opts.headers || {}),
+      },
+      body: opts.body,
     });
-    if (!res.ok) {
-      const text = await res.text();
-      throw new Error(`${res.status} ${res.statusText} - ${text}`);
-    }
     const ct = res.headers.get("content-type") || "";
-    if (!ct.includes("application/json")) {
-      try { return JSON.parse((await res.text()) || "[]"); } catch { return []; }
+    const isJSON = ct.includes("application/json");
+    const data = isJSON ? await res.json().catch(() => null) : await res.text();
+    if (!res.ok) {
+      const msg = isJSON ? (data?.message || data?.error) : data;
+      throw new Error(msg || `HTTP ${res.status}`);
     }
-    return res.json();
+    return data;
   }, []);
 
+  // ====== loaders ======
   const loadAvisos = useCallback(async () => {
     setLoading((s) => ({ ...s, avisos: true }));
     setError((s) => ({ ...s, avisos: null }));
@@ -117,28 +111,27 @@ export default function AdminPanelContainer() {
     setLoading((s) => ({ ...s, usuarios: true }));
     setError((s) => ({ ...s, usuarios: null }));
     try {
-      const list = await fetchUsers();
-      setUsuarios(list || []);
+      const resp = await fetchJSON(`${API_BASE}/users`);
+      const list = Array.isArray(resp?.data) ? resp.data : resp;
+      setUsuarios((list || []).map(normalizeUser));
     } catch (e) {
       setError((s) => ({ ...s, usuarios: String(e?.message || e) }));
     } finally {
       setLoading((s) => ({ ...s, usuarios: false }));
     }
-  }, []);
+  }, [fetchJSON]);
 
   useEffect(() => {
     loadAvisos();
     loadTestimonios();
-    loadUsuarios(); // ⬅️ usuarios también
+    loadUsuarios();
   }, [loadAvisos, loadTestimonios, loadUsuarios]);
 
-  // ====== Helpers edición (avisos/testimonios) ======
+  // ====== edición avisos/testimonios ======
   const fetchItemForEdit = async (tipo, id) => {
     try {
-      const r = await fetch(`${API_BASE}/${tipo}/${id}`, { credentials: "include" });
-      if (!r.ok) throw new Error("GET individual no disponible");
-      const js = await r.json();
-      return js?.data ?? js;
+      const r = await fetchJSON(`${API_BASE}/${tipo}/${id}`);
+      return r?.data ?? r;
     } catch {
       const list = tipo === "avisos" ? avisos : testimonios;
       return list.find((x) => String(x.id) === String(id)) || null;
@@ -157,11 +150,10 @@ export default function AdminPanelContainer() {
   };
 
   const handleEdit = async (tipo, itemOrId) => {
-    if (tipo === "usuarios") return handleUserEdit(itemOrId); // ⬅️ redirige a modal usuario
+    if (tipo === "usuarios") return handleUserEdit(itemOrId);
 
     const id = typeof itemOrId === "object" ? itemOrId.id : itemOrId;
     if (!id) return;
-
     setEditTipo(tipo);
     setEditId(id);
 
@@ -189,14 +181,14 @@ export default function AdminPanelContainer() {
   };
 
   const handleDelete = async (tipo, id) => {
-    if (tipo === "usuarios") return handleDeleteUser(id); // ⬅️ hard delete
+    if (tipo === "usuarios") return handleDeleteUser(id);
     if (!id) return;
 
     const ok = confirm("¿Eliminar este registro? Esta acción no se puede deshacer.");
     if (!ok) return;
     try {
       const url = tipo === "avisos" ? `${API_BASE}/avisos/${id}` : `${API_BASE}/testimonios/${id}`;
-      await fetch(url, { method: "DELETE", mode: "cors", credentials: "include" });
+      await fetchJSON(url, { method: "DELETE" });
       if (tipo === "avisos") await loadAvisos();
       if (tipo === "testimonios") await loadTestimonios();
     } catch (e) {
@@ -224,8 +216,7 @@ export default function AdminPanelContainer() {
     }
 
     try {
-      const r = await fetch(url, { method: "PUT", body: fd, mode: "cors", credentials: "include" });
-      if (!r.ok) throw new Error(`PUT ${editTipo} falló (${r.status})`);
+      await fetch(url, { method: "PUT", body: fd, mode: "cors", credentials: "include" });
       if (editTipo === "avisos") await loadAvisos(); else await loadTestimonios();
       resetEdit();
     } catch (e2) {
@@ -233,19 +224,20 @@ export default function AdminPanelContainer() {
     }
   };
 
-  // ====== USUARIOS: editar / suspender / eliminar ======
+  // ====== usuarios ======
   async function handleUserEdit(itemOrId) {
     const id = typeof itemOrId === "object" ? itemOrId.id : itemOrId;
     if (!id) return;
     try {
-      const u = await fetchUserById(id);
+      const r = await fetchJSON(`${API_BASE}/users/${id}`);
+      const u = r?.data ?? r;
       setUserId(id);
       setUserNombre(u?.nombre || "");
       setUserApellidos(u?.apellidos || u?.apellido || "");
+      setUserActivo(toBool(u?.isActive ?? u?.activo ?? u?.active)); // ← usa isActive
       setUserReadonly({
         email: u?.email || u?.correo || "",
         rol: u?.rol || u?.role || "",
-        activo: u?.activo ?? u?.active ?? true,
       });
       setIsUserOpen(true);
     } catch (e) {
@@ -257,7 +249,16 @@ export default function AdminPanelContainer() {
     e.preventDefault();
     if (!userId) return;
     try {
-      await updateUser(userId, { nombre: userNombre, apellidos: userApellidos });
+      await fetchJSON(`${API_BASE}/users/${userId}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          nombre: userNombre,
+          apellidos: userApellidos,
+          // 👇 el backend espera isActive 0/1
+          isActive: userActivo ? 1 : 0,
+        }),
+      });
       await loadUsuarios();
       setIsUserOpen(false);
     } catch (e) {
@@ -269,7 +270,7 @@ export default function AdminPanelContainer() {
     const ok = confirm("¿Suspender este usuario? Podrás reactivarlo después.");
     if (!ok) return;
     try {
-      await suspendUser(id);  // DELETE /users/:id (soft)
+      await fetchJSON(`${API_BASE}/users/${id}`, { method: "DELETE" }); // soft: pone isActive=0
       await loadUsuarios();
     } catch (e) {
       alert("No se pudo suspender: " + (e?.message || e));
@@ -280,7 +281,7 @@ export default function AdminPanelContainer() {
     const ok = confirm("¿Eliminar DEFINITIVAMENTE este usuario? No se puede deshacer.");
     if (!ok) return;
     try {
-      await deleteUserHard(id); // DELETE /users/:id?hard=true
+      await fetchJSON(`${API_BASE}/users/${id}?hard=true`, { method: "DELETE" });
       await loadUsuarios();
     } catch (e) {
       alert("No se pudo eliminar: " + (e?.message || e));
@@ -297,14 +298,9 @@ export default function AdminPanelContainer() {
         usuarios={usuarios}
         loading={loading}
         error={error}
-
         onEdit={handleEdit}
         onDelete={handleDelete}
-
-        // ⬇️ props para usuarios
         onSuspend={handleSuspendUser}
-        onEditUser={(item) => handleUserEdit(item)}
-        onDeleteUser={(id) => handleDeleteUser(id)}
       />
 
       {/* Modales AVISOS/Testimonios */}
@@ -321,7 +317,6 @@ export default function AdminPanelContainer() {
           formPreview={formPreview}
         />
       )}
-
       {isEditOpen && editTipo === "testimonios" && (
         <TestimoniosModal
           isOpen={true}
@@ -340,7 +335,7 @@ export default function AdminPanelContainer() {
         />
       )}
 
-      {/* Modal USUARIO (solo nombre y apellidos) */}
+      {/* Modal USUARIO */}
       {isUserOpen && (
         <UsuariosModal
           isOpen={isUserOpen}
@@ -350,9 +345,10 @@ export default function AdminPanelContainer() {
           setFormNombre={setUserNombre}
           formApellidos={userApellidos}
           setFormApellidos={setUserApellidos}
+          formActivo={userActivo}
+          setFormActivo={setUserActivo}
           readEmail={userReadonly.email}
           readRol={userReadonly.rol}
-          readActivo={userReadonly.activo}
         />
       )}
     </>

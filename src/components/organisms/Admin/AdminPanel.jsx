@@ -1,15 +1,7 @@
 import React, { useMemo } from "react";
 import { Quote, Users, Bell, MessageSquare, BarChart2, Trash2, Pencil, Calendar, MapPin } from "lucide-react";
-
 import { absUrl } from "../../../api/adminMedia";
 
-
-
-/**
- * Organism: AdminPanel (presentational)
- * - Receives data and handlers from Container
- * - Renders Sidebar + Content (Usuarios/Avisos/Testimonios/Estadísticas)
- */
 export default function AdminPanel({
   active,
   onSelect,
@@ -24,7 +16,6 @@ export default function AdminPanel({
 }) {
   return (
     <div className="min-h-screen bg-white text-slate-900">
-      {/* Title */}
       <header className="max-w-7xl mx-auto px-6 pt-10 pb-6">
         <h1 className="text-4xl md:text-6xl font-semibold tracking-tight leading-none">
           <span className="text-slate-900">Panel </span>
@@ -35,16 +26,15 @@ export default function AdminPanel({
 
       <div className="max-w-7xl mx-auto px-4 md:px-6 pb-12 grid grid-cols-1 md:grid-cols-[260px,1fr] gap-6">
         <Sidebar active={active} onSelect={onSelect} />
-
         <main>
           {active === "usuarios" && (
             <UsuariosList
               usuarios={usuarios}
               loading={!!loading.usuarios}
               error={error.usuarios}
-                    onEdit={(item) => onEdit("usuarios", item)}
-        onSuspend={(id) => onSuspend(id)}
-        onDelete={(id) => onDelete("usuarios", id)}
+              onEdit={(item) => onEdit("usuarios", item)}
+              onSuspend={(id) => onSuspend(id)}
+              onDelete={(id) => onDelete("usuarios", id)}
             />
           )}
           {active === "avisos" && (
@@ -79,7 +69,6 @@ function Sidebar({ active, onSelect }) {
     { id: "testimonios", label: "Testimonios", icon: MessageSquare },
     { id: "estadisticas", label: "Estadísticas", icon: BarChart2 },
   ];
-
   return (
     <aside className="bg-white border border-slate-200 rounded-2xl p-3 h-fit md:sticky md:top-6">
       <nav className="space-y-1">
@@ -106,8 +95,9 @@ function Sidebar({ active, onSelect }) {
   );
 }
 
-/** ------------------------ USUARIOS (placeholder) ------------------------ */
+/** ------------------------ USUARIOS ------------------------ */
 function UsuariosList({ usuarios = [], loading, error, onEdit, onSuspend, onDelete }) {
+  const toBool = (v) => v === true || v === 1 || v === "1" || v === "true";
   return (
     <section>
       <SectionTitle titleBlack="Gestionar" titlePurple="Usuarios" />
@@ -120,19 +110,18 @@ function UsuariosList({ usuarios = [], loading, error, onEdit, onSuspend, onDele
           const apellidos = u.apellidos || u.apellido || "";
           const email = u.email || u.correo || "";
           const rol = u.rol || u.role || "usuario";
-          const activo = u.activo ?? u.active ?? true;
+          // 👇 usa isActive recibido del backend
+          const activo = u.isActiveBool ?? toBool(u.isActive ?? u.activo ?? u.active);
 
           return (
             <li key={u.id} className="bg-white border border-slate-200 rounded-2xl overflow-hidden">
               <div className="flex gap-4 p-4 items-center">
-                {/* Silueta */}
                 <div className="w-16 h-16 rounded-xl border border-slate-200 bg-slate-50 grid place-items-center shrink-0">
                   <svg viewBox="0 0 24 24" className="w-9 h-9 text-slate-400">
                     <path fill="currentColor" d="M12 12a5 5 0 1 0-5-5 5 5 0 0 0 5 5Zm0 2c-5 0-9 2.5-9 5.5A1.5 1.5 0 0 0 4.5 21h15A1.5 1.5 0 0 0 21 19.5C21 16.5 17 14 12 14Z"/>
                   </svg>
                 </div>
 
-                {/* Info */}
                 <div className="flex-1 min-w-0">
                   <div className="flex items-start justify-between gap-3">
                     <h3 className="text-lg font-semibold text-slate-900 truncate">
@@ -150,7 +139,6 @@ function UsuariosList({ usuarios = [], loading, error, onEdit, onSuspend, onDele
                     <div className="truncate"><span className="text-slate-500">Rol:</span> {rol}</div>
                   </div>
 
-                  {/* Acciones */}
                   <div className="mt-3 flex items-center gap-2">
                     <button
                       className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-blue-600 text-white hover:bg-blue-700"
@@ -187,8 +175,6 @@ function UsuariosList({ usuarios = [], loading, error, onEdit, onSuspend, onDele
   );
 }
 
-
-
 /** ------------------------ AVISOS ------------------------ */
 function AvisosList({ data = [], loading, error, onEdit, onDelete }) {
   return (
@@ -203,7 +189,6 @@ function AvisosList({ data = [], loading, error, onEdit, onDelete }) {
           return (
             <li key={aviso.id} className="bg-white border border-slate-200 rounded-2xl overflow-hidden">
               <div className="flex gap-4 p-4 items-center">
-                {/* Imagen */}
                 {src ? (
                   <img
                     src={src}
@@ -217,7 +202,6 @@ function AvisosList({ data = [], loading, error, onEdit, onDelete }) {
                   </div>
                 )}
 
-                {/* Texto */}
                 <div className="flex-1 min-w-0">
                   <div className="flex items-start justify-between gap-3">
                     <h3 className="text-lg font-semibold text-slate-900 truncate">{aviso.titulo}</h3>
@@ -229,7 +213,6 @@ function AvisosList({ data = [], loading, error, onEdit, onDelete }) {
                   </div>
                   {aviso.texto && <p className="text-slate-600 mt-1 line-clamp-2">{aviso.texto}</p>}
 
-                  {/* Acciones */}
                   <div className="mt-3 flex items-center gap-2">
                     <button
                       className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-blue-600 text-white hover:bg-blue-700"
@@ -265,7 +248,6 @@ function TestimoniosList({ data = [], loading, error, onEdit, onDelete }) {
   return (
     <section>
       <SectionTitle titleBlack="Gestionar" titlePurple="Testimonios" />
-
       {loading && <ListSkeleton lines={2} />}
       {error && <ErrorBox msg={error} />}
 
@@ -275,7 +257,6 @@ function TestimoniosList({ data = [], loading, error, onEdit, onDelete }) {
           return (
             <li key={t.id} className="bg-white border border-slate-200 rounded-2xl overflow-hidden">
               <div className="grid md:grid-cols-[280px,1fr] gap-4 p-4 items-center">
-                {/* Imagen (maneja vertical/horizontal) */}
                 <div className="w-full rounded-xl overflow-hidden border border-slate-200 bg-slate-100">
                   <div className="w-full aspect-[4/3] md:aspect-[16/9]">
                     {src ? (
@@ -291,7 +272,6 @@ function TestimoniosList({ data = [], loading, error, onEdit, onDelete }) {
                   </div>
                 </div>
 
-                {/* Contenido derecho */}
                 <div className="pr-2">
                   <Quote className="w-6 h-6 text-purple-700" />
                   <p className="italic text-slate-700 mt-1">{`“${t.comentario ?? ""}”`}</p>
@@ -311,7 +291,6 @@ function TestimoniosList({ data = [], loading, error, onEdit, onDelete }) {
                     )}
                   </div>
 
-                  {/* Acciones */}
                   <div className="mt-3 flex items-center gap-2">
                     <button
                       className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-blue-600 text-white hover:bg-blue-700"

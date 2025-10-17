@@ -1,9 +1,9 @@
-// src/components/organisms/Usuarios/UsuariosModal.jsx
 export default function UsuariosModal({
   isOpen, onClose, onSubmit,
   formNombre, setFormNombre,
   formApellidos, setFormApellidos,
-  readEmail, readRol, readActivo,
+  formActivo, setFormActivo,
+  readEmail, readRol,
 }) {
   if (!isOpen) return null;
   return (
@@ -50,12 +50,26 @@ export default function UsuariosModal({
                 <div className="mt-1 rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-slate-600">{readRol}</div>
               </div>
               <div>
-                <label className="block text-xs font-medium text-slate-500">Estado</label>
-                <div className="mt-1">
-                  <span className={`inline-flex items-center px-3 py-1.5 rounded-full text-xs font-medium ${
-                    readActivo ? "bg-green-50 text-green-700 border border-green-200" : "bg-amber-50 text-amber-700 border border-amber-200"
-                  }`}>
-                    {readActivo ? "Activo" : "Suspendido"}
+                <label className="block text-xs font-medium text-slate-500">Estatus</label>
+                <div className="mt-1 flex items-center gap-2">
+                  <button
+                    type="button"
+                    onClick={() => setFormActivo(!formActivo)}
+                    className={
+                      "relative w-12 h-6 rounded-full transition " +
+                      (formActivo ? "bg-green-500" : "bg-slate-300")
+                    }
+                    aria-pressed={formActivo}
+                  >
+                    <span
+                      className={
+                        "absolute top-0.5 h-5 w-5 rounded-full bg-white shadow transition " +
+                        (formActivo ? "right-0.5" : "left-0.5")
+                      }
+                    />
+                  </button>
+                  <span className={"text-sm " + (formActivo ? "text-green-700" : "text-amber-700")}>
+                    {formActivo ? "Activo" : "Suspendido"}
                   </span>
                 </div>
               </div>
