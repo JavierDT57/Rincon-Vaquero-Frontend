@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { getDashboardComputed } from "../../../api/dashboard";
 import {
   ResponsiveContainer,
   PieChart,
@@ -9,152 +10,103 @@ import {
   Label,
 } from "recharts";
 
+
+
+const PURPLE = ["#7c3aed", "#a855f7", "#c084fc", "#e9d5ff", "#d946ef", "#9333ea"];
+
 export default function DashboardPueblo() {
-  // ---------------- Datos base ----------------
-  const POBTOT = 250;
-  const POBMAS = 142;
-  const POBFEM = 108;
+  const [data, setData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [err, setErr] = useState(null);
 
-  const NINOS = 45;
-  const ADULTOS = 164; // 15–64
-  const TERCERA = 41; // 65+
-  const POB15MAS = ADULTOS + TERCERA; // 205
+  useEffect(() => {
+    (async () => {
+      try {
+        const d = await getDashboardComputed();
+        setData(d);
+      } catch (e) {
+        setErr(String(e.message || e));
+      } finally {
+        setLoading(false);
+      }
+    })();
+  }, []);
 
-  const CATOLICA = 206;
-  const SINREL = 16;
-  const OTRASREL = 28;
+  if (loading) return <div className="p-8 text-slate-500">Cargando dashboard…</div>;
+  if (err) return <div className="p-8 text-red-600">Error: {err}</div>;
+  if (!data) return null;
 
-  const PEA = 105; // 15+
-  const PEA_M = 66;
-  const PEA_F = 39;
-  const NO_PEA = POB15MAS - PEA; // 100
+  const { charts = {}, derivados = {}, porcentajes = {}, textos = {} } = data;
 
-  const DER_SS = 220; // Con derechohabiencia a algún servicio
-  const SIN_SS = POBTOT - DER_SS; // 30
-  const IMSS = 139;
-  const IMSSB = 1;
-  const ISSSTE = 2;
-  const ISEST = 0;
-  const SP = 60; // Seguro Popular
-  const PRIV = 7; // Institución privada
-  const PROG = 8; // Programa público
-  const OTRA = 3;
-
-  // ---------------- Helpers ----------------
-  const pct = (n, d) => (d === 0 ? 0 : Math.round((n / d) * 1000) / 10); // 1 decimal
-
-  // Paleta morados / neutros
-  const PURPLE = ["#7c3aed", "#a855f7", "#c084fc", "#e9d5ff", "#d946ef", "#9333ea"]; // variantes
-
-  // Datasets para las gráficas
-  const sexoData = [
-    { name: "Hombres", value: POBMAS },
-    { name: "Mujeres", value: POBFEM },
-  ];
-
-  const edadData = [
-    { name: "0–14", value: NINOS },
-    { name: "15–64", value: ADULTOS },
-    { name: "65+", value: TERCERA },
-  ];
-
-  const religionData = [
-    { name: "Católica", value: CATOLICA },
-    { name: "Sin religión", value: SINREL },
-    { name: "Otras", value: OTRASREL },
-  ];
-
-  const peaData = [
-    { name: "Activa (PEA)", value: PEA },
-    { name: "No activa", value: NO_PEA },
-  ];
-
-  const peaSexoData = [
-    { name: "Hombres (PEA)", value: PEA_M },
-    { name: "Mujeres (PEA)", value: PEA_F },
-  ];
-
-  const ssCoberturaData = [
-    { name: "Con servicio", value: DER_SS },
-    { name: "Sin servicio", value: SIN_SS },
-  ];
-
-  const ssDetalleData = [
-    { name: "IMSS", value: IMSS },
-    { name: "IMSS-B", value: IMSSB },
-    { name: "ISSSTE", value: ISSSTE },
-    { name: "Inst. estatales", value: ISEST },
-    { name: "Seguro Popular", value: SP },
-    { name: "Privada", value: PRIV },
-    { name: "Programa púb.", value: PROG },
-    { name: "Otra", value: OTRA },
-  ];
+  const POBTOT = derivados.POBTOT ?? 0;
+  const POB15MAS = derivados.POB15MAS ?? 0;
 
   return (
     <div className="min-h-screen bg-white text-slate-900">
-      {/* Contenido (el header ahora vive en el componente de header aparte) */}
       <main className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 items-stretch">
           {/* Población por sexo */}
           <ChartCard title="Población por sexo" subtitle={`Total: ${POBTOT}`} className="min-h-[520px]">
             <Donut
-              data={sexoData}
+              data={charts.sexoData || []}
               colors={[PURPLE[0], PURPLE[2]]}
-              center={`${pct(POBMAS, POBTOT)}% hombres / ${pct(POBFEM, POBTOT)}% mujeres`}
+              center={`${porcentajes.hombres ?? 0}% hombres / ${porcentajes.mujeres ?? 0}% mujeres`}
               height="h-80"
               margin={{ bottom: 40 }}
               hideLegend
             />
             <LegendDots
-              items={sexoData.map((d, i) => ({ name: d.name, color: [PURPLE[0], PURPLE[2]][i] }))}
+              items={[
+                { name: "Hombres", color: PURPLE[0] },
+                { name: "Mujeres", color: PURPLE[2] },
+              ]}
             />
             <CardInfo>
-              <p>
-                La población es de <b>{POBTOT}</b> personas: <b>{POBMAS}</b> hombres ({pct(POBMAS, POBTOT)}%) y <b>{POBFEM}</b> mujeres ({pct(POBFEM, POBTOT)}%).
-                La relación es de ~<b>{Math.round((POBMAS / POBFEM) * 100) / 100}</b> hombres por cada mujer.
-              </p>
+              <p>{textos.poblacionSexo ?? <>La población es de <b>{POBTOT}</b> personas.</>}</p>
             </CardInfo>
           </ChartCard>
 
           {/* Grupos de edad */}
           <ChartCard title="Distribución por grupos de edad" subtitle="Conteo de personas">
             <Donut
-              data={edadData}
+              data={charts.edadData || []}
               colors={[PURPLE[0], PURPLE[1], PURPLE[3]]}
-              center={`${pct(NINOS, POBTOT)}% / ${pct(ADULTOS, POBTOT)}% / ${pct(TERCERA, POBTOT)}%`}
+              center={`${porcentajes.ninos ?? 0}% / ${porcentajes.adultos ?? 0}% / ${porcentajes.tercera ?? 0}%`}
               height="h-72"
               margin={{ bottom: 40 }}
               hideLegend
             />
             <LegendDots
-              items={edadData.map((d, i) => ({ name: d.name, color: [PURPLE[0], PURPLE[1], PURPLE[3]][i] }))}
+              items={[
+                { name: "0–14", color: PURPLE[0] },
+                { name: "15–64", color: PURPLE[1] },
+                { name: "65+", color: PURPLE[3] },
+              ]}
             />
             <CardInfo>
-              <p>
-                Estructura etaria: <b>{pct(NINOS, POBTOT)}%</b> niños (0–14), <b>{pct(ADULTOS, POBTOT)}%</b> adultos (15–64) y <b>{pct(TERCERA, POBTOT)}%</b> personas mayores (65+).
-                Predominan los adultos, lo que sugiere fuerza laboral amplia y demanda de servicios para hogar y empleo.
-              </p>
+              <p>{textos.estructuraEtaria}</p>
             </CardInfo>
           </ChartCard>
 
           {/* Religión */}
           <ChartCard title="Religión y creencias" subtitle="Distribución porcentual">
             <Donut
-              data={religionData}
+              data={charts.religionData || []}
               colors={[PURPLE[0], PURPLE[2], PURPLE[4]]}
-              center={`${pct(CATOLICA, POBTOT)}% católica`}
+              center={`${porcentajes.catolica ?? 0}% católica`}
               height="h-72"
               margin={{ bottom: 40 }}
               hideLegend
             />
             <LegendDots
-              items={religionData.map((d, i) => ({ name: d.name, color: [PURPLE[0], PURPLE[2], PURPLE[4]][i] }))}
+              items={[
+                { name: "Católica", color: PURPLE[0] },
+                { name: "Sin religión", color: PURPLE[2] },
+                { name: "Otras", color: PURPLE[4] },
+              ]}
             />
             <CardInfo>
-              <p>
-                La mayoría se identifica como <b>católica ({pct(CATOLICA, POBTOT)}%)</b>. Las <b>otras religiones</b> concentran {pct(OTRASREL, POBTOT)}% y <b>sin religión</b> {pct(SINREL, POBTOT)}%.
-                Esto orienta actividades culturales, festividades y comunicación comunitaria.
-              </p>
+              <p>{textos.religion}</p>
             </CardInfo>
           </ChartCard>
 
@@ -163,63 +115,69 @@ export default function DashboardPueblo() {
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
                 <Donut
-                  data={peaData}
+                  data={charts.peaData || []}
                   colors={[PURPLE[0], "#e5e7eb"]}
-                  center={`${pct(PEA, POB15MAS)}% PEA`}
+                  center={`${porcentajes.pea_sobre_15mas ?? 0}% PEA`}
                   height="h-72"
                   margin={{ bottom: 24 }}
                   hideLegend
                 />
                 <LegendDots
-                  items={peaData.map((d, i) => ({ name: d.name, color: [PURPLE[0], "#e5e7eb"][i] }))}
+                  items={[
+                    { name: "Activa (PEA)", color: PURPLE[0] },
+                    { name: "No activa", color: "#e5e7eb" },
+                  ]}
                 />
               </div>
               <div>
                 <Donut
-                  data={peaSexoData}
+                  data={charts.peaSexoData || []}
                   colors={[PURPLE[0], PURPLE[2]]}
-                  center={`${pct(PEA_M, PEA)}% M / ${pct(PEA_F, PEA)}% F`}
+                  center={`${porcentajes.pea_hombres ?? 0}% M / ${porcentajes.pea_mujeres ?? 0}% F`}
                   height="h-72"
                   margin={{ bottom: 24 }}
                   hideLegend
                 />
                 <LegendDots
-                  items={peaSexoData.map((d, i) => ({ name: d.name, color: [PURPLE[0], PURPLE[2]][i] }))}
+                  items={[
+                    { name: "Hombres (PEA)", color: PURPLE[0] },
+                    { name: "Mujeres (PEA)", color: PURPLE[2] },
+                  ]}
                 />
               </div>
             </div>
             <CardInfo>
-              <p>
-                La <b>PEA</b> es <b>{PEA}</b> de <b>{POB15MAS}</b> personas de 15+: <b>{pct(PEA, POB15MAS)}%</b>.
-                Dentro de la PEA, <b>{pct(PEA_M, PEA)}%</b> son hombres y <b>{pct(PEA_F, PEA)}%</b> mujeres. La participación femenina podría crecer con guarderías, capacitación y horarios flexibles.
-              </p>
+              <p>{textos.pea}</p>
             </CardInfo>
           </ChartCard>
 
-          {/* Salud: cobertura y afiliación — se extiende a todo el ancho */}
+          {/* Salud */}
           <div className="md:col-span-2 xl:col-span-3">
             <ChartCard
               title="Derechohabiencia a servicios de salud"
-              subtitle={`Cobertura general: ${pct(DER_SS, POBTOT)}%`}
+              subtitle={`Cobertura general: ${porcentajes.cobertura_salud ?? 0}%`}
             >
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
                   <Donut
-                    data={ssCoberturaData}
+                    data={charts.ssCoberturaData || []}
                     colors={[PURPLE[0], "#e5e7eb"]}
-                    center={`${pct(DER_SS, POBTOT)}% con servicio`}
+                    center={`${porcentajes.cobertura_salud ?? 0}% con servicio`}
                     height="h-72"
                     margin={{ bottom: 24 }}
                     hideLegend
                   />
                   <LegendDots
-                    items={ssCoberturaData.map((d, i) => ({ name: d.name, color: [PURPLE[0], "#e5e7eb"][i] }))}
+                    items={[
+                      { name: "Con servicio", color: PURPLE[0] },
+                      { name: "Sin servicio", color: "#e5e7eb" },
+                    ]}
                   />
                 </div>
 
                 <div>
                   <Donut
-                    data={ssDetalleData}
+                    data={charts.ssDetalleData || []}
                     colors={[
                       PURPLE[0],
                       PURPLE[1],
@@ -232,48 +190,40 @@ export default function DashboardPueblo() {
                     ]}
                     center="Distribución"
                     height="h-72"
-                    // Sin leyenda interna: usamos una externa debajo para evitar traslapes
                     hideLegend
                     margin={{ bottom: 0 }}
                   />
                   <LegendDots
-                    items={ssDetalleData.map((d, i) => ({
-                      name: d.name,
-                      color: [
-                        PURPLE[0],
-                        PURPLE[1],
-                        PURPLE[2],
-                        PURPLE[3],
-                        PURPLE[4],
-                        "#a1a1aa",
-                        "#b45309",
-                        "#16a34a",
-                      ][i],
-                    }))}
+                    items={[
+                      { name: "IMSS", color: PURPLE[0] },
+                      { name: "IMSS-B", color: PURPLE[1] },
+                      { name: "ISSSTE", color: PURPLE[2] },
+                      { name: "Inst. estatales", color: PURPLE[3] },
+                      { name: "Seguro Popular", color: PURPLE[4] },
+                      { name: "Privada", color: "#a1a1aa" },
+                      { name: "Programa púb.", color: "#b45309" },
+                      { name: "Otra", color: "#16a34a" },
+                    ]}
                   />
                 </div>
               </div>
 
               <CardInfo>
-                <p>
-                  <b>{DER_SS}</b> personas (<b>{pct(DER_SS, POBTOT)}%</b>) tienen derecho a algún servicio; <b>{SIN_SS}</b> (<b>{pct(SIN_SS, POBTOT)}%</b>) no.
-                  La afiliación se concentra en <b>IMSS ({pct(IMSS, POBTOT)}%)</b> y <b>Seguro Popular ({pct(SP, POBTOT)}%)</b>, con menor presencia de ISSSTE u opciones privadas.
-                  Esto sugiere que las jornadas médicas y convenios con IMSS serían las más efectivas.
-                </p>
+                <p>{textos.salud}</p>
               </CardInfo>
             </ChartCard>
           </div>
         </div>
 
         <div className="mt-8 text-xs text-slate-500">
-          Nota: Las cifras de derechohabiencia están desagregadas dentro de quienes reportan tener algún servicio (220). En tu fuente podrían permitir múltiple afiliación; aquí se muestran como distribución simple para lectura rápida.
+          Nota: Las cifras se derivan automáticamente del backend (fuente atómica + cálculo).
         </div>
       </main>
     </div>
   );
 }
 
-// ---------------- UI helpers ----------------
+/* ---------------- UI helpers (sin cambios) ---------------- */
 function ChartCard({ title, subtitle, children, className = "" }) {
   return (
     <div className={`relative h-full overflow-hidden rounded-2xl p-[1px] bg-gradient-to-br from-purple-500/40 to-fuchsia-500/40 shadow-lg ${className}`}>
@@ -326,7 +276,7 @@ function Donut({ data, colors, center, height = "h-64", margin = { bottom: 32 },
             dataKey="value"
             nameKey="name"
           >
-            {data.map((_, i) => (
+            {(data || []).map((_, i) => (
               <Cell key={`cell-${i}`} fill={colors[i % colors.length]} />
             ))}
             <Label
