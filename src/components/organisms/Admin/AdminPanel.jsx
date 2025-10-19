@@ -1,5 +1,7 @@
 import React, { useMemo } from "react";
-import { Quote, Users, Bell, MessageSquare, BarChart2, Trash2, Pencil, Calendar, MapPin } from "lucide-react";
+import {
+  Quote, Users, Bell, MessageSquare, BarChart2, Trash2, Pencil, Calendar, MapPin
+} from "lucide-react";
 import { absUrl } from "../../../api/adminMedia";
 
 export default function AdminPanel({
@@ -13,6 +15,15 @@ export default function AdminPanel({
   onEdit = () => {},
   onSuspend = () => {},
   onDelete = () => {},
+
+  // Estadísticas (admin)
+  stats = [],
+  statsLoading = false,
+  statsError = null,
+  onStatChange = () => {},
+  onStatsSave = () => {},
+  statsSaving = false,
+  dirtyCount = 0,
 }) {
   return (
     <div className="min-h-screen bg-white text-slate-900">
@@ -37,6 +48,7 @@ export default function AdminPanel({
               onDelete={(id) => onDelete("usuarios", id)}
             />
           )}
+
           {active === "avisos" && (
             <AvisosList
               data={avisos}
@@ -46,6 +58,7 @@ export default function AdminPanel({
               onDelete={(id) => onDelete("avisos", id)}
             />
           )}
+
           {active === "testimonios" && (
             <TestimoniosList
               data={testimonios}
@@ -55,7 +68,18 @@ export default function AdminPanel({
               onDelete={(id) => onDelete("testimonios", id)}
             />
           )}
-          {active === "estadisticas" && <EstadisticasPlaceholder />}
+
+          {active === "estadisticas" && (
+            <EstadisticasEditable
+              stats={stats}
+              loading={statsLoading}
+              error={statsError}
+              onChange={onStatChange}
+              onSave={onStatsSave}
+              saving={statsSaving}
+              dirtyCount={dirtyCount}
+            />
+          )}
         </main>
       </div>
     </div>
@@ -110,7 +134,7 @@ function UsuariosList({ usuarios = [], loading, error, onEdit, onSuspend, onDele
           const apellidos = u.apellidos || u.apellido || "";
           const email = u.email || u.correo || "";
           const rol = u.rol || u.role || "usuario";
-          // 👇 usa isActive recibido del backend
+          // ✅ ocupa isActive correctamente
           const activo = u.isActiveBool ?? toBool(u.isActive ?? u.activo ?? u.active);
 
           return (
@@ -321,14 +345,46 @@ function TestimoniosList({ data = [], loading, error, onEdit, onDelete }) {
   );
 }
 
-/** ------------------------ ESTADÍSTICAS (placeholder) ------------------------ */
-function EstadisticasPlaceholder() {
+/** ------------------------ ESTADÍSTICAS (editable) ------------------------ */
+function EstadisticasEditable({ stats = [], loading, error, onChange, onSave, saving, dirtyCount }) {
   return (
     <section>
-      <SectionTitle titleBlack="Panel de" titlePurple="Estadísticas" />
-      <div className="border border-dashed border-slate-300 rounded-2xl p-8 text-slate-500">
-        Pendiente de implementar. Aquí podrás mostrar tus dashboards.
+      <div className="flex items-center justify-between mb-4">
+        <SectionTitle titleBlack="Gestionar" titlePurple="Estadísticas" />
+        <button
+          onClick={onSave}
+          disabled={saving || dirtyCount === 0}
+          className={
+            "rounded-xl px-4 py-2 text-white font-medium shadow " +
+            (dirtyCount === 0
+              ? "bg-slate-300 cursor-not-allowed"
+              : "bg-purple-600 hover:bg-purple-700")
+          }
+          title={dirtyCount === 0 ? "No hay cambios" : `Actualizar (${dirtyCount})`}
+        >
+          {saving ? "Guardando…" : dirtyCount === 0 ? "Actualizar" : `Actualizar (${dirtyCount})`}
+        </button>
       </div>
+
+      {loading && <ListSkeleton lines={4} />}
+      {error && <ErrorBox msg={error} />}
+
+      {!loading && !error && (
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          {stats.map((s) => (
+            <div key={s.slug} className="rounded-2xl border border-slate-200 p-4">
+              <div className="text-sm text-slate-500">{s.slug}</div>
+              <div className="text-lg font-semibold text-slate-900 mb-2">{s.title}</div>
+              <input
+                type="number"
+                value={String(s.value ?? "")}
+                onChange={(e) => onChange(s.slug, Number(e.target.value || 0))}
+                className="w-full rounded-xl border border-slate-200 px-3 py-2 outline-none focus:ring-2 focus:ring-purple-500"
+              />
+            </div>
+          ))}
+        </div>
+      )}
     </section>
   );
 }
@@ -336,7 +392,7 @@ function EstadisticasPlaceholder() {
 /** ------------------------ UI helpers ------------------------ */
 function SectionTitle({ titleBlack, titlePurple }) {
   return (
-    <div className="mb-4">
+    <div className="mb-1">
       <h2 className="text-2xl md:text-3xl font-semibold">
         <span className="text-slate-900">{titleBlack} </span>
         <span className="text-purple-600">{titlePurple}</span>
@@ -348,7 +404,7 @@ function SectionTitle({ titleBlack, titlePurple }) {
 function ErrorBox({ msg }) {
   return (
     <div className="mb-4 rounded-xl border border-red-200 bg-red-50 text-red-700 px-4 py-3">
-      Error al cargar: {String(msg)}
+      Error: {String(msg)}
     </div>
   );
 }

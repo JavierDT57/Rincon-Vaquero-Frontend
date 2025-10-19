@@ -4,11 +4,12 @@ import AvisosModal from "../../components/organisms/Avisos/AvisosModal";
 import TestimoniosModal from "../../components/organisms/Home/Testimonios/TestimoniosModal";
 import UsuariosModal from "../../components/organisms/Usuarios/UsuariosModal";
 
+import { fetchDashboard, updateDashboardItem } from "../../api/adminDashboard";
 import { absUrl, normalizeAviso, normalizeTestimonio } from "../../api/adminMedia";
 
 const API_BASE = (import.meta?.env?.VITE_API_BASE || "http://localhost:5000/api").replace(/\/$/, "");
 
-// === helpers ===
+// helpers users
 const toBool = (v) => v === true || v === 1 || v === "1" || v === "true";
 const normalizeUser = (u) => ({
   ...u,
@@ -22,8 +23,18 @@ export default function AdminPanelContainer() {
   const [testimonios, setTestimonios] = useState([]);
   const [usuarios, setUsuarios] = useState([]);
 
-  const [loading, setLoading] = useState({ avisos: true, testimonios: true, usuarios: true });
-  const [error, setError] = useState({ avisos: null, testimonios: null, usuarios: null });
+  const [loading, setLoading] = useState({
+    avisos: true,
+    testimonios: true,
+    usuarios: true,
+    estadisticas: true,
+  });
+  const [error, setError] = useState({
+    avisos: null,
+    testimonios: null,
+    usuarios: null,
+    estadisticas: null,
+  });
 
   // ====== edición avisos/testimonios ======
   const [isEditOpen, setIsEditOpen] = useState(false);
@@ -43,8 +54,13 @@ export default function AdminPanelContainer() {
   const [userId, setUserId] = useState(null);
   const [userNombre, setUserNombre] = useState("");
   const [userApellidos, setUserApellidos] = useState("");
-  const [userActivo, setUserActivo] = useState(true); // ← se mapea desde isActive
+  const [userActivo, setUserActivo] = useState(true); // toggle en modal
   const [userReadonly, setUserReadonly] = useState({ email: "", rol: "" });
+
+  // ====== estadísticas ======
+  const [stats, setStats] = useState([]);
+  const [savingStats, setSavingStats] = useState(false);
+  const [dirtyStats, setDirtyStats] = useState({}); // {slug: true}
 
   const resetEdit = () => {
     setIsEditOpen(false);
@@ -121,11 +137,26 @@ export default function AdminPanelContainer() {
     }
   }, [fetchJSON]);
 
+  const loadStats = useCallback(async () => {
+    setLoading((s) => ({ ...s, estadisticas: true }));
+    setError((s) => ({ ...s, estadisticas: null }));
+    try {
+      const list = await fetchDashboard(); // usa api/dashboard.js
+      setStats(list || []);
+      setDirtyStats({});
+    } catch (e) {
+      setError((s) => ({ ...s, estadisticas: String(e?.message || e) }));
+    } finally {
+      setLoading((s) => ({ ...s, estadisticas: false }));
+    }
+  }, []);
+
   useEffect(() => {
     loadAvisos();
     loadTestimonios();
     loadUsuarios();
-  }, [loadAvisos, loadTestimonios, loadUsuarios]);
+    loadStats();
+  }, [loadAvisos, loadTestimonios, loadUsuarios, loadStats]);
 
   // ====== edición avisos/testimonios ======
   const fetchItemForEdit = async (tipo, id) => {
@@ -234,7 +265,7 @@ export default function AdminPanelContainer() {
       setUserId(id);
       setUserNombre(u?.nombre || "");
       setUserApellidos(u?.apellidos || u?.apellido || "");
-      setUserActivo(toBool(u?.isActive ?? u?.activo ?? u?.active)); // ← usa isActive
+      setUserActivo(toBool(u?.isActive ?? u?.activo ?? u?.active));
       setUserReadonly({
         email: u?.email || u?.correo || "",
         rol: u?.rol || u?.role || "",
@@ -255,8 +286,7 @@ export default function AdminPanelContainer() {
         body: JSON.stringify({
           nombre: userNombre,
           apellidos: userApellidos,
-          // 👇 el backend espera isActive 0/1
-          isActive: userActivo ? 1 : 0,
+          isActive: userActivo ? 1 : 0, // ✅ backend espera 0/1
         }),
       });
       await loadUsuarios();
@@ -270,7 +300,7 @@ export default function AdminPanelContainer() {
     const ok = confirm("¿Suspender este usuario? Podrás reactivarlo después.");
     if (!ok) return;
     try {
-      await fetchJSON(`${API_BASE}/users/${id}`, { method: "DELETE" }); // soft: pone isActive=0
+      await fetchJSON(`${API_BASE}/users/${id}`, { method: "DELETE" }); // soft → isActive=0
       await loadUsuarios();
     } catch (e) {
       alert("No se pudo suspender: " + (e?.message || e));
@@ -288,6 +318,30 @@ export default function AdminPanelContainer() {
     }
   }
 
+  // ====== stats change/save ======
+  const onStatChange = (slug, nextValue) => {
+    setStats((prev) => prev.map((it) => (it.slug === slug ? { ...it, value: nextValue } : it)));
+    setDirtyStats((d) => ({ ...d, [slug]: true }));
+  };
+
+  const saveAllStats = async () => {
+    const toUpdate = stats.filter((it) => dirtyStats[it.slug]);
+    if (toUpdate.length === 0) {
+      alert("No hay cambios por guardar.");
+      return;
+    }
+    setSavingStats(true);
+    try {
+      await Promise.all(toUpdate.map((it) => updateDashboardItem(it.slug, it.value)));
+      await loadStats();
+      alert("Estadísticas actualizadas.");
+    } catch (e) {
+      alert("No se pudieron actualizar: " + (e?.message || e));
+    } finally {
+      setSavingStats(false);
+    }
+  };
+
   return (
     <>
       <AdminPanel
@@ -301,6 +355,15 @@ export default function AdminPanelContainer() {
         onEdit={handleEdit}
         onDelete={handleDelete}
         onSuspend={handleSuspendUser}
+
+        // stats
+        stats={stats}
+        statsLoading={!!loading.estadisticas}
+        statsError={error.estadisticas}
+        onStatChange={onStatChange}
+        onStatsSave={saveAllStats}
+        statsSaving={savingStats}
+        dirtyCount={Object.keys(dirtyStats).length}
       />
 
       {/* Modales AVISOS/Testimonios */}
