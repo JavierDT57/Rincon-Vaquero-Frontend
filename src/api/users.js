@@ -1,4 +1,6 @@
 // src/api/users.js
+const base = import.meta.env?.VITE_API_BASE || "";
+
 const RAW_BASE =
   (typeof import.meta !== "undefined" && import.meta.env && import.meta.env.VITE_API_BASE) ||
   (typeof process !== "undefined" && process.env && process.env.REACT_APP_API_BASE) ||
@@ -39,6 +41,21 @@ async function request(path, { method = "GET", body, headers = {}, query } = {})
   return data && Object.prototype.hasOwnProperty.call(data, "data") ? data.data : data;
 }
 
+async function jsonFetch(url, opts = {}) {
+  const res = await fetch(url, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...(opts.headers || {}) },
+    body: JSON.stringify(opts.body || {}),
+    credentials: 'include', // por si usas cookies en otros endpoints
+  });
+  const data = await res.json().catch(() => ({}));
+  if (!res.ok) {
+    const msg = data?.message || data?.error || 'Error en la petición';
+    throw new Error(msg);
+  }
+  return data;
+}
+
 /* --------- AUTH */
 export function registerUser(payload) {
   return request("/api/users/register", { method: "POST", body: payload });
@@ -46,8 +63,16 @@ export function registerUser(payload) {
 export function loginUser(payload) {
   return request("/api/users/login", { method: "POST", body: payload });
 }
-export function recoverPassword(payload) {
-  return request("/api/users/recover-password", { method: "POST", body: payload });
+export function requestPasswordReset({ email }) {
+  return jsonFetch(`${base}/api/users/recover/request`, { body: { email } });
+}
+export function verifyPasswordToken({ email, token }) {
+  return jsonFetch(`${base}/api/users/recover/verify`, { body: { email, token } });
+}
+export function confirmPasswordReset({ email, token, newPassword, confirmPassword }) {
+  return jsonFetch(`${base}/api/users/recover/confirm`, {
+    body: { email, token, newPassword, confirmPassword },
+  });
 }
 export function createAdmin(payload) {
   return request("/api/users/create-admin", { method: "POST", body: payload });
