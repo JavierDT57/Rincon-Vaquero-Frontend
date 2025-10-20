@@ -1,16 +1,17 @@
+// src/pages/tienda/TiendaPage.jsx
 import React, { useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import useAuth from "../../hooks/useAuth";
-import AdminPanelContainer from "../../containers/admin/AdminPanelContainer";
+import TiendaContainer from "../../containers/tienda/TiendaContainer"; // <- ajusta si tu container se llama distinto
 
-export default function AdminPanelPage() {
+export default function TiendaPage() {
   const { user, isChecking } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
 
   
   useEffect(() => {
-    document.title = "Panel Administrativo";
+    document.title = "Tienda";
   }, []);
 
   
@@ -18,20 +19,12 @@ export default function AdminPanelPage() {
     if (isChecking) return; 
     if (!user) {
       navigate("/login", { replace: true, state: { from: location.pathname } });
-      return;
-    }
-    if (user.rol !== "admin") {
-      navigate("/", { replace: true });
     }
   }, [isChecking, user, navigate, location.pathname]);
 
   
   if (isChecking) return null;
-  if (!user || user.rol !== "admin") return null;
+  if (!user) return null;
 
-  return (
-    <div className="bg-white text-slate-900">
-      <AdminPanelContainer />
-    </div>
-  );
+  return <TiendaContainer />;
 }

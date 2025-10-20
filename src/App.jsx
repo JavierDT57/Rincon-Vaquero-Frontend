@@ -17,6 +17,7 @@ import AvisosPage from "./pages/Avisos/AvisosPage";
 import EstadisticasPage from "./pages/Estadisticas/EstadisticasPage";
 import TestimoniosPage from "./pages/Testimonios/TestimoniosPage";
 import AdminPanelPage from "./pages/admin/AdminPanelPage";
+import TiendaPage from "./pages/Tienda/TiendaPage";
 
 export default function App() {
   return (
@@ -55,6 +56,8 @@ export default function App() {
 
             {/* Panel de administración */}
             <Route path="/admin" element={<AdminPanelPage />} />
+            {/* Tienda */}
+            <Route path="tienda" element={<TiendaPage />} />
 
 
           </Route>
