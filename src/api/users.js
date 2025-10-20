@@ -5,7 +5,7 @@ const RAW_BASE =
   ""; // usa proxy si está vacío
 
 function joinUrl(base, path) {
-  if (!base) return path; // proxy maneja /api
+  if (!base) return path;
   const b = String(base).replace(/\/+$/, "");
   const p = String(path).startsWith("/") ? path : `/${path}`;
   if (b.endsWith("/api") && p.startsWith("/api")) return b + p.replace(/^\/api/, "");
@@ -19,7 +19,7 @@ async function request(path, { method = "GET", body, headers = {}, query } = {})
   const init = {
     method,
     mode: "cors",
-    credentials: "include",            // ⬅️ imprescindible para enviar/recibir cookies
+    credentials: "include",            
     headers: { Accept: "application/json", ...headers },
   };
   if (body !== undefined) {
@@ -39,7 +39,7 @@ async function request(path, { method = "GET", body, headers = {}, query } = {})
   return data && Object.prototype.hasOwnProperty.call(data, "data") ? data.data : data;
 }
 
-/* --------- AUTH (sin cambios funcionales, ahora con credentials) --------- */
+/* --------- AUTH */
 export function registerUser(payload) {
   return request("/api/users/register", { method: "POST", body: payload });
 }
@@ -51,6 +51,12 @@ export function recoverPassword(payload) {
 }
 export function createAdmin(payload) {
   return request("/api/users/create-admin", { method: "POST", body: payload });
+}
+export function logoutUser() {
+  return request("/api/users/logout", { method: "POST" });
+}
+export function me() {
+  return request("/api/users/me", { method: "GET" });
 }
 
 /* --------- ADMIN: usuarios --------- */
@@ -64,7 +70,7 @@ export function updateUser(id, { nombre, apellidos }) {
   return request(`/api/users/${id}`, { method: "PUT", body: { nombre, apellidos } });
 }
 export function suspendUser(id) {
-  return request(`/api/users/${id}`, { method: "DELETE" }); // soft
+  return request(`/api/users/${id}`, { method: "DELETE" });
 }
 export function deleteUserHard(id) {
   return request(`/api/users/${id}?hard=true`, { method: "DELETE" });

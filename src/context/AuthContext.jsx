@@ -1,25 +1,53 @@
-// src/context/AuthContext.jsx
-import React, { createContext, useState, useEffect } from 'react';
+import React, { createContext, useState, useEffect, useCallback } from 'react';
 
 export const AuthContext = createContext(null);
 
+const API_BASE = import.meta?.env?.VITE_API_BASE || 'http://localhost:5000/api';
+
 export default function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
+  const [isChecking, setIsChecking] = useState(true);
 
-  // Verifica el usuario actual al cargar la app (usa cookies)
-  useEffect(() => {
-    fetch('http://localhost:5000/api/users/me', {
-      method: 'GET',
-      credentials: 'include'
-    })
-      .then(res => (res.ok ? res.json() : null))
-      .then(data => setUser(data?.user || null))
-      .catch(() => setUser(null));
+  const refresh = useCallback(async () => {
+    setIsChecking(true);
+    try {
+      const res = await fetch(`${API_BASE}/users/me`, { method: 'GET', credentials: 'include' });
+      if (!res.ok) throw new Error('unauth');
+      const data = await res.json();
+      setUser(data?.user ?? data ?? null);
+    } catch {
+      setUser(null);
+    } finally {
+      setIsChecking(false);
+    }
   }, []);
 
-  // Login (ejemplo, puedes tener tu propia función)
+  useEffect(() => {
+    // 1) comprobar sesión 
+    refresh();
+
+    // 2) revalidar al volver el foco 
+    const onFocus = () => refresh();
+    window.addEventListener('focus', onFocus);
+
+    // 3) sincronizar login/logout entre pestañas y componentes
+    let bc;
+    try {
+      bc = new BroadcastChannel('auth');
+      bc.onmessage = (e) => {
+        if (e.data?.type === 'login') refresh();
+        if (e.data?.type === 'logout') setUser(null);
+      };
+    } catch {}
+
+    return () => {
+      window.removeEventListener('focus', onFocus);
+      if (bc) bc.close();
+    };
+  }, [refresh]);
+
   const login = async (email, password) => {
-    const res = await fetch('http://localhost:5000/api/users/login', {
+    const res = await fetch(`${API_BASE}/users/login`, {
       method: 'POST',
       credentials: 'include',
       headers: { 'Content-Type': 'application/json' },
@@ -27,21 +55,23 @@ export default function AuthProvider({ children }) {
     });
     if (!res.ok) throw new Error('Login fallido');
     const data = await res.json();
-    setUser(data.user);
-    return data.user;
+    
+    setUser(data?.user ?? null);
+    try { new BroadcastChannel('auth').postMessage({ type: 'login' }); } catch {}
+    return data?.user ?? null;
   };
 
-  // Logout (como vimos antes)
   const logout = async () => {
-    await fetch('http://localhost:5000/api/users/logout', {
-      method: 'POST',
-      credentials: 'include'
-    });
+    try {
+      
+      await fetch(`${API_BASE}/users/logout`, { method: 'POST', credentials: 'include' });
+    } catch {}
     setUser(null);
+    try { new BroadcastChannel('auth').postMessage({ type: 'logout' }); } catch {}
   };
 
   return (
-    <AuthContext.Provider value={{ user, setUser, login, logout }}>
+    <AuthContext.Provider value={{ user, setUser, isChecking, refresh, login, logout }}>
       {children}
     </AuthContext.Provider>
   );
