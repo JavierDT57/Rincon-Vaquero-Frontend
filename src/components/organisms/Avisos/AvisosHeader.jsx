@@ -2,6 +2,7 @@
 import React from "react";
 import { useInRouterContext, useNavigate } from "react-router-dom";
 import fondo from "../../../assets/Avisos/fondo.jpg";
+import useAuth from "../../../hooks/useAuth";
 
 /** Botón Volver (mismo comportamiento que en Fiesta Patronal) */
 function BackButton({ className = "" }) {
@@ -34,7 +35,7 @@ export default function AvisosHeader({
   total = 0,
 }) {
 
-
+  const { user, isChecking } = useAuth();
   const ToggleIcon =
     layout === "grid"
       ? () => (
@@ -96,21 +97,23 @@ export default function AvisosHeader({
                 {layout === "grid" ? "Vista en lista" : "Vista en cuadrícula"}
               </button>
 
-              <button
-                onClick={onOpenModal}
-                className="inline-flex items-center gap-2 rounded-full bg-emerald-600 text-white px-4 py-2 shadow hover:bg-emerald-700 transition"
-              >
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
-                     stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <line x1="12" y1="5" x2="12" y2="19" />
-                  <line x1="5" y1="12" x2="19" y2="12" />
-                </svg>
-                Crear nuevo aviso
-              </button>
-
               <span className="inline-flex items-center rounded-full bg-white/15 px-2.5 py-1 text-sm text-white backdrop-blur">
-                {total} aviso{total === 1 ? "" : "s"}
+              {total} aviso{total === 1 ? "" : "s"}
               </span>
+
+              {!isChecking && user?.rol === "admin" && (
+                <button
+                  onClick={onOpenModal}
+                  className="inline-flex items-center gap-2 rounded-full bg-emerald-600 text-white px-4 py-2 shadow hover:bg-emerald-700 transition"
+                >
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
+                      stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <line x1="12" y1="5" x2="12" y2="19" />
+                    <line x1="5" y1="12" x2="19" y2="12" />
+                  </svg>
+                  Crear nuevo aviso
+                </button>
+              )}
             </div>
           </div>
         </div>
