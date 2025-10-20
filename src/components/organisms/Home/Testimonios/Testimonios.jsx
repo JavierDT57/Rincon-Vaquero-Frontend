@@ -6,11 +6,9 @@ import { ChevronLeft, ChevronRight, Star, Quote, MapPin, Calendar } from "lucide
 
 import { fetchTestimonios, createTestimonio, API_ORIGIN } from "../../../../api/testimonios.js";
 import TestimoniosModal from "../../Home/Testimonios/TestimoniosModal.jsx";
+import { useNavigate, useLocation } from "react-router-dom";
+import useAuth from "../../../../hooks/useAuth.js";
 
-// Imágenes locales (fallback)
-import olaverde from "../../../../assets/Home/campo1.jpeg";
-import rio2 from "../../../../assets/Home/rio2.jpg";
-import tequio1 from "../../../../assets/Home/tequio1.png";
 
 /* ---------------- helpers ---------------- */
 const absUrl = (p) => {
@@ -71,6 +69,9 @@ export function TestimoniosYFotos() {
   const [formRating, setFormRating] = useState(5);
   const [formFile, setFormFile] = useState(null);
   const [formPreview, setFormPreview] = useState("");
+  const { user, isChecking } = useAuth();
+  const navigate = useNavigate();
+  const location = useLocation();
 
   /* carga inicial desde backend */
   useEffect(() => {
@@ -85,6 +86,10 @@ export function TestimoniosYFotos() {
       }
     })();
   }, []);
+
+  const goLogin = () => {
+  navigate("/login", { state: { from: location.pathname } });
+  };
 
   /* autoplay */
   useEffect(() => {
@@ -283,9 +288,15 @@ const handleImgLoad = (e) => {
               <p className="text-muted-foreground mb-6">
                 Comparte tu experiencia y fotos con otros viajeros
               </p>
-              <Button className="w-full" onClick={() => setIsOpen(true)}>
-                Compartir mi experiencia
-              </Button>
+              {!isChecking && (user && (user.rol === "usuario" || user.rol === "admin") ? (
+                <Button className="w-full" onClick={() => setIsOpen(true)}>
+                  Compartir mi experiencia
+                </Button>
+              ) : (
+                <Button className="w-full" onClick={goLogin}>
+                  Iniciar sesión
+                </Button>
+              ))}
             </CardContent>
           </Card>
         </div>
