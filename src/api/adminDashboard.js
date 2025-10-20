@@ -1,16 +1,17 @@
 // API para el panel admin (listar y actualizar stats del dashboard)
 
 const VITE = (typeof import.meta !== "undefined" && import.meta.env) || {};
-const RAW_BASE = (VITE.VITE_API_BASE || "").trim(); 
+const RAW_BASE = (VITE.VITE_API_BASE || "").trim(); // puede ser "http://localhost:5000" O "http://localhost:5000/api"
 
-
-const BASE = RAW_BASE.replace(/\/$/, "");                 
-const BASE_HAS_API = /\/api$/i.test(BASE);                
+// Normaliza el base y asegura que las rutas vayan a /api/...
+const BASE = RAW_BASE.replace(/\/$/, "");                 // sin slash al final
+const BASE_HAS_API = /\/api$/i.test(BASE);                // true si termina en /api
 
 function buildUrl(pathUnderApi) {
-
+  // pathUnderApi debe empezar con "/dashboard" o "/dashboard/:slug"
+  // y aquí le añadimos el prefijo /api si el BASE no lo trae
   const prefix = BASE_HAS_API ? "" : "/api";
-  const origin = BASE || ""; 
+  const origin = BASE || ""; // si está vacío, será relativo al mismo origen
   return `${origin}${prefix}${pathUnderApi}`;
 }
 
@@ -41,16 +42,16 @@ async function req(pathUnderApi, { method = "GET", body, headers = {} } = {}) {
     throw new Error(msg);
   }
 
-
+  // backend puede responder {ok, data} o directamente []
   return data && Object.prototype.hasOwnProperty.call(data, "data") ? data.data : (data ?? raw);
 }
 
-/** GET /api/dashboard  
+/** GET /api/dashboard  ->  [{ slug, title, value, type }, ...] */
 export function fetchDashboard() {
   return req("/dashboard");
 }
 
-/** PUT /api/dashboard/ */
+/** PUT /api/dashboard/:slug  body { value } */
 export function updateDashboardItem(slug, value) {
   if (!slug) throw new Error("slug requerido");
   const vNum = typeof value === "string" && value.trim() !== "" ? Number(value) : value;
