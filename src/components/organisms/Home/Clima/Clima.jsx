@@ -40,7 +40,7 @@ const mejoresEpocas = [
       "Días de fe y tradición: viacrucis, procesiones y vendimia en el rio. El pueblo se vive con intensidad y calidez comunitaria.",
     temperatura: "Caluroso",
     actividades: ["Viacrucis","Ir al rio","Ir al Baile en la noche", "Disfrutar musica en vivo"], 
-    color: "bg-purple-100 text-purple-800",
+    color: "bg-emerald-100 text-emerald-800",
   },
   {
     meses: "Mayo",
@@ -97,7 +97,7 @@ export function ClimaYEpoca({ climaActual, semana, loading = false, error = null
                   <p className="text-sm text-muted-foreground">Temperatura</p>
                 </div>
                 <div className="text-center">
-                  <div className="text-2xl font-semibold text-muted-foreground mb-2">{actual.sensacion}</div>
+                  <div className="text-4xl font-bold text-primary mb-2">{actual.sensacion}</div>
                   <p className="text-sm text-muted-foreground">Sensación térmica</p>
                 </div>
               </div>
@@ -136,8 +136,8 @@ export function ClimaYEpoca({ climaActual, semana, loading = false, error = null
                 </div>
               </div>
 
-              <div className="mt-6 p-4 bg-muted rounded-lg">
-                <p className="text-center text-sm">
+              <div className="mt-6 p-4 bg-primary rounded-lg">
+                <p className="text-center  text-sm !text-white">
                   <strong>Condiciones actuales:</strong> {actual.descripcion}
                 </p>
               </div>
@@ -147,7 +147,11 @@ export function ClimaYEpoca({ climaActual, semana, loading = false, error = null
           {/* Pronóstico Semanal */}
           <Card>
             <CardContent className="p-8">
-              <h3 className="text-2xl font-semibold mb-6">Pronóstico de 7 días</h3>
+                <div className="flex items-center gap-3 mb-6">
+                <Sun className="w-6 h-6 text-yellow-500" />
+                <h3 className="text-2xl font-semibold">Pronóstico de 7 días</h3>
+                </div>
+              
 
               {loading && (
                 <div className="flex items-center gap-2 text-muted-foreground mb-4">

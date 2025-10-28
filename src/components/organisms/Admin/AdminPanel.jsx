@@ -30,7 +30,7 @@ export default function AdminPanel({
       <header className="max-w-7xl mx-auto px-6 pt-10 pb-6">
         <h1 className="text-4xl md:text-6xl font-semibold tracking-tight leading-none">
           <span className="text-slate-900">Panel </span>
-          <span className="text-purple-600">Administrativo</span>
+          <span className="text-[#0833a2]">Administrativo</span>
         </h1>
         <p className="text-slate-500 mt-2">Gestiona usuarios, avisos, testimonios y estadísticas.</p>
       </header>
@@ -105,7 +105,7 @@ function Sidebar({ active, onSelect }) {
               className={
                 "w-full flex items-center gap-3 rounded-xl px-3 py-2 transition border " +
                 (selected
-                  ? "bg-purple-50 border-purple-300 text-purple-700"
+                  ? "bg-purple-50 border-blue-300 text-[#0833a2]"
                   : "bg-white border-transparent hover:bg-slate-50 text-slate-700")
               }
             >
@@ -230,7 +230,7 @@ function AvisosList({ data = [], loading, error, onEdit, onDelete }) {
                   <div className="flex items-start justify-between gap-3">
                     <h3 className="text-lg font-semibold text-slate-900 truncate">{aviso.titulo}</h3>
                     {aviso.fecha && (
-                      <span className="shrink-0 text-[12px] px-3 py-1 rounded-full bg-purple-50 text-purple-700 border border-purple-200">
+                      <span className="rounded-full bg-primary px-2 py-0.5 text-xs font-medium !text-white">
                         {formatFecha(aviso.fecha)}
                       </span>
                     )}
@@ -297,7 +297,7 @@ function TestimoniosList({ data = [], loading, error, onEdit, onDelete }) {
                 </div>
 
                 <div className="pr-2">
-                  <Quote className="w-6 h-6 text-purple-700" />
+                  <Quote className="w-6 h-6 text-blue-700" />
                   <p className="italic text-slate-700 mt-1">{`“${t.comentario ?? ""}”`}</p>
 
                   <div className="mt-2">
@@ -358,7 +358,7 @@ function EstadisticasEditable({ stats = [], loading, error, onChange, onSave, sa
             "rounded-xl px-4 py-2 text-white font-medium shadow " +
             (dirtyCount === 0
               ? "bg-slate-300 cursor-not-allowed"
-              : "bg-purple-600 hover:bg-purple-700")
+              : "bg-primary hover:bg-blue-700")
           }
           title={dirtyCount === 0 ? "No hay cambios" : `Actualizar (${dirtyCount})`}
         >
@@ -379,7 +379,7 @@ function EstadisticasEditable({ stats = [], loading, error, onChange, onSave, sa
                 type="number"
                 value={String(s.value ?? "")}
                 onChange={(e) => onChange(s.slug, Number(e.target.value || 0))}
-                className="w-full rounded-xl border border-slate-200 px-3 py-2 outline-none focus:ring-2 focus:ring-purple-500"
+                className="w-full rounded-xl border border-slate-200 px-3 py-2 outline-none focus:ring-2 focus:ring-blue-500"
               />
             </div>
           ))}
@@ -395,13 +395,13 @@ function SectionTitle({ titleBlack, titlePurple }) {
     <div className="mb-1">
       <h2 className="text-2xl md:text-3xl font-semibold">
         <span className="text-slate-900">{titleBlack} </span>
-        <span className="text-purple-600">{titlePurple}</span>
+        <span className="text-[#0833a2]">{titlePurple}</span>
       </h2>
     </div>
   );
 }
 
-function ErrorBox({ msg }) {
+function ErrorBox({ msg }) { 
   return (
     <div className="mb-4 rounded-xl border border-red-200 bg-red-50 text-red-700 px-4 py-3">
       Error: {String(msg)}

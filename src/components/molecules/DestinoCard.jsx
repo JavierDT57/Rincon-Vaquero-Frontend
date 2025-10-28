@@ -16,7 +16,7 @@ export default function DestinoCard({
       onMouseEnter={() => setHovered?.(id)}
       onMouseLeave={() => setHovered?.(null)}
     >
-      <div className="relative h-64 overflow-hidden">
+      <div className="relative h-64 overflow-hidden border border-border bg-card">
         {image ? (
           <img
             src={image}
@@ -28,7 +28,7 @@ export default function DestinoCard({
         )}
       </div>
 
-      <div className="p-6">
+      <div className="p-6 border border-border bg-card ">
         <h3 className="text-xl font-semibold">{title}</h3>
         {description && (
           <p className="text-muted-foreground mt-1">{description}</p>

@@ -226,7 +226,7 @@ export default function DashboardPueblo() {
 /* ---------------- UI helpers (sin cambios) ---------------- */
 function ChartCard({ title, subtitle, children, className = "" }) {
   return (
-    <div className={`relative h-full overflow-hidden rounded-2xl p-[1px] bg-gradient-to-br from-purple-500/40 to-fuchsia-500/40 shadow-lg ${className}`}>
+    <div className={`relative h-full overflow-hidden rounded-2xl p-[1px] border border-border bg-card shadow-lg ${className}`}>
       <div className="flex h-full flex-col rounded-2xl bg-white ring-1 ring-black/5 p-4">
         <div className="mb-3">
           <h3 className="text-lg font-semibold text-slate-900">{title}</h3>

@@ -255,7 +255,7 @@ const handleImgLoad = (e) => {
 
           {/* Controles de navegación */}
           <div className="flex items-center justify-between mt-8">
-            <Button variant="outline" size="icon" onClick={testimonioAnterior} className="rounded-full ">
+            <Button variant="outline" size="icon" onClick={testimonioAnterior} className="rounded-full hover:bg-blue-700 !text-white ">
               <ChevronLeft className="w-4 h-4" />
             </Button>
 
@@ -274,7 +274,7 @@ const handleImgLoad = (e) => {
               ))}
             </div>
 
-            <Button variant="outline" size="icon" onClick={siguienteTestimonio} className="rounded-full ">
+            <Button variant="outline" size="icon" onClick={siguienteTestimonio} className="rounded-full hover:bg-blue-700 !text-white">
               <ChevronRight className="w-4 h-4" />
             </Button>
           </div>
@@ -285,15 +285,15 @@ const handleImgLoad = (e) => {
           <Card className="max-w-lg mx-auto">
             <CardContent className="p-8">
               <h3 className="text-xl font-semibold mb-4">¿Ya visitaste Rincón Vaquero?</h3>
-              <p className="text-muted-foreground mb-6">
+              <p className="text-muted-foreground mb-6 ">
                 Comparte tu experiencia y fotos con otros viajeros
               </p>
               {!isChecking && (user && (user.rol === "usuario" || user.rol === "admin") ? (
-                <Button className="w-full" onClick={() => setIsOpen(true)}>
+                <Button className="w-full hover:bg-blue-700 !text-white " onClick={() => setIsOpen(true)}>
                   Compartir mi experiencia
                 </Button>
               ) : (
-                <Button className="w-full" onClick={goLogin}>
+                <Button className="w-full hover:bg-blue-700 !text-white" onClick={goLogin}>
                   Iniciar sesión
                 </Button>
               ))}

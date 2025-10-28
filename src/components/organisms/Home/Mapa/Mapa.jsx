@@ -46,8 +46,8 @@ export function MapaInteractivo() {
                     <MapPin className="w-8 h-8 text-primary mx-auto mb-3" />
                     <h4 className="text-lg font-semibold mb-2">Rincón Vaquero</h4>
                     <p className="text-sm text-muted-foreground mb-4">Haz clic para ver en Google Maps</p>
-                    <Button onClick={handleMapaClick} className="w-full">
-                      <Navigation className="w-4 h-4 mr-2" />
+                    <Button onClick={handleMapaClick} className="w-full !text-white hover:bg-blue-700">
+                      <Navigation className="w-4 h-4 mr-2 !text-white" />
                       Abrir Mapa
                     </Button>
                   </div>

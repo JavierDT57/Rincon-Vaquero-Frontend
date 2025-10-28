@@ -33,7 +33,7 @@ export default function AvisoCardList({ aviso, expanded, onToggle }) {
   const texto = !expanded && largo ? body.slice(0, maxChars) + "…" : body;
 
   return (
-    <div className="group relative rounded-2xl p-[1px] bg-gradient-to-br from-purple-500/40 to-fuchsia-500/40 shadow-lg transition-transform hover:translate-y-[-2px]">
+    <div className="group relative h-full rounded-2xl p-[1px] border border-border bg-card shadow-lg transition-transform hover:translate-y-[-2px]">
       <div className="rounded-2xl bg-white ring-1 ring-black/5 overflow-hidden">
         <div className="md:flex">
           {imgSrc && (
@@ -50,7 +50,7 @@ export default function AvisoCardList({ aviso, expanded, onToggle }) {
           <div className="p-4 w-full">
             <div className="mb-2 flex items-center justify-between gap-2">
               <h3 className="text-lg font-semibold text-slate-900">{aviso.titulo ?? "Sin título"}</h3>
-              <span className="rounded-full bg-purple-100/60 px-2 py-0.5 text-xs font-medium text-purple-700">
+              <span className="rounded-full bg-primary px-2 py-0.5 text-xs font-medium !text-white">
                 {aviso.fecha ? new Date(aviso.fecha).toLocaleDateString() : ""}
               </span>
             </div>

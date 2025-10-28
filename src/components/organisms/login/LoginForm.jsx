@@ -33,7 +33,7 @@ export default function LoginForm({ onRegister, onForgotPassword }) {
     <Card className="w-full shadow-2xl border-0 bg-card">
       <CardHeader className="text-center space-y-4">
         <div className="mx-auto w-16 h-16 bg-primary rounded-full flex items-center justify-center">
-          <MapPin className="w-8 h-8 text-primary-foreground" />
+          <MapPin className="w-8 h-8 text-white" />
         </div>
         <div>
           <CardTitle className="text-2xl font-bold text-foreground">Bienvenido</CardTitle>
@@ -49,7 +49,7 @@ export default function LoginForm({ onRegister, onForgotPassword }) {
                  inputProps={{ type:"email", placeholder:"tu@email.com", value:email, onChange:e=>setEmail(e.target.value), required:true }} />
           <Field id="password" label="Contraseña" icon={Lock}
                  inputProps={{ type:"password", placeholder:"••••••••", value:password, onChange:e=>setPassword(e.target.value), required:true }} />
-          <Button type="submit" className="w-full py-3" disabled={isLoading}>
+          <Button type="submit" className="w-full py-3 !text-white" disabled={isLoading}>
             {isLoading ? "Iniciando sesión..." : "Iniciar sesión"}
           </Button>
         </form>

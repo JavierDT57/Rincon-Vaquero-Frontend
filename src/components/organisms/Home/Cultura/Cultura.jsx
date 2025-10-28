@@ -39,7 +39,7 @@ export function CultureSection() {
               conectar con nuestras raíces y compartir la riqueza cultural de nuestro pueblo.
             </p>
 
-            <div className="space-y-6">
+            <div className="space-y-6 ">
               {culturalEvents.map((event, index) => (
                 <Card key={index} className="border-l-4 border-l-primary">
                   <CardContent className="p-6">
@@ -50,7 +50,7 @@ export function CultureSection() {
                       <div>
                         <div className="flex items-center gap-2 mb-2">
                           <h3 className="text-lg font-semibold">{event.title}</h3>
-                          <span className="text-sm bg-secondary px-2 py-2 rounded-full">{event.date}</span>
+                          <span className="text-sm bg-primary px-2 py-2 rounded-full !text-white">{event.date}</span>
                         </div>
                         <p className="text-muted-foreground leading-relaxed">{event.description}</p>
                       </div>

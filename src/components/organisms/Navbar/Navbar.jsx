@@ -52,7 +52,7 @@ export function Navbar() {
                   to={item.to}
                   className={({ isActive }) =>
                     `px-3 py-2 text-sm font-medium transition-colors ${
-                      isActive ? "text-purple-600" : "text-gray-800 hover:text-purple-600"
+                      isActive ? "text-blue-600" : "text-gray-800 hover:text-blue-600"
                     }`
                   }
                 >
@@ -69,14 +69,14 @@ export function Navbar() {
                 <span className="text-sm text-gray-600">Hola, {user?.nombre}</span>
                 <button
                   onClick={doLogout}
-                  className="bg-purple-600 hover:bg-purple-700 text-white font-medium px-6 py-2 rounded-lg"
+                  className="bg-primary hover:bg-blue-700 text-white font-medium px-6 py-2 rounded-lg"
                 >
                   Logout
                 </button>
               </div>
             ) : (
               <Link to="/login">
-                <button className="bg-purple-600 hover:bg-purple-700 text-white font-medium px-6 py-2 rounded-lg">
+                <button className="bg-primary hover:bg-blue-700 text-white font-medium px-6 py-2 rounded-lg">
                   Iniciar sesión
                 </button>
               </Link>
@@ -102,7 +102,7 @@ export function Navbar() {
                   onClick={() => setIsMobileMenuOpen(false)}
                   className={({ isActive }) =>
                     `block px-3 py-2 text-base font-medium ${
-                      isActive ? "text-purple-600" : "text-gray-800 hover:text-purple-600"
+                      isActive ? "text-blue-600" : "text-gray-800 hover:text-blue-600"
                     }`
                   }
                 >
@@ -118,13 +118,13 @@ export function Navbar() {
                         setIsMobileMenuOpen(false);
                         doLogout();
                       }}
-                      className="w-full bg-purple-600 hover:bg-purple-700 text-white font-medium px-6 py-2 rounded-lg"
+                      className="w-full bg-primary hover:bg-blue-700 text-white font-medium px-6 py-2 rounded-lg"
                     >
                       Logout
                     </button>
                   ) : (
                     <Link to="/login" onClick={() => setIsMobileMenuOpen(false)}>
-                      <button className="w-full bg-purple-600 hover:bg-purple-700 text-white font-medium px-6 py-2 rounded-lg">
+                      <button className="w-full bg-primary hover:bg-blue-700 text-white font-medium px-6 py-2 rounded-lg">
                         Iniciar Sesión
                       </button>
                     </Link>

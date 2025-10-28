@@ -8,20 +8,20 @@
 :root {
   --background: oklch(1 0 0);
   --foreground: oklch(0.25 0 0);
-  --card: oklch(0.99 0.02 85);
+  --card: oklch(100% 0.00011 271.152);
   --card-foreground: oklch(0.25 0 0);
   --primary: oklch(48.308% 0.2513 304.79);
-  --primary-foreground: oklch(1 0 0);
+  --primary-foreground: oklch(100% 0.00011 271.152);
   --secondary: oklch(48.308% 0.2513 304.79);
   --secondary-foreground: oklch(1 0 0);
   --muted: oklch(0.99 0.02 85);
   --muted-foreground: oklch(0.25 0 0);
   --accent: oklch(30.126% 0.13406 330.83);
   --accent-foreground: oklch(1 0 0);
-  --destructive: oklch(43.4% 0.2206 306.024);
+  --destructive: oklch(48.308% 0.2513 304.79);
   --destructive-foreground: oklch(1 0 0);
   --border: oklch(0.25 0 0);
-  --input: oklch(0.99 0.02 85);
+  --input: oklch(99.107% 0.00011 271.152);
   --ring: oklch(0.65 0.15 65);
   --radius-sm: calc(0.5rem - 4px);
   --radius-md: calc(0.5rem - 2px);
@@ -102,23 +102,32 @@ main { padding-top: 72px; } /* ajusta si tu navbar es más alto */
 /*cultura */
 :root {
   /* Fondo y texto base */
-  --background: oklch(0.98 0.01 85);
+  --background: oklch(100% 0.00011 271.152);
   --foreground: oklch(0.15 0.02 45);
 
   /* Colores principales */
-  --primary: oklch(48.308% 0.2513 304.79);
-  --primary-foreground: oklch(0.98 0.01 85);
+  --primary: oklab(38.169% -0.02034 -0.1824);
+  /* oklch(24.089% 0.16378 264.138)
+     oklch(73.499% 0.15148 28.034)
+     oklab(38.169% -0.02034 -0.1824);
+  
+  
+  
+  */
+  --primary-foreground: oklch(32.99% 0.02929 81.666);
 
   /* Secundario */
-  --secondary: oklch(0.85 0.08 65);
+  --secondary: oklch(48.308% 0.2513 304.79);
   --secondary-foreground: oklch(0.25 0.02 45);
 
   /* Texto atenuado */
-  --muted: oklch(0.92 0.02 75);
+  --muted: oklch(48.308% 0.2513 304.79);
   --muted-foreground: oklch(0.55 0.02 45);
 
   /* Bordes */
-  --border: oklch(0.88 0.02 75);
+  --border: oklch(86.995% 0.0001 271.152);
+
+  
 }
 
 .dark {
@@ -126,7 +135,7 @@ main { padding-top: 72px; } /* ajusta si tu navbar es más alto */
   --foreground: oklch(0.985 0 0);
 
   --primary: oklch(0.985 0 0);
-  --primary-foreground: oklch(0.205 0 0);
+  --primary-foreground: oklch(100% 0.00011 271.152);
 
   --secondary: oklch(0.269 0 0);
   --secondary-foreground: oklch(0.985 0 0);

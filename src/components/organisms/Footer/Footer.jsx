@@ -1,6 +1,6 @@
 export function Footer() {
   return (
-    <footer className="bg-accent text-accent-foreground py-8">
+    <footer className="bg-primary text-accent-foreground py-5">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center">
           <p className="text-lg">© 2025 Rincón Vaquero. Todos los derechos reservados.</p>
