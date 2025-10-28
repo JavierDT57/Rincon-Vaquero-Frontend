@@ -17,6 +17,25 @@ const absUrl = (p) => {
   return `${API_ORIGIN}${p.startsWith("/") ? p : `/${p}`}`;
 };
 
+function StarRating({ value = 0, max = 5 }) {
+  const items = useMemo(() => Array.from({ length: max }), [max]);
+  return (
+    <div className="flex items-center gap-1">
+      {items.map((_, i) => (
+        <svg
+          key={i}
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 24 24"
+          className={"w-4 h-4 " + (i < value ? "fill-yellow-400 text-yellow-400" : "fill-slate-300 text-slate-300")}
+        >
+          <path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.62L12 2 9.19 8.62 2 9.24l5.46 4.73L5.82 21z" />
+        </svg>
+      ))}
+    </div>
+  );
+}
+
+
 const safeId = () => `testi_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
 
 function normalize(raw) {
@@ -229,10 +248,9 @@ const handleImgLoad = (e) => {
                 </div>
 
                 <div className="space-y-4">
-                  <div className="flex items-center gap-1 mb-2">
-                    {[...Array(testimonioSeleccionado.rating || 5)].map((_, i) => (
-                      <Star key={i} className="w-4 h-4 fill-yellow-400 text-yellow-400" />
-                    ))}
+                  <div className="mt-2">
+                    <StarRating value={Number(testimonioSeleccionado.rating) || 0} />
+
                   </div>
 
                   <div>
@@ -289,7 +307,7 @@ const handleImgLoad = (e) => {
                 Comparte tu experiencia y fotos con otros viajeros
               </p>
               {!isChecking && (user && (user.rol === "usuario" || user.rol === "admin") ? (
-                <Button className="w-full hover:bg-blue-700 !text-white " onClick={() => setIsOpen(true)}>
+                <Button className="w-full hover:bg-blue-700 !text-white" onClick={() => setIsOpen(true)}>
                   Compartir mi experiencia
                 </Button>
               ) : (
