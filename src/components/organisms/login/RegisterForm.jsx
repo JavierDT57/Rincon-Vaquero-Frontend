@@ -34,7 +34,7 @@ export default function RegisterForm({ onLogin }) {
     <Card className="w-full shadow-2xl border-0 bg-card">
       <CardHeader className="text-center space-y-4">
         <div className="mx-auto w-16 h-16 bg-primary rounded-full flex items-center justify-center">
-          <MapPin className="w-8 h-8 text-primary-foreground" />
+          <MapPin className="w-8 h-8 text-primary-foreground text-white" />
         </div>
         <div>
           <CardTitle className="text-2xl font-bold text-foreground">Únete a nosotros</CardTitle>
@@ -58,7 +58,7 @@ export default function RegisterForm({ onLogin }) {
           <Field id="confirmPassword" label="Confirmar contraseña" icon={Lock}
                  inputProps={{ type:"password", placeholder:"••••••••", value:form.confirmPassword, onChange:e=>handle("confirmPassword", e.target.value), required:true }} />
 
-          <Button type="submit" className="w-full py-3" disabled={isLoading}>
+          <Button type="submit" className="w-full py-3 !text-white" disabled={isLoading}>
             {isLoading ? "Creando cuenta..." : "Crear cuenta"}
           </Button>
         </form>

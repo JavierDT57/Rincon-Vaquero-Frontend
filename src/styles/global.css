@@ -22,7 +22,7 @@
   --destructive-foreground: oklch(1 0 0);
   --border: oklch(0.25 0 0);
   --input: oklch(99.107% 0.00011 271.152);
-  --ring: oklch(0.65 0.15 65);
+  --ring: oklab(38.169% -0.02034 -0.1824);
   --radius-sm: calc(0.5rem - 4px);
   --radius-md: calc(0.5rem - 2px);
   --radius-lg: 0.5rem;
@@ -117,11 +117,11 @@ main { padding-top: 72px; } /* ajusta si tu navbar es más alto */
   --primary-foreground: oklch(32.99% 0.02929 81.666);
 
   /* Secundario */
-  --secondary: oklch(48.308% 0.2513 304.79);
+  --secondary: oklab(48.995% -0.02086 -0.19664);
   --secondary-foreground: oklch(0.25 0.02 45);
 
   /* Texto atenuado */
-  --muted: oklch(48.308% 0.2513 304.79);
+  --muted: oklab(38.169% -0.02034 -0.1824);
   --muted-foreground: oklch(0.55 0.02 45);
 
   /* Bordes */

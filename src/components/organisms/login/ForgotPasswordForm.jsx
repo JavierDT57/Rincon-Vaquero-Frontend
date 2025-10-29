@@ -75,7 +75,7 @@ export default function ForgotPasswordForm({ onBackToLogin }) {
     <Card className="w-full shadow-2xl border-0 bg-card">
       <CardHeader className="text-center space-y-4">
         <div className="mx-auto w-16 h-16 bg-primary rounded-full flex items-center justify-center">
-          <MapPin className="w-8 h-8 text-primary-foreground" />
+          <MapPin className="w-8 h-8 text-primary-foreground text-white" />
         </div>
         <div>
           <CardTitle className="text-2xl font-bold text-foreground">
@@ -107,7 +107,7 @@ export default function ForgotPasswordForm({ onBackToLogin }) {
                 required: true
               }}
             />
-            <Button type="submit" className="w-full py-3" disabled={isLoading}>
+            <Button type="submit" className="w-full py-3 !text-white" disabled={isLoading}>
               {isLoading ? "Enviando..." : "Enviar código"}
             </Button>
           </form>
@@ -144,7 +144,7 @@ export default function ForgotPasswordForm({ onBackToLogin }) {
                       onClick={() => { setStep(1); resetAlerts(); }}>
                 Cambiar correo
               </Button>
-              <Button type="submit" className="w-1/2" disabled={isLoading}>
+              <Button type="submit" className="w-1/2 bg-secondary" disabled={isLoading}>
                 {isLoading ? "Verificando..." : "Verificar código"}
               </Button>
             </div>
@@ -182,7 +182,7 @@ export default function ForgotPasswordForm({ onBackToLogin }) {
                       onClick={() => { setStep(2); resetAlerts(); }}>
                 Atrás
               </Button>
-              <Button type="submit" className="w-2/3" disabled={isLoading}>
+              <Button type="submit" className="w-2/3 bg-secondary" disabled={isLoading}>
                 {isLoading ? "Guardando..." : "Guardar contraseña"}
               </Button>
             </div>
