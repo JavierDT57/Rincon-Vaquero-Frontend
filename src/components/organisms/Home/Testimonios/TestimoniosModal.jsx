@@ -13,7 +13,10 @@ export default function TestimoniosModal({
       <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" onClick={onClose} />
       <div className="relative z-10 w-full max-w-xl">
         <div className="rounded-2xl bg-white p-6 shadow-xl ring-1 ring-black/5">
-          <h3 className="text-xl font-semibold text-slate-800">Compartir experiencia</h3>
+          <div className="mb-4 flex items-center justify-between">
+            <h3 className="text-xl font-semibold text-slate-800">Compartir experiencia</h3>
+            <button onClick={onClose} className="rounded-lg px-2 py-1 text-sm text-slate-600 hover:bg-slate-100">Cerrar</button>
+          </div>
           <form className="mt-4 space-y-4" onSubmit={onSubmit}>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
