@@ -19,12 +19,12 @@ export default function TestimoniosModal({
               <div>
                 <label className="block text-sm font-medium text-slate-700">Nombre</label>
                 <input type="text" value={formNombre} onChange={(e) => setFormNombre(e.target.value)} required
-                  className="mt-1 w-full rounded-xl border border-slate-300 px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-purple-500/60" />
+                  className="mt-1 w-full rounded-xl border border-slate-300 px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-blue-500/60" />
               </div>
               <div>
                 <label className="block text-sm font-medium text-slate-700">Localidad</label>
                 <input type="text" value={formLocalidad} onChange={(e) => setFormLocalidad(e.target.value)}
-                  className="mt-1 w-full rounded-xl border border-slate-300 px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-purple-500/60" />
+                  className="mt-1 w-full rounded-xl border border-slate-300 px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-blue-500/60" />
               </div>
             </div>
 
@@ -32,14 +32,14 @@ export default function TestimoniosModal({
               <div>
                 <label className="block text-sm font-medium text-slate-700">Calificación</label>
                 <select value={formRating} onChange={(e) => setFormRating(e.target.value)}
-                  className="mt-1 w-full rounded-xl border border-slate-300 px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-purple-500/60">
+                  className="mt-1 w-full rounded-xl border border-slate-300 px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-blue-500/60">
                   {[5,4,3,2,1].map((n) => <option key={n} value={n}>{n}</option>)}
                 </select>
               </div>
               <div>
                 <label className="block text-sm font-medium text-slate-700">Imagen (opcional)</label>
                 <input type="file" accept="image/*" onChange={onFileChange}
-                  className="mt-1 block w-full text-sm text-slate-600 file:mr-4 file:rounded-lg file:border-0 file:bg-purple-600 file:px-3 file:py-2 file:text-white hover:file:opacity-90" />
+                  className="mt-1 block w-full text-sm text-slate-600 file:mr-4 file:rounded-lg file:border-0 file:bg-blue-600 file:px-3 file:py-2 file:text-white hover:file:opacity-90" />
               </div>
             </div>
 
@@ -52,7 +52,7 @@ export default function TestimoniosModal({
             <div>
               <label className="block text-sm font-medium text-slate-700">Comentario</label>
               <textarea value={formComentario} onChange={(e) => setFormComentario(e.target.value)} required rows={4}
-                className="mt-1 w-full rounded-xl border border-slate-300 px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-purple-500/60"
+                className="mt-1 w-full rounded-xl border border-slate-300 px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-blue-500/60"
                 placeholder="Cuéntanos tu experiencia…" />
             </div>
 
@@ -60,7 +60,7 @@ export default function TestimoniosModal({
               <button type="button" onClick={onClose}
                 className="rounded-xl bg-slate-100 px-4 py-2 text-sm text-slate-700 shadow hover:bg-slate-50">Cancelar</button>
               <button type="submit"
-                className="rounded-xl bg-purple-600 px-4 py-2 text-sm font-medium text-white shadow hover:opacity-90 active:translate-y-px">Publicar</button>
+                className="rounded-xl bg-blue-600 px-4 py-2 text-sm font-medium text-white shadow hover:opacity-90 active:translate-y-px">Publicar</button>
             </div>
           </form>
         </div>
