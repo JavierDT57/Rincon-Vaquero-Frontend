@@ -20,7 +20,7 @@ export function MapaInteractivo() {
   }
 
   return (
-    <section className="py-20 px-4 mx-auto">
+    <section className="py-5 px-4 mx-auto">
       <div className="max-w-6xl mx-auto">
         <div className="text-center mb-16">
           <h2 className="text-4xl md:text-5xl font-serif mb-6 text-balance">Encuéntranos</h2>

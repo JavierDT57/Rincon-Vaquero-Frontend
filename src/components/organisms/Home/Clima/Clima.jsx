@@ -59,7 +59,7 @@ export function ClimaYEpoca({ climaActual, semana, loading = false, error = null
   const listaSemana = (semana && semana.length > 0 ? semana : FALLBACK_SEMANA).slice(0, 7);
 
   return (
-    <section className="py-20 px-4 bg-muted/30">
+    <section className="py-10 px-4 bg-muted/30">
       <div className="max-w-6xl mx-auto">
         <div className="text-center mb-16">
           <h2 className="text-4xl md:text-5xl font-serif mb-6 text-balance">Clima & Mejor Época</h2>

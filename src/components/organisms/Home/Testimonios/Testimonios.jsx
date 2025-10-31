@@ -204,7 +204,7 @@ const handleImgLoad = (e) => {
   }
 
   return (
-    <section className="py-20 px-4 bg-muted/20">
+    <section className="py-8 px-4 bg-muted/20">
       <div className="max-w-6xl mx-auto">
         <div className="text-center mb-16">
           <h2 className="text-4xl md:text-5xl font-serif mb-6 text-balance">Testimonios & Fotos de Visitantes</h2>
