@@ -23,6 +23,9 @@ export default function AdminPanelContainer() {
   const [testimonios, setTestimonios] = useState([]);
   const [usuarios, setUsuarios] = useState([]);
 
+  // estado de filtro para moderación
+  const [tStatus, setTStatus] = useState("pending");
+
   const [loading, setLoading] = useState({
     avisos: true,
     testimonios: true,
@@ -54,7 +57,7 @@ export default function AdminPanelContainer() {
   const [userId, setUserId] = useState(null);
   const [userNombre, setUserNombre] = useState("");
   const [userApellidos, setUserApellidos] = useState("");
-  const [userActivo, setUserActivo] = useState(true); // toggle en modal
+  const [userActivo, setUserActivo] = useState(true);
   const [userReadonly, setUserReadonly] = useState({ email: "", rol: "" });
 
   // ====== estadísticas ======
@@ -109,11 +112,12 @@ export default function AdminPanelContainer() {
     }
   }, [fetchJSON]);
 
+  // endpoint admin con filtro de estado
   const loadTestimonios = useCallback(async () => {
     setLoading((s) => ({ ...s, testimonios: true }));
     setError((s) => ({ ...s, testimonios: null }));
     try {
-      const resp = await fetchJSON(`${API_BASE}/testimonios`);
+      const resp = await fetchJSON(`${API_BASE}/testimonios/admin?status=${encodeURIComponent(tStatus)}`);
       const items = Array.isArray(resp?.data) ? resp.data : resp;
       setTestimonios((items || []).map(normalizeTestimonio));
     } catch (e) {
@@ -121,7 +125,7 @@ export default function AdminPanelContainer() {
     } finally {
       setLoading((s) => ({ ...s, testimonios: false }));
     }
-  }, [fetchJSON]);
+  }, [fetchJSON, tStatus]);
 
   const loadUsuarios = useCallback(async () => {
     setLoading((s) => ({ ...s, usuarios: true }));
@@ -141,7 +145,7 @@ export default function AdminPanelContainer() {
     setLoading((s) => ({ ...s, estadisticas: true }));
     setError((s) => ({ ...s, estadisticas: null }));
     try {
-      const list = await fetchDashboard(); // usa api/dashboard.js
+      const list = await fetchDashboard();
       setStats(list || []);
       setDirtyStats({});
     } catch (e) {
@@ -243,7 +247,7 @@ export default function AdminPanelContainer() {
       fd.append("localidad", formLocalidad || "");
       fd.append("comentario", formComentario);
       fd.append("rating", String(formRating));
-      if (file) fd.append("imagenurl", file);
+      if (file) fd.append("imagen", file);
     }
 
     try {
@@ -286,7 +290,7 @@ export default function AdminPanelContainer() {
         body: JSON.stringify({
           nombre: userNombre,
           apellidos: userApellidos,
-          isActive: userActivo ? 1 : 0, // ✅ backend espera 0/1
+          isActive: userActivo ? 1 : 0,
         }),
       });
       await loadUsuarios();
@@ -303,7 +307,7 @@ export default function AdminPanelContainer() {
       await fetchJSON(`${API_BASE}/users/${id}`, { method: "DELETE" }); // soft → isActive=0
       await loadUsuarios();
     } catch (e) {
-      alert("No se pudo suspender: " + (e?.message || e));
+      alert("No se pudo suspender: " + (e?.message || e) );
     }
   }
 
@@ -342,6 +346,16 @@ export default function AdminPanelContainer() {
     }
   };
 
+  // ====== aprobar testimonio ======
+  const approveTestimonio = async (id) => {
+    try {
+      await fetchJSON(`${API_BASE}/testimonios/admin/${id}`, { method: "PATCH" });
+      await loadTestimonios();
+    } catch (e) {
+      alert("No se pudo aprobar: " + (e?.message || e));
+    }
+  };
+
   return (
     <>
       <AdminPanel
@@ -355,6 +369,12 @@ export default function AdminPanelContainer() {
         onEdit={handleEdit}
         onDelete={handleDelete}
         onSuspend={handleSuspendUser}
+
+        // Moderación testimonios
+        tStatus={tStatus}
+        onChangeStatus={(s) => { setTStatus(s); }}    // cambia filtro
+        onApprove={approveTestimonio}
+        onRefreshTestimonios={loadTestimonios}
 
         // stats
         stats={stats}

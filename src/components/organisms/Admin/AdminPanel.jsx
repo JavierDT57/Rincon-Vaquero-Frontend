@@ -1,6 +1,6 @@
 import React, { useMemo } from "react";
 import {
-  Quote, Users, Bell, MessageSquare, BarChart2, Trash2, Pencil, Calendar, MapPin
+  Quote, Users, Bell, MessageSquare, BarChart2, Trash2, Pencil, Calendar, MapPin, Check
 } from "lucide-react";
 import { absUrl } from "../../../api/adminMedia";
 
@@ -15,6 +15,12 @@ export default function AdminPanel({
   onEdit = () => {},
   onSuspend = () => {},
   onDelete = () => {},
+
+  // Moderación testimonios
+  tStatus = "pending",
+  onChangeStatus = () => {},
+  onApprove = () => {},
+  onRefreshTestimonios = () => {},
 
   // Estadísticas (admin)
   stats = [],
@@ -66,6 +72,10 @@ export default function AdminPanel({
               error={error.testimonios}
               onEdit={(item) => onEdit("testimonios", item)}
               onDelete={(id) => onDelete("testimonios", id)}
+              tStatus={tStatus}
+              onChangeStatus={onChangeStatus}
+              onApprove={onApprove}
+              onRefresh={onRefreshTestimonios}
             />
           )}
 
@@ -134,7 +144,6 @@ function UsuariosList({ usuarios = [], loading, error, onEdit, onSuspend, onDele
           const apellidos = u.apellidos || u.apellido || "";
           const email = u.email || u.correo || "";
           const rol = u.rol || u.role || "usuario";
-          // ✅ ocupa isActive correctamente
           const activo = u.isActiveBool ?? toBool(u.isActive ?? u.activo ?? u.active);
 
           return (
@@ -267,17 +276,42 @@ function AvisosList({ data = [], loading, error, onEdit, onDelete }) {
   );
 }
 
-/** ------------------------ TESTIMONIOS ------------------------ */
-function TestimoniosList({ data = [], loading, error, onEdit, onDelete }) {
+/** ------------------------ TESTIMONIOS (Moderación) ------------------------ */
+function TestimoniosList({ data = [], loading, error, onEdit, onDelete, tStatus, onChangeStatus, onApprove, onRefresh }) {
   return (
     <section>
-      <SectionTitle titleBlack="Gestionar" titlePurple="Testimonios" />
+      <div className="flex items-center justify-between mb-2">
+        <SectionTitle titleBlack="Gestionar" titlePurple="Testimonios" />
+        <div className="flex items-center gap-2">
+          <select
+            value={tStatus}
+            onChange={(e) => onChangeStatus(e.target.value)}
+            className="border border-slate-300 rounded-xl px-3 py-2 text-sm"
+            title="Estado a mostrar"
+          >
+            <option value="pending">Pendientes</option>
+            <option value="approved">Aprobados</option>
+          </select>
+          <button onClick={onRefresh} className="border rounded-xl px-3 py-2 text-sm hover:bg-slate-50">
+            Recargar
+          </button>
+        </div>
+      </div>
+
       {loading && <ListSkeleton lines={2} />}
       {error && <ErrorBox msg={error} />}
 
       <ul className="space-y-4">
         {data?.map((t) => {
           const src = t.imgSrc ?? absUrl(t.imagenurl ?? t.imagen_url ?? t.imgurl ?? t.imagen);
+            const status = t.status || tStatus; 
+            const statusBadge =
+              status === "approved"
+              ? "bg-green-50 text-green-700 border-green-200"
+              : "bg-amber-50 text-amber-700 border-amber-200";
+              const statusText = status === "approved" ? "aprobado"
+                 : status === "pending"  ? "pendiente"
+                 : status;
           return (
             <li key={t.id} className="bg-white border border-slate-200 rounded-2xl overflow-hidden">
               <div className="grid md:grid-cols-[280px,1fr] gap-4 p-4 items-center">
@@ -297,7 +331,13 @@ function TestimoniosList({ data = [], loading, error, onEdit, onDelete }) {
                 </div>
 
                 <div className="pr-2">
-                  <Quote className="w-6 h-6 text-blue-700" />
+                  <div className="flex items-start justify-between">
+                    <Quote className="w-6 h-6 text-blue-700" />
+                      <span className={`text-[12px] px-2 py-1 rounded-full border ${statusBadge}`}>
+                        {statusText}
+                      </span>
+                  </div>
+
                   <p className="italic text-slate-700 mt-1">{`“${t.comentario ?? ""}”`}</p>
 
                   <div className="mt-2">
@@ -316,6 +356,15 @@ function TestimoniosList({ data = [], loading, error, onEdit, onDelete }) {
                   </div>
 
                   <div className="mt-3 flex items-center gap-2">
+                    {tStatus === "pending" && (
+                      <button
+                        className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-emerald-600 text-white hover:bg-emerald-700"
+                        onClick={() => onApprove(t.id)}
+                        title="Aprobar"
+                      >
+                        <Check className="w-4 h-4" /> Aprobar
+                      </button>
+                    )}
                     <button
                       className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-blue-600 text-white hover:bg-blue-700"
                       onClick={() => onEdit(t)}
