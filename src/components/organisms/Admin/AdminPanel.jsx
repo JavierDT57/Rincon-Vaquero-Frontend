@@ -304,14 +304,17 @@ function TestimoniosList({ data = [], loading, error, onEdit, onDelete, tStatus,
       <ul className="space-y-4">
         {data?.map((t) => {
           const src = t.imgSrc ?? absUrl(t.imagenurl ?? t.imagen_url ?? t.imgurl ?? t.imagen);
-            const status = t.status || tStatus; 
-            const statusBadge =
-              status === "approved"
+          const status = t.status || tStatus;
+          const statusBadge =
+            status === "approved"
               ? "bg-green-50 text-green-700 border-green-200"
               : "bg-amber-50 text-amber-700 border-amber-200";
-              const statusText = status === "approved" ? "aprobado"
-                 : status === "pending"  ? "pendiente"
-                 : status;
+          const statusText =
+            status === "approved" ? "aprobado" :
+            status === "pending"  ? "pendiente" : status;
+
+          const resumeText = getResumeText(t);
+
           return (
             <li key={t.id} className="bg-white border border-slate-200 rounded-2xl overflow-hidden">
               <div className="grid md:grid-cols-[280px,1fr] gap-4 p-4 items-center">
@@ -333,9 +336,9 @@ function TestimoniosList({ data = [], loading, error, onEdit, onDelete, tStatus,
                 <div className="pr-2">
                   <div className="flex items-start justify-between">
                     <Quote className="w-6 h-6 text-blue-700" />
-                      <span className={`text-[12px] px-2 py-1 rounded-full border ${statusBadge}`}>
-                        {statusText}
-                      </span>
+                    <span className={`text-[12px] px-2 py-1 rounded-full border ${statusBadge}`}>
+                      {statusText}
+                    </span>
                   </div>
 
                   <p className="italic text-slate-700 mt-1">{`“${t.comentario ?? ""}”`}</p>
@@ -354,6 +357,17 @@ function TestimoniosList({ data = [], loading, error, onEdit, onDelete, tStatus,
                       <span className="inline-flex items-center gap-1"><Calendar className="w-3.5 h-3.5" />{formatFecha(t.fecha)}</span>
                     )}
                   </div>
+
+                  {tStatus === "pending" && (
+                    <div className="mt-3 bg-slate-50 border border-slate-200 rounded-xl p-3">
+                      <div className="font-semibold text-slate-900">
+                        Analisis
+                      </div>
+                      <div className="mt-1 text-sm text-slate-700 whitespace-pre-wrap break-words">
+                        {resumeText || "—"}
+                      </div>
+                    </div>
+                  )}
 
                   <div className="mt-3 flex items-center gap-2">
                     {tStatus === "pending" && (
@@ -497,3 +511,11 @@ function formatFecha(f) {
     return f;
   }
 }
+
+  // helper para obtener el texto de resumen 
+  const getResumeText = (t) => {
+    const raw = t?.resumen ?? t?.resume ?? t?.summary ?? "";
+    const text = typeof raw === "string" ? raw : (raw ? JSON.stringify(raw) : "");
+    if (!text) return "";
+    return text.length > 800 ? text.slice(0, 800) + "…" : text; 
+  };
