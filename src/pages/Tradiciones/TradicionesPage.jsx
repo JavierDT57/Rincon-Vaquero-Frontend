@@ -2,7 +2,7 @@ import TradicionesContainer from "../../containers/Tradiciones/TradicionesContai
 
 export default function TradicionesPage() {
   return (
-    <main className="min-h-screen bg-background pt-24">
+    <main className="min-h-screen bg-background pt-1">
       <div className="container mx-auto px-4 py-12">
         <div className="text-center mb-12">
           <h1 className="text-4xl md:text-6xl font-light mb-2">

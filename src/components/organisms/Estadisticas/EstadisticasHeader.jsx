@@ -26,21 +26,18 @@ function BackButton({ className = "" }) {
 }
 
 
-/**
- * Banner full-bleed como Fiesta/Avisos.
- * `headerBg` puede ser clases Tailwind (bg-*, gradient) o una imagen (import/URL/data:).
- */
+
 export default function EstadisticasHeader({
 
   title = "Estadísticas",
   subtitle = "Dashboard del pueblo",
-  onEdit,            // opcional
-  lastUpdated,       // opcional (string)
+  onEdit,            
+  lastUpdated,       
 }) {
 
 
   return (
-    <section className="relative left-1/2 right-1/2 -mx-[50vw] w-screen -mt-10 md:-mt-20 mb-6 sm:mb-8">
+    <section className="relative left-1/2 right-1/2 -mx-[50vw] w-screen -mt-20 md:-mt-20 mb-6 sm:mb-8">
 
       <div className="relative h-[40vh] md:h-[40vh] min-h-[260px] w-full overflow-hidden">
 
