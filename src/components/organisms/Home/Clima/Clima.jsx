@@ -74,7 +74,7 @@ export function ClimaYEpoca({ climaActual, semana, loading = false, error = null
             <CardContent className="p-8">
               <div className="flex items-center gap-3 mb-6">
                 <Sun className="w-6 h-6 text-yellow-500" />
-                <h3 className="text-2xl font-semibold">Clima Actual</h3>
+                <h3 className="text-2xl font-semibold mt-1">Clima Actual</h3>
               </div>
 
               {loading && (
@@ -149,7 +149,7 @@ export function ClimaYEpoca({ climaActual, semana, loading = false, error = null
             <CardContent className="p-8">
                 <div className="flex items-center gap-3 mb-6">
                 <Sun className="w-6 h-6 text-yellow-500" />
-                <h3 className="text-2xl font-semibold">Pronóstico de 7 días</h3>
+                <h3 className="text-2xl font-semibold mt-1">Pronóstico de 7 días</h3>
                 </div>
               
 
@@ -193,8 +193,8 @@ export function ClimaYEpoca({ climaActual, semana, loading = false, error = null
                   <div className="flex items-center justify-between mb-4">
                     <Badge className={epoca.color}>{epoca.meses}</Badge>
                     <div className="flex items-center gap-1">
-                      <Thermometer className="w-4 h-4 text-muted-foreground" />
-                      <span className="text-sm font-medium">{epoca.temperatura}</span>
+                      <Thermometer className="w-4 h-4 text-muted-foreground mt-1" />
+                      <span className="text-sm font-medium mt-1">{epoca.temperatura}</span>
                     </div>
                   </div>
 

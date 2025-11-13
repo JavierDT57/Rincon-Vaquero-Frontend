@@ -45,12 +45,12 @@ export function CultureSection() {
                   <CardContent className="p-6">
                     <div className="flex items-start gap-4">
                       <div className="bg-primary/10 p-3 rounded-lg">
-                        <event.icon className="w-6 h-6 text-primary" />
+                        <event.icon className="w-6 h-10 text-primary" />
                       </div>
                       <div>
                         <div className="flex items-center gap-2 mb-2">
                           <h3 className="text-lg font-semibold">{event.title}</h3>
-                          <span className="text-sm bg-primary px-2 py-2 rounded-full !text-white">{event.date}</span>
+                          <span className="text-sm bg-primary px-2 py-1 rounded-full !text-white mt-1">{event.date}</span>
                         </div>
                         <p className="text-muted-foreground leading-relaxed">{event.description}</p>
                       </div>

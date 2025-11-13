@@ -180,7 +180,7 @@ function UsuariosList({
                 </div>
 
                 <div className="flex-1 min-w-0">
-                  <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-2">
+                  <div className="flex-col sm:flex-row sm:items-start sm:justify-between gap-2">
                     <h3 className="text-lg font-semibold text-slate-900 truncate">
                       {nombre} {apellidos}
                     </h3>
@@ -275,12 +275,12 @@ function AvisosList({ data = [], loading, error, onEdit, onDelete }) {
                 )}
 
                 <div className="flex-1 min-w-0">
-                  <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-2">
+                  <div className=" flex-col sm:flex-row sm:items-start sm:justify-between gap-2">
                     <h3 className="text-lg font-semibold text-slate-900 truncate">
                       {aviso.titulo}
                     </h3>
                     {aviso.fecha && (
-                      <span className="rounded-full bg-primary px-2 py-0.5 text-xs font-medium !text-white shrink-0">
+                      <span className="rounded-full bg-primary px-2 py-1 text-xs font-medium !text-white shrink-0">
                         {formatFecha(aviso.fecha)}
                       </span>
                     )}
@@ -407,7 +407,7 @@ function TestimoniosList({
                   <div className="flex items-start justify-between gap-2">
                     <Quote className="w-6 h-6 text-blue-700" />
                     <span
-                      className={`text-[12px] px-2 py-1 rounded-full border ${statusBadge}`}
+                      className={`text-[12px] px-2 py-1 rounded-full border  ${statusBadge}`}
                     >
                       {statusText}
                     </span>
