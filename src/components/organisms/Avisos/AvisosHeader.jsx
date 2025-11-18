@@ -1,32 +1,5 @@
-// src/components/organisms/Avisos/AvisosHeader.jsx
 import React from "react";
-import { useInRouterContext, useNavigate } from "react-router-dom";
-import fondo from "../../../assets/Avisos/fondo.jpg";
 import useAuth from "../../../hooks/useAuth";
-
-/** Botón Volver (mismo comportamiento que en Fiesta Patronal) */
-function BackButton({ className = "" }) {
-  const inRouter = useInRouterContext();
-  const navigate = inRouter ? useNavigate() : null;
-
-  const handleClick = () => {
-    if (inRouter && navigate) navigate(-1);
-    else if (typeof window !== "undefined") window.history.back();
-  };
-
-  return (
-    <button
-      onClick={handleClick}
-      className={`inline-flex items-center gap-2 rounded-full bg-white/90 text-slate-700 px-3 py-1.5 shadow hover:bg-white transition ${className}`}
-    >
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
-           stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M15 18l-6-6 6-6" />
-      </svg>
-      Volver
-    </button>
-  );
-}
 
 export default function AvisosHeader({
   layout,
@@ -34,14 +7,20 @@ export default function AvisosHeader({
   onOpenModal,
   total = 0,
 }) {
-
   const { user, isChecking } = useAuth();
+
+  const baseButton =
+    "px-4 sm:px-6 py-2 rounded-lg text-sm font-semibold transition-colors";
+  const primaryButton = `${baseButton} bg-blue-600 text-white hover:bg-blue-700`;
+  const ghostButton =
+    baseButton + " border border-blue-600 text-blue-700 hover:bg-blue-50";
+
   const ToggleIcon =
     layout === "grid"
       ? () => (
-          // lista
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
-               stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+               stroke="currentColor" strokeWidth="2"
+               strokeLinecap="round" strokeLinejoin="round">
             <line x1="8" y1="6" x2="21" y2="6" />
             <line x1="8" y1="12" x2="21" y2="12" />
             <line x1="8" y1="18" x2="21" y2="18" />
@@ -51,9 +30,9 @@ export default function AvisosHeader({
           </svg>
         )
       : () => (
-          // grid
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
-               stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+               stroke="currentColor" strokeWidth="2"
+               strokeLinecap="round" strokeLinejoin="round">
             <rect x="3" y="3" width="7" height="7" />
             <rect x="14" y="3" width="7" height="7" />
             <rect x="14" y="14" width="7" height="7" />
@@ -62,62 +41,49 @@ export default function AvisosHeader({
         );
 
   return (
-    <section className="relative left-1/2 right-1/2 -mx-[50vw] w-screen mb-6 sm:mb-8">
-      {/* Hero: mismo alto y composición que Fiesta */}
-      <div className="relative h-[40vh] md:h-[40vh] min-h-[260px] w-full overflow-hidden">
+    <div className="container mx-auto px-4 mb-6 sm:mb-8">
+      <header className="bg-white/90 backdrop-blur border border-gray-200 rounded-2xl ring-1 ring-black/5 mt-8">
+        <div className="px-4 sm:px-6 lg:px-8 py-5">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+            
+            <div>
+              <h1 className="text-2xl md:text-3xl font-semibold text-slate-900">
+                Avisos
+              </h1>
+              <p className="text-sm md:text-base text-slate-600 mt-1">
+                Comunicados para toda la comunidad.
+              </p>
+            </div>
 
-          <img
-            src={fondo}
-            alt="Avisos"
-            className="absolute inset-0 h-full w-full object-cover"
-          />
-       
-
-        {/* Overlay no bloquea clics y queda debajo con z-0 */}
-        <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-black/50 via-black/40 to-black/50" />
-
-        {/* Botón Volver arriba a la izquierda */}
-        <div className="absolute top-4 left-4 z-20">
-          <BackButton />
-        </div>
-
-        {/* Título/subtítulo y acciones al fondo del hero */}
-        <div className="relative z-20 mx-auto flex h-full max-w-6xl items-end px-4 pb-10">
-          <div>
-            <h1 className="text-4xl md:text-5xl font-semibold text-white drop-shadow">Avisos</h1>
-            <p className="mt-1 text-white/90 text-lg">Comunicados para toda la comunidad</p>
-
-            {/* Acciones */}
-            <div className="mt-4 flex flex-wrap items-center gap-3">
+            <div className="flex flex-wrap gap-2">
               <button
+                type="button"
                 onClick={onToggleLayout}
-                className="inline-flex items-center gap-2 rounded-full bg-white/90 text-slate-700 px-3 py-1.5 shadow hover:bg-white transition"
+                className={ghostButton}
               >
-                <ToggleIcon />
-                {layout === "grid" ? "Vista en lista" : "Vista en cuadrícula"}
+                <div className="inline-flex items-center gap-2">
+                  <ToggleIcon />
+                  {layout === "grid" ? "Vista en lista" : "Vista en cuadrícula"}
+                </div>
               </button>
 
-              <span className="inline-flex items-center rounded-full bg-white/15 px-2.5 py-1 text-sm text-white backdrop-blur">
-              {total} aviso{total === 1 ? "" : "s"}
+              <span className="inline-flex items-center px-4 py-2 rounded-lg text-sm font-semibold bg-blue-50 text-blue-700 border border-blue-200">
+                {total} avisos
               </span>
 
               {!isChecking && user?.rol === "admin" && (
                 <button
+                  type="button"
                   onClick={onOpenModal}
-                  className="inline-flex items-center gap-2 rounded-full bg-emerald-600 text-white px-4 py-2 shadow hover:bg-emerald-700 transition"
+                  className={primaryButton}
                 >
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
-                      stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <line x1="12" y1="5" x2="12" y2="19" />
-                    <line x1="5" y1="12" x2="19" y2="12" />
-                  </svg>
-                  Crear nuevo aviso
+                  + Crear nuevo aviso
                 </button>
               )}
             </div>
           </div>
         </div>
-      </div>
-    </section>
+      </header>
+    </div>
   );
 }
