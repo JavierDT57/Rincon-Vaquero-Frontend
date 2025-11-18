@@ -7,10 +7,12 @@ import UsuariosModal from "../../components/organisms/Usuarios/UsuariosModal";
 import { fetchDashboard, updateDashboardItem } from "../../api/adminDashboard";
 import { absUrl, normalizeAviso, normalizeTestimonio } from "../../api/adminMedia";
 
-const API_BASE = (import.meta?.env?.VITE_API_BASE || "http://localhost:5000/api").replace(/\/$/, "");
+const API_BASE = (import.meta?.env?.VITE_API_BASE || "http://localhost:5000/api")
+  .replace(/\/$/, "");
 
-// helpers users
-const toBool = (v) => v === true || v === 1 || v === "1" || v === "true";
+const toBool = (v) =>
+  v === true || v === 1 || v === "1" || v === "true";
+
 const normalizeUser = (u) => ({
   ...u,
   isActiveBool: toBool(u?.isActive ?? u?.activo ?? u?.active),
@@ -23,7 +25,6 @@ export default function AdminPanelContainer() {
   const [testimonios, setTestimonios] = useState([]);
   const [usuarios, setUsuarios] = useState([]);
 
-  // estado de filtro para moderación
   const [tStatus, setTStatus] = useState("pending");
 
   const [loading, setLoading] = useState({
@@ -32,6 +33,7 @@ export default function AdminPanelContainer() {
     usuarios: true,
     estadisticas: true,
   });
+
   const [error, setError] = useState({
     avisos: null,
     testimonios: null,
@@ -39,7 +41,7 @@ export default function AdminPanelContainer() {
     estadisticas: null,
   });
 
-  // ====== edición avisos/testimonios ======
+  // MODALES
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [editTipo, setEditTipo] = useState(null);
   const [editId, setEditId] = useState(null);
@@ -52,7 +54,7 @@ export default function AdminPanelContainer() {
   const [file, setFile] = useState(null);
   const [formPreview, setFormPreview] = useState(null);
 
-  // ====== edición usuarios ======
+  // MODAL USUARIOS
   const [isUserOpen, setIsUserOpen] = useState(false);
   const [userId, setUserId] = useState(null);
   const [userNombre, setUserNombre] = useState("");
@@ -60,10 +62,10 @@ export default function AdminPanelContainer() {
   const [userActivo, setUserActivo] = useState(true);
   const [userReadonly, setUserReadonly] = useState({ email: "", rol: "" });
 
-  // ====== estadísticas ======
+  // Estadísticas
   const [stats, setStats] = useState([]);
   const [savingStats, setSavingStats] = useState(false);
-  const [dirtyStats, setDirtyStats] = useState({}); // {slug: true}
+  const [dirtyStats, setDirtyStats] = useState({});
 
   const resetEdit = () => {
     setIsEditOpen(false);
@@ -71,11 +73,15 @@ export default function AdminPanelContainer() {
     setEditId(null);
     setFile(null);
     setFormPreview(null);
-    setFormTitulo(""); setFormTexto("");
-    setFormNombre(""); setFormLocalidad(""); setFormComentario(""); setFormRating(5);
+    setFormTitulo("");
+    setFormTexto("");
+    setFormNombre("");
+    setFormLocalidad("");
+    setFormComentario("");
+    setFormRating(5);
   };
 
-  // ====== fetch base ======
+  // ========== Fetch JSON helper ==========
   const fetchJSON = useCallback(async (url, opts = {}) => {
     const res = await fetch(url, {
       method: opts.method || "GET",
@@ -87,20 +93,22 @@ export default function AdminPanelContainer() {
       },
       body: opts.body,
     });
-    const ct = res.headers.get("content-type") || "";
-    const isJSON = ct.includes("application/json");
+
+    const isJSON = (res.headers.get("content-type") || "").includes("application/json");
     const data = isJSON ? await res.json().catch(() => null) : await res.text();
+
     if (!res.ok) {
-      const msg = isJSON ? (data?.message || data?.error) : data;
+      const msg = isJSON ? data?.message || data?.error : data;
       throw new Error(msg || `HTTP ${res.status}`);
     }
     return data;
   }, []);
 
-  // ====== loaders ======
+  // ========== LOADERS ==========
   const loadAvisos = useCallback(async () => {
     setLoading((s) => ({ ...s, avisos: true }));
     setError((s) => ({ ...s, avisos: null }));
+
     try {
       const resp = await fetchJSON(`${API_BASE}/avisos`);
       const items = Array.isArray(resp?.data) ? resp.data : resp;
@@ -112,12 +120,14 @@ export default function AdminPanelContainer() {
     }
   }, [fetchJSON]);
 
-  // endpoint admin con filtro de estado
   const loadTestimonios = useCallback(async () => {
     setLoading((s) => ({ ...s, testimonios: true }));
     setError((s) => ({ ...s, testimonios: null }));
+
     try {
-      const resp = await fetchJSON(`${API_BASE}/testimonios/admin?status=${encodeURIComponent(tStatus)}`);
+      const resp = await fetchJSON(
+        `${API_BASE}/testimonios/admin?status=${encodeURIComponent(tStatus)}`
+      );
       const items = Array.isArray(resp?.data) ? resp.data : resp;
       setTestimonios((items || []).map(normalizeTestimonio));
     } catch (e) {
@@ -130,6 +140,7 @@ export default function AdminPanelContainer() {
   const loadUsuarios = useCallback(async () => {
     setLoading((s) => ({ ...s, usuarios: true }));
     setError((s) => ({ ...s, usuarios: null }));
+
     try {
       const resp = await fetchJSON(`${API_BASE}/users`);
       const list = Array.isArray(resp?.data) ? resp.data : resp;
@@ -144,6 +155,7 @@ export default function AdminPanelContainer() {
   const loadStats = useCallback(async () => {
     setLoading((s) => ({ ...s, estadisticas: true }));
     setError((s) => ({ ...s, estadisticas: null }));
+
     try {
       const list = await fetchDashboard();
       setStats(list || []);
@@ -155,14 +167,23 @@ export default function AdminPanelContainer() {
     }
   }, []);
 
+  // Cargar todo al montar
   useEffect(() => {
     loadAvisos();
     loadTestimonios();
     loadUsuarios();
     loadStats();
-  }, [loadAvisos, loadTestimonios, loadUsuarios, loadStats]);
+  }, []);
 
-  // ====== edición avisos/testimonios ======
+  // Recargar al cambiar tab o estatus de testimonios
+  useEffect(() => {
+    if (active === "avisos") loadAvisos();
+    if (active === "usuarios") loadUsuarios();
+    if (active === "estadisticas") loadStats();
+    if (active === "testimonios") loadTestimonios();
+  }, [active, tStatus]);
+
+  // ========== EDICIÓN ==========
   const fetchItemForEdit = async (tipo, id) => {
     try {
       const r = await fetchJSON(`${API_BASE}/${tipo}/${id}`);
@@ -173,28 +194,17 @@ export default function AdminPanelContainer() {
     }
   };
 
-  const onAvisoFileChange = (f) => {
-    const fileObj = f || null;
-    setFile(fileObj);
-    setFormPreview(fileObj ? URL.createObjectURL(fileObj) : formPreview);
-  };
-  const onTestimonioFileChange = (e) => {
-    const f = e?.target?.files?.[0] || null;
-    setFile(f);
-    setFormPreview(f ? URL.createObjectURL(f) : formPreview);
-  };
-
   const handleEdit = async (tipo, itemOrId) => {
     if (tipo === "usuarios") return handleUserEdit(itemOrId);
 
     const id = typeof itemOrId === "object" ? itemOrId.id : itemOrId;
     if (!id) return;
+
     setEditTipo(tipo);
     setEditId(id);
 
     try {
       const data = await fetchItemForEdit(tipo, id);
-      if (!data) throw new Error("No se encontró el registro.");
 
       if (tipo === "avisos") {
         setFormTitulo(data.titulo || "");
@@ -207,10 +217,12 @@ export default function AdminPanelContainer() {
         setFormRating(Number(data.rating || 5));
         setFormPreview(absUrl(data.imagenurl || data.imagen_url || data.imgurl));
       }
+
       setFile(null);
       setIsEditOpen(true);
+
     } catch (e) {
-      alert("Error al cargar datos para editar: " + (e?.message || e));
+      alert("Error al cargar datos: " + (e?.message || e));
       resetEdit();
     }
   };
@@ -219,15 +231,18 @@ export default function AdminPanelContainer() {
     if (tipo === "usuarios") return handleDeleteUser(id);
     if (!id) return;
 
-    const ok = confirm("¿Eliminar este registro? Esta acción no se puede deshacer.");
+    const ok = confirm("¿Eliminar este registro?");
     if (!ok) return;
+
     try {
-      const url = tipo === "avisos" ? `${API_BASE}/avisos/${id}` : `${API_BASE}/testimonios/${id}`;
+      const url = `${API_BASE}/${tipo}/${id}`;
       await fetchJSON(url, { method: "DELETE" });
-      if (tipo === "avisos") await loadAvisos();
-      if (tipo === "testimonios") await loadTestimonios();
+
+      if (tipo === "avisos") loadAvisos();
+      if (tipo === "testimonios") loadTestimonios();
+
     } catch (e) {
-      alert("Error eliminando: " + String(e?.message || e));
+      alert("Error eliminando: " + (e?.message || e));
     }
   };
 
@@ -251,29 +266,35 @@ export default function AdminPanelContainer() {
     }
 
     try {
-      await fetch(url, { method: "PUT", body: fd, mode: "cors", credentials: "include" });
-      if (editTipo === "avisos") await loadAvisos(); else await loadTestimonios();
+      await fetch(url, { method: "PUT", body: fd, credentials: "include" });
+
+      if (editTipo === "avisos") loadAvisos();
+      else loadTestimonios();
+
       resetEdit();
+
     } catch (e2) {
       alert("Error guardando cambios: " + (e2?.message || e2));
     }
   };
 
-  // ====== usuarios ======
+  // ========== USUARIOS ==========
   async function handleUserEdit(itemOrId) {
     const id = typeof itemOrId === "object" ? itemOrId.id : itemOrId;
-    if (!id) return;
+
     try {
       const r = await fetchJSON(`${API_BASE}/users/${id}`);
       const u = r?.data ?? r;
+
       setUserId(id);
-      setUserNombre(u?.nombre || "");
-      setUserApellidos(u?.apellidos || u?.apellido || "");
-      setUserActivo(toBool(u?.isActive ?? u?.activo ?? u?.active));
+      setUserNombre(u.nombre || "");
+      setUserApellidos(u.apellidos || u.apellido || "");
+      setUserActivo(toBool(u.isActive ?? u.activo ?? u.active));
       setUserReadonly({
-        email: u?.email || u?.correo || "",
-        rol: u?.rol || u?.role || "",
+        email: u.email || u.correo || "",
+        rol: u.rol || u.role || "",
       });
+
       setIsUserOpen(true);
     } catch (e) {
       alert("No se pudo cargar el usuario: " + (e?.message || e));
@@ -283,6 +304,7 @@ export default function AdminPanelContainer() {
   async function submitUserEdit(e) {
     e.preventDefault();
     if (!userId) return;
+
     try {
       await fetchJSON(`${API_BASE}/users/${userId}`, {
         method: "PUT",
@@ -293,7 +315,8 @@ export default function AdminPanelContainer() {
           isActive: userActivo ? 1 : 0,
         }),
       });
-      await loadUsuarios();
+
+      loadUsuarios();
       setIsUserOpen(false);
     } catch (e) {
       alert("No se pudo actualizar: " + (e?.message || e));
@@ -301,56 +324,58 @@ export default function AdminPanelContainer() {
   }
 
   async function handleSuspendUser(id) {
-    const ok = confirm("¿Suspender este usuario? Podrás reactivarlo después.");
+    const ok = confirm("¿Suspender usuario?");
     if (!ok) return;
+
     try {
-      await fetchJSON(`${API_BASE}/users/${id}`, { method: "DELETE" }); // soft → isActive=0
-      await loadUsuarios();
+      await fetchJSON(`${API_BASE}/users/${id}`, { method: "DELETE" });
+      loadUsuarios();
     } catch (e) {
-      alert("No se pudo suspender: " + (e?.message || e) );
+      alert("No se pudo suspender: " + (e?.message || e));
     }
   }
 
   async function handleDeleteUser(id) {
-    const ok = confirm("¿Eliminar DEFINITIVAMENTE este usuario? No se puede deshacer.");
+    const ok = confirm("¿Eliminar usuario DEFINITIVAMENTE?");
     if (!ok) return;
+
     try {
       await fetchJSON(`${API_BASE}/users/${id}?hard=true`, { method: "DELETE" });
-      await loadUsuarios();
+      loadUsuarios();
     } catch (e) {
       alert("No se pudo eliminar: " + (e?.message || e));
     }
   }
 
-  // ====== stats change/save ======
+  // ========== ESTADISTICAS ==========
   const onStatChange = (slug, nextValue) => {
-    setStats((prev) => prev.map((it) => (it.slug === slug ? { ...it, value: nextValue } : it)));
+    setStats((prev) =>
+      prev.map((it) => (it.slug === slug ? { ...it, value: nextValue } : it))
+    );
     setDirtyStats((d) => ({ ...d, [slug]: true }));
   };
 
   const saveAllStats = async () => {
     const toUpdate = stats.filter((it) => dirtyStats[it.slug]);
-    if (toUpdate.length === 0) {
-      alert("No hay cambios por guardar.");
-      return;
-    }
+
     setSavingStats(true);
     try {
-      await Promise.all(toUpdate.map((it) => updateDashboardItem(it.slug, it.value)));
+      await Promise.all(
+        toUpdate.map((it) => updateDashboardItem(it.slug, it.value))
+      );
       await loadStats();
       alert("Estadísticas actualizadas.");
     } catch (e) {
       alert("No se pudieron actualizar: " + (e?.message || e));
-    } finally {
-      setSavingStats(false);
     }
+    setSavingStats(false);
   };
 
-  // ====== aprobar testimonio ======
+  // ========== APROBAR TESTIMONIOS ==========
   const approveTestimonio = async (id) => {
     try {
       await fetchJSON(`${API_BASE}/testimonios/admin/${id}`, { method: "PATCH" });
-      await loadTestimonios();
+      loadTestimonios();
     } catch (e) {
       alert("No se pudo aprobar: " + (e?.message || e));
     }
@@ -361,22 +386,31 @@ export default function AdminPanelContainer() {
       <AdminPanel
         active={active}
         onSelect={setActive}
+
+        // DATOS
         avisos={avisos}
         testimonios={testimonios}
         usuarios={usuarios}
         loading={loading}
         error={error}
+
+        // EDICIÓN
         onEdit={handleEdit}
         onDelete={handleDelete}
         onSuspend={handleSuspendUser}
 
-        // Moderación testimonios
-        tStatus={tStatus}
-        onChangeStatus={(s) => { setTStatus(s); }}    // cambia filtro
-        onApprove={approveTestimonio}
+        // RECARGAS — CORRECTAS
+        onRefreshAvisos={loadAvisos}
+        onRefreshUsuarios={loadUsuarios}
+        onRefreshStats={loadStats}
         onRefreshTestimonios={loadTestimonios}
 
-        // stats
+        // Testimonios
+        tStatus={tStatus}
+        onChangeStatus={setTStatus}
+        onApprove={approveTestimonio}
+
+        // Estadísticas
         stats={stats}
         statsLoading={!!loading.estadisticas}
         statsError={error.estadisticas}
@@ -386,7 +420,7 @@ export default function AdminPanelContainer() {
         dirtyCount={Object.keys(dirtyStats).length}
       />
 
-      {/* Modales AVISOS/Testimonios */}
+      {/* Modales */}
       {isEditOpen && editTipo === "avisos" && (
         <AvisosModal
           isOpen={true}
@@ -396,10 +430,14 @@ export default function AdminPanelContainer() {
           setFormTitulo={setFormTitulo}
           formTexto={formTexto}
           setFormTexto={setFormTexto}
-          onFileChange={onAvisoFileChange}
+          onFileChange={(f) => {
+            setFile(f);
+            setFormPreview(f ? URL.createObjectURL(f) : null);
+          }}
           formPreview={formPreview}
         />
       )}
+
       {isEditOpen && editTipo === "testimonios" && (
         <TestimoniosModal
           isOpen={true}
@@ -413,12 +451,15 @@ export default function AdminPanelContainer() {
           setFormComentario={setFormComentario}
           formRating={formRating}
           setFormRating={setFormRating}
-          onFileChange={onTestimonioFileChange}
+          onFileChange={(e) => {
+            const f = e.target.files?.[0] || null;
+            setFile(f);
+            setFormPreview(f ? URL.createObjectURL(f) : null);
+          }}
           formPreview={formPreview}
         />
       )}
 
-      {/* Modal USUARIO */}
       {isUserOpen && (
         <UsuariosModal
           isOpen={isUserOpen}
