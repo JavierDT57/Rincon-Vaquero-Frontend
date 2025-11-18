@@ -1,6 +1,5 @@
-// src/api/tienda.js
 const API = import.meta.env.VITE_API_BASE;   // http://localhost:5000
-const BASE_URL = `${API}/api/tienda`;          // http://localhost:5000/api/tienda
+const BASE_URL = `${API}/api/tienda`;        // http://localhost:5000/api/tienda
 
 async function authFetch(path, options = {}) {
   const res = await fetch(`${BASE_URL}${path}`, {
@@ -42,10 +41,13 @@ function normalizeProduct(raw) {
     category: raw.categoria ?? raw.category ?? "",
     stock: Number(raw.stock ?? raw.existencias ?? 0),
     location: raw.ubicacion ?? raw.location ?? "",
+
+    // ✔ AQUI ESTABA EL PROBLEMA
+    telefono: raw.telefono ?? "",
+
     status: raw.status ?? raw.estado ?? "",
   };
 }
-
 
 function productToFormData(product) {
   const fd = new FormData();
@@ -56,11 +58,14 @@ function productToFormData(product) {
   fd.append("stock", String(product.stock ?? ""));
   fd.append("ubicacion", product.location ?? "");
 
+  // ✔ AQUI ESTABA EL PROBLEMA
+  if (product.telefono) {
+    fd.append("telefono", product.telefono);
+  }
 
   if (product.imageFile instanceof File) {
     fd.append("imagen", product.imageFile);
   }
-
 
   return fd;
 }
@@ -69,7 +74,6 @@ function productToFormData(product) {
 export async function fetchPublicProducts() {
   const json = await authFetch("", { method: "GET" });
 
-  // Soportamos varios formatos por si cambias algo en el back
   const list = Array.isArray(json?.data)
     ? json.data
     : Array.isArray(json)
@@ -105,7 +109,7 @@ export async function createProduct(product) {
 
   const json = await authFetch("", {
     method: "POST",
-    body: formData, 
+    body: formData,
   });
 
   const raw = json?.data ?? json?.product ?? json;
