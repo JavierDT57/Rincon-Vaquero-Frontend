@@ -40,10 +40,29 @@ export default function ProductCard({
         />
       </div>
 
-      <div className="p-4">
-        <p className="text-xs text-gray-500 font-semibold uppercase mb-2">
+     <div className="p-4">
+
+      {/* Vendedor + Estado */}
+      <div className="flex items-center justify-between mb-2">
+        <p className="text-xs text-gray-500 font-semibold uppercase">
           👤 {product.owner || "Vendedor"}
         </p>
+
+        {product.status && showManageButtons && (
+          <span
+            className={`px-3 py-1 rounded-full text-[10px] font-semibold ${getStatusColor(
+              product.status
+            )}`}
+          >
+            {product.status === "published" || product.status === "approved"
+              ? "Publicado"
+              : product.status === "pending"
+              ? "Pendiente"
+              : "Rechazada"}
+          </span>
+        )}
+      </div>
+
 
         <h3 className="text-lg font-bold text-black mb-2">
           {product.name}
@@ -90,24 +109,6 @@ export default function ProductCard({
           </a>
         )}
         </div>
-
-
-        {/* ESTADO (Mis publicaciones) */}
-        {showManageButtons && product.status && (
-          <div className="mb-4">
-            <span
-              className={`inline-block px-3 py-1 rounded-full text-xs font-semibold ${getStatusColor(
-                product.status
-              )}`}
-            >
-              {product.status === "published" || product.status === "approved"
-                ? "Publicado"
-                : product.status === "pending"
-                ? "Pendiente"
-                : "Rechazada"}
-            </span>
-          </div>
-        )}
 
         {/* BOTONES */}
         {showManageButtons && (
