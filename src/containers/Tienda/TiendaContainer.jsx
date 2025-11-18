@@ -1,4 +1,3 @@
-// src/containers/Tienda/TiendaContainer.jsx
 import React, { useEffect, useMemo, useState } from "react";
 import TiendaHeader from "../../components/organisms/Tienda/TiendaHeader.jsx";
 import TiendaProductGrid from "../../components/organisms/Tienda/TiendaProductGrid.jsx";
@@ -143,12 +142,26 @@ export default function TiendaContainer() {
     }
   };
 
+  async function refreshMyPublications() {
+    try {
+      setLoadingMy(true);
+
+      const data = await fetchMyProducts();
+      setMyProducts(data);
+    } catch (err) {
+      setError(err.message || "Error al recargar tus publicaciones.");
+    } finally {
+      setLoadingMy(false);
+    }
+  }
+
   return (
     <div className="space-y-6">
+      
       <TiendaHeader
         activeView={view}
         onShowGeneral={() => setView("general")}
-        onCreateClick={() => setIsCreateModalOpen(true)} // ✔ ABRE MODAL
+        onCreateClick={() => setIsCreateModalOpen(true)}
         onMyPublicationsClick={() => setView("my-publications")}
       />
 
@@ -166,23 +179,15 @@ export default function TiendaContainer() {
 
       {view === "general" && (
         <section className="bg-white text-slate-900 rounded-2xl ring-1 ring-black/5 p-4 sm:p-6 lg:p-8">
+
           <div className="mb-6 flex flex-col sm:flex-row items-start sm:items-center gap-4">
             <button
               type="button"
               onClick={() => setShowFilters((prev) => !prev)}
-              className="relative flex items-center gap-2 px-4 h-10 rounded-lg bg-gray-100 hover:bg-gray-200 transition-colors text-gray-700 text-sm font-medium"
-              title="Filtrar productos"
+              className="relative flex items-center gap-2 px-4 h-10 rounded-lg bg-gray-100 hover:bg-gray-200 transition text-gray-700 text-sm font-medium"
             >
-              <svg
-                className="w-5 h-5"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="1.5"
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5"
                   d="M3 4h18M6 8h12M9 12h6m-4 4h2m-6 4h10"
                 />
               </svg>
@@ -199,7 +204,7 @@ export default function TiendaContainer() {
                   placeholder="Buscar..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 text-sm"
+                  className="flex-1 px-4 py-2 border border-gray-300 rounded-lg text-sm"
                 />
 
                 <input
@@ -207,7 +212,7 @@ export default function TiendaContainer() {
                   placeholder="Precio mín"
                   value={minPrice}
                   onChange={(e) => setMinPrice(e.target.value)}
-                  className="w-full sm:w-28 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 text-sm"
+                  className="w-full sm:w-28 px-4 py-2 border border-gray-300 rounded-lg text-sm"
                 />
 
                 <input
@@ -215,7 +220,7 @@ export default function TiendaContainer() {
                   placeholder="Precio máx"
                   value={maxPrice}
                   onChange={(e) => setMaxPrice(e.target.value)}
-                  className="w-full sm:w-28 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 text-sm"
+                  className="w-full sm:w-28 px-4 py-2 border border-gray-300 rounded-lg text-sm"
                 />
 
                 {hasActiveFilters && (
@@ -226,7 +231,7 @@ export default function TiendaContainer() {
                       setMinPrice("");
                       setMaxPrice("");
                     }}
-                    className="px-3 py-2 bg-gray-400 text-white rounded-lg hover:bg-gray-500 text-sm font-semibold"
+                    className="px-3 py-2 bg-gray-400 text-white rounded-lg text-sm font-semibold"
                   >
                     Limpiar
                   </button>
@@ -236,9 +241,7 @@ export default function TiendaContainer() {
           </div>
 
           {loadingPublic ? (
-            <div className="text-center py-12 text-slate-500">
-              Cargando productos...
-            </div>
+            <div className="text-center py-12 text-slate-500">Cargando productos...</div>
           ) : (
             <TiendaProductGrid products={filteredProducts} />
           )}
@@ -248,14 +251,13 @@ export default function TiendaContainer() {
       {view === "my-publications" && (
         <section className="bg-white text-slate-900 rounded-2xl ring-1 ring-black/5 p-4 sm:p-6 lg:p-8">
           {loadingMy ? (
-            <div className="text-center py-12 text-slate-500">
-              Cargando tus productos...
-            </div>
+            <div className="text-center py-12 text-slate-500">Cargando tus productos...</div>
           ) : (
             <TiendaMyPublications
               products={myProducts}
               onEdit={handleEditPublication}
               onDelete={handleDeletePublication}
+              onRefresh={refreshMyPublications}  
             />
           )}
         </section>

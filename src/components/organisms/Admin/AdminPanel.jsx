@@ -24,7 +24,7 @@ export default function AdminPanel({
   onApprove = () => {},
   onRefreshTestimonios = () => {},
 
-  // Recargas reales CORRECTAS 🔥
+  // Recarga datos
   onRefreshAvisos = () => {},
   onRefreshUsuarios = () => {},
   onRefreshStats = () => {},
@@ -64,7 +64,7 @@ export default function AdminPanel({
               onEdit={(item) => onEdit("usuarios", item)}
               onSuspend={(id) => onSuspend(id)}
               onDelete={(id) => onDelete("usuarios", id)}
-              onRefresh={onRefreshUsuarios}     // 🔥 recarga real
+              onRefresh={onRefreshUsuarios}     
             />
           )}
 
@@ -75,7 +75,7 @@ export default function AdminPanel({
               error={error.avisos}
               onEdit={(item) => onEdit("avisos", item)}
               onDelete={(id) => onDelete("avisos", id)}
-              onRefresh={onRefreshAvisos}       // 🔥 recarga real
+              onRefresh={onRefreshAvisos}       
             />
           )}
 
@@ -89,7 +89,7 @@ export default function AdminPanel({
               tStatus={tStatus}
               onChangeStatus={onChangeStatus}
               onApprove={onApprove}
-              onRefresh={onRefreshTestimonios}  // 🔥 correcto
+              onRefresh={onRefreshTestimonios}  
             />
           )}
 
@@ -102,7 +102,7 @@ export default function AdminPanel({
               onSave={onStatsSave}
               saving={statsSaving}
               dirtyCount={dirtyCount}
-              onRefresh={onRefreshStats}        // 🔥 recarga real
+              onRefresh={onRefreshStats}        
             />
           )}
 
@@ -411,7 +411,7 @@ function TestimoniosList({
                   <div className="w-full aspect-[4/3] md:aspect-[16/9]">
 
                     {src ? (
-                      <img
+                      <img// 🔥 recarga real
                         src={src}
                         alt={t.nombre}
                         className="w-full h-full object-cover"
