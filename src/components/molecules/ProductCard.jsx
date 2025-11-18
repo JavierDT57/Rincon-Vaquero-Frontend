@@ -4,6 +4,7 @@ import React from "react";
 const getStatusColor = (status) => {
   switch (status) {
     case "published":
+    case "approved":
       return "bg-green-100 text-green-800";
     case "pending":
       return "bg-yellow-100 text-yellow-800";
@@ -22,29 +23,21 @@ export default function ProductCard({
 }) {
   if (!product) return null;
 
-  const whatsappNumber = product.contactNumber || "";
-  const sanitized = whatsappNumber.replace(/\D/g, "");
-  const whatsappLink = sanitized
-    ? `https://wa.me/${sanitized}?text=${encodeURIComponent(
-        `Hola, vi tu producto "${product.name}" en la tienda y me interesa.`
-      )}`
-    : "#";
-
   return (
     <div className="bg-white border border-gray-200 rounded-lg overflow-hidden hover:shadow-lg transition-shadow">
-      {/* Imagen */}
-      <div className="w-full h-48 bg-gray-100 overflow-hidden">
-        <img
-          src={product.image || "/placeholder.svg"}
-          alt={product.name}
-          className="w-full h-full object-cover"
-        />
-      </div>
+      <div className="w-full h-56 bg-gray-100 flex items-center justify-center overflow-hidden">
+      <img
+        src={product.image || "/placeholder.svg"}
+        alt={product.name}
+        className="max-h-full max-w-full object-contain"
+      />
+    </div>
+
 
       {/* Contenido */}
       <div className="p-4">
         <p className="text-xs text-gray-500 font-semibold uppercase mb-2">
-          👤 {product.owner}
+          👤 {product.owner || "Vendedor"}
         </p>
 
         <h3 className="text-lg font-bold text-black mb-2">
@@ -78,7 +71,7 @@ export default function ProductCard({
           </div>
         </div>
 
-        {/* Estado (solo en Mis publicaciones) */}
+        {/* Estado (Mis publicaciones) */}
         {showManageButtons && product.status && (
           <div className="mb-4">
             <span
@@ -86,7 +79,7 @@ export default function ProductCard({
                 product.status
               )}`}
             >
-              {product.status === "published"
+              {product.status === "published" || product.status === "approved"
                 ? "Publicado"
                 : product.status === "pending"
                 ? "Pendiente"
@@ -94,16 +87,6 @@ export default function ProductCard({
             </span>
           </div>
         )}
-
-        {/* Botón WhatsApp */}
-        <a
-          href={whatsappLink}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="block w-full mb-3 bg-green-500 text-white font-semibold py-2 rounded-lg hover:bg-green-600 transition-colors text-center"
-        >
-          💬 WhatsApp
-        </a>
 
         {/* Botones de gestión (Mis publicaciones) */}
         {showManageButtons && (
@@ -113,14 +96,14 @@ export default function ProductCard({
               onClick={() => onEdit && onEdit(product.id)}
               className="flex-1 bg-blue-600 text-white font-semibold py-2 rounded-lg hover:bg-blue-700 transition-colors"
             >
-              ✏️ Editar
+               Editar
             </button>
             <button
               type="button"
               onClick={() => onDelete && onDelete(product.id)}
               className="flex-1 bg-red-600 text-white font-semibold py-2 rounded-lg hover:bg-red-700 transition-colors"
             >
-              🗑️ Eliminar
+               Eliminar
             </button>
           </div>
         )}

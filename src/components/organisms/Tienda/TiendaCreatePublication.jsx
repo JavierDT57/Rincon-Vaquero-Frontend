@@ -3,16 +3,16 @@ import React, { useState } from "react";
 
 export default function TiendaCreatePublication({ onSubmit, onCancel }) {
   const [formData, setFormData] = useState({
-    owner: "Mi Usuario",        // TODO: luego lo conectas con el usuario logueado
     name: "",
-    image: "/diverse-products-still-life.png",
     price: "",
     category: "Otros",
     stock: "",
     location: "",
-    contactNumber: "",
-    status: "pending",
+    imageFile: null, 
   });
+
+  const [submitting, setSubmitting] = useState(false);
+  const [localError, setLocalError] = useState("");
 
   const handleChange = (field) => (e) => {
     setFormData((prev) => ({
@@ -21,36 +21,54 @@ export default function TiendaCreatePublication({ onSubmit, onCancel }) {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleFileChange = (e) => {
+    const file = e.target.files && e.target.files[0];
+    setFormData((prev) => ({
+      ...prev,
+      imageFile: file || null,
+    }));
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    setLocalError("");
 
     if (
       !formData.name ||
       !formData.price ||
       !formData.stock ||
-      !formData.location ||
-      !formData.contactNumber
+      !formData.location
     ) {
+      setLocalError("Por favor completa todos los campos obligatorios.");
       return;
     }
 
-    const product = {
-      ...formData,
+    const payload = {
+      name: formData.name,
       price: Number.parseFloat(formData.price),
       stock: Number.parseInt(formData.stock, 10),
+      category: formData.category,
+      location: formData.location,
+      imageFile: formData.imageFile ?? null, 
     };
 
-    onSubmit(product);
+    try {
+      setSubmitting(true);
+      await onSubmit(payload);
 
-    // Reseteamos algunos campos
-    setFormData((prev) => ({
-      ...prev,
-      name: "",
-      price: "",
-      stock: "",
-      location: "",
-      contactNumber: "",
-    }));
+      setFormData({
+        name: "",
+        price: "",
+        category: "Otros",
+        stock: "",
+        location: "",
+        imageFile: null,
+      });
+    } catch (err) {
+      setLocalError(err?.message || "Error al crear el producto.");
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
@@ -58,6 +76,12 @@ export default function TiendaCreatePublication({ onSubmit, onCancel }) {
       <h2 className="text-xl md:text-2xl font-semibold text-slate-900 mb-4">
         Crear nueva publicación
       </h2>
+
+      {localError && (
+        <div className="mb-4 bg-red-50 border border-red-200 text-red-700 px-4 py-2 rounded-lg text-sm">
+          {localError}
+        </div>
+      )}
 
       <form
         onSubmit={handleSubmit}
@@ -135,36 +159,23 @@ export default function TiendaCreatePublication({ onSubmit, onCancel }) {
 
         <div>
           <label className="block text-sm font-semibold text-black mb-2">
-            Número de contacto (WhatsApp) *
+            Imagen del producto (opcional)
           </label>
           <input
-            type="tel"
-            required
-            placeholder="Ej: +525511112233"
-            value={formData.contactNumber}
-            onChange={handleChange("contactNumber")}
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
-        </div>
-
-        <div>
-          <label className="block text-sm font-semibold text-black mb-2">
-            URL de la imagen (opcional)
-          </label>
-          <input
-            type="text"
-            value={formData.image}
-            onChange={handleChange("image")}
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            type="file"
+            accept="image/*"
+            onChange={handleFileChange}
+            className="w-full text-sm text-gray-700"
           />
         </div>
 
         <div className="flex gap-3 pt-2">
           <button
             type="submit"
-            className="flex-1 bg-blue-600 text-white font-semibold py-2 rounded-lg hover:bg-blue-700 transition-colors"
+            disabled={submitting}
+            className="flex-1 bg-blue-600 text-white font-semibold py-2 rounded-lg hover:bg-blue-700 disabled:opacity-60 disabled:cursor-not-allowed transition-colors"
           >
-            Publicar
+            {submitting ? "Publicando..." : "Publicar"}
           </button>
           <button
             type="button"
