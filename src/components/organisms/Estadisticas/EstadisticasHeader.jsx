@@ -1,88 +1,43 @@
 // src/components/organisms/Estadisticas/EstadisticasHeader.jsx
 import React from "react";
-import { useInRouterContext, useNavigate } from "react-router-dom";
-import fondo from "../../../assets/Avisos/fondo.jpg";
-
-/** Botón Volver */
-function BackButton({ className = "" }) {
-  const inRouter = useInRouterContext();
-  const navigate = inRouter ? useNavigate() : null;
-  const handleClick = () => {
-    if (inRouter && navigate) navigate(-1);
-    else if (typeof window !== "undefined") window.history.back();
-  };
-  return (
-    <button
-      onClick={handleClick}
-      className={`inline-flex items-center gap-2 rounded-full bg-white/90 text-slate-700 px-3 py-1.5 shadow hover:bg-white transition ${className}`}
-    >
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
-           stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M15 18l-6-6 6-6" />
-      </svg>
-      Volver
-    </button>
-  );
-}
-
-
 
 export default function EstadisticasHeader({
-
   title = "Estadísticas",
   subtitle = "Dashboard del pueblo",
-  onEdit,            
-  lastUpdated,       
+  lastUpdated,
 }) {
-
+  const baseButton =
+    "px-4 sm:px-6 py-2 rounded-lg text-sm font-semibold transition-colors";
+  const primaryButton = `${baseButton} bg-blue-600 text-white hover:bg-blue-700`;
 
   return (
-    <section className="relative left-1/2 right-1/2 -mx-[50vw] w-screen -mt-20 md:-mt-20 mb-6 sm:mb-8">
+    <div className="container mx-auto px-4 mb-6 sm:mb-8">
+    <header className="bg-white/90 backdrop-blur border border-gray-200 rounded-2xl ring-1 ring-black/5 mt-8">
+      <div className="px-4 sm:px-6 lg:px-8 py-5">
 
-      <div className="relative h-[40vh] md:h-[40vh] min-h-[260px] w-full overflow-hidden">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
 
-          <img
-            src={fondo}
-            alt="Avisos"
-            className="absolute inset-0 h-full w-full object-cover"
-          />
-        {/* Overlay */}
-       <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-black/50 via-black/40 to-black/50" />
-
-        {/* Volver */}
-        <div className="absolute top-4 left-4 z-20">
-          <BackButton />
-        </div>
-
-        {/* Título/subtítulo + acciones */}
-        <div className="relative z-20 mx-auto flex h-full max-w-6xl items-end px-4 pb-8 sm:pb-10">
           <div>
-            <h1 className="text-4xl md:text-5xl font-semibold text-white drop-shadow">{title}</h1>
-            {subtitle && <p className="mt-1 text-white/90 text-lg">{subtitle}</p>}
+            <h1 className="text-2xl md:text-3xl font-semibold text-slate-900">
+              {title}
+            </h1>
 
-            <div className="mt-4 flex flex-wrap items-center gap-3">
-              {typeof onEdit === "function" && (
-                <button
-                  onClick={onEdit}
-                  className="inline-flex items-center gap-2 rounded-full bg-white/90 text-slate-700 px-3 py-1.5 shadow hover:bg-white transition"
-                >
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
-                       stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M12 20h9" />
-                    <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z" />
-                  </svg>
-                  Editar
-                </button>
-              )}
-              {lastUpdated && (
-                <span className="inline-flex items-center rounded-full bg-white/15 px-2.5 py-1 text-sm text-white backdrop-blur">
-                  Última actualización: {lastUpdated}
-                </span>
-              )}
-            </div>
+            {subtitle && (
+              <p className="text-sm md:text-base text-slate-600 mt-1">
+                {subtitle}
+              </p>
+            )}
+
+            {lastUpdated && (
+              <span className="inline-flex items-center px-3 py-1 mt-2 rounded-full text-sm bg-blue-50 text-blue-700 border border-blue-200">
+                Última actualización: {lastUpdated}
+              </span>
+            )}
           </div>
+
         </div>
       </div>
-    </section>
+    </header>
+    </div>
   );
 }

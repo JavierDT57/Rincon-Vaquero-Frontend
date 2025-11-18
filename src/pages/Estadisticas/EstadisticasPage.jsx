@@ -3,8 +3,6 @@ import EstadisticasContainer from "../../containers/Estadisticas/EstadisticasCon
 
 export default function EstadisticasPage() {
   return (
-    <main className="min-h-screen bg-background">
       <EstadisticasContainer />
-    </main>
   );
 }
