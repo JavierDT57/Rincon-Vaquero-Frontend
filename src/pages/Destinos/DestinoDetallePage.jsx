@@ -1,7 +1,5 @@
 import { useDestinoDetalleData } from "../../containers/Destinos/DestinoDetalleContainer";
 import DestinosLayout from "../../components/organisms/Destinos/DestinosLayout";
-import ImageCarousel from "../../components/organisms/Destinos/ImageCarousel";
-
 export default function DestinoDetallePage() {
   // ✅ usar el hook, no llamar el container como función
   const { data } = useDestinoDetalleData();

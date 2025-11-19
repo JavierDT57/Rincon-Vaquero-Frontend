@@ -12,7 +12,6 @@ import DestinoDetallePage from "./pages/Destinos/DestinoDetallePage";
 import TradicionesPage from "./pages/Tradiciones/TradicionesPage";
 import SemanaSantaPage from "./pages/Tradiciones/SemanaSantaPage";
 import FiestaPatronalPage from "./pages/Tradiciones/FiestaPatronalPage";
-import NavidadPage from "./pages/Tradiciones/NavidadPage";
 import AvisosPage from "./pages/Avisos/AvisosPage";
 import EstadisticasPage from "./pages/Estadisticas/EstadisticasPage";
 import TestimoniosPage from "./pages/Testimonios/TestimoniosPage";
@@ -42,7 +41,6 @@ export default function App() {
               <Route index element={<TradicionesPage />} />
               <Route path="fiesta-patronal" element={<FiestaPatronalPage />} />
               <Route path="semana-santa" element={<SemanaSantaPage />} />
-              <Route path="navidad" element={<NavidadPage />} />
             </Route>
 
             {/* Avisos */  }
