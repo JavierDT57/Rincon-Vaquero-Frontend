@@ -1,7 +1,9 @@
 import { useDestinoDetalleData } from "../../containers/Destinos/DestinoDetalleContainer";
 import DestinosLayout from "../../components/organisms/Destinos/DestinosLayout";
+import { CarouselFotos } from "../../components/molecules/CarouselFotos";
+import { CarouselVideos } from "../../components/molecules/CarouselVideos";
+
 export default function DestinoDetallePage() {
-  // ✅ usar el hook, no llamar el container como función
   const { data } = useDestinoDetalleData();
 
   if (!data) return <main className="pt-24 p-8">Destino no encontrado</main>;
@@ -26,7 +28,7 @@ export default function DestinoDetallePage() {
           <p className="text-muted-foreground">{data.sections.historia}</p>
         </section>
 
-        <section>
+          <section>
           <h2 className="text-3xl font-medium mb-8">Datos Curiosos</h2>
           <div className="grid md:grid-cols-2 gap-6">
             {data.sections.curiosos.map((c, i) => (
@@ -38,10 +40,15 @@ export default function DestinoDetallePage() {
           </div>
         </section>
 
-        <section>
-          <h2 className="text-3xl font-medium mb-8">Galería de Imágenes</h2>
+          <section>
+            <h2 className="text-3xl font-medium mb-8">Galería de Fotos</h2>
+            <CarouselFotos fotos={data.galleryFotos} autoPlay={false} />
+          </section>
 
-        </section>
+          <section>
+            <h2 className="text-3xl font-medium mb-8">Galería de Videos</h2>
+            <CarouselVideos videos={data.galleryVideos} />
+          </section>
       </div>
     </DestinosLayout>
   );
