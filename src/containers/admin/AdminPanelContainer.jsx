@@ -3,9 +3,14 @@ import AdminPanel from "../../components/organisms/Admin/AdminPanel";
 import AvisosModal from "../../components/organisms/Avisos/AvisosModal";
 import TestimoniosModal from "../../components/organisms/Home/Testimonios/TestimoniosModal";
 import UsuariosModal from "../../components/organisms/Usuarios/UsuariosModal";
+import TiendaCreatePublication from "../../components/organisms/Tienda/TiendaCrearModal";
 
 import { fetchDashboard, updateDashboardItem } from "../../api/adminDashboard";
-import { absUrl, normalizeAviso, normalizeTestimonio } from "../../api/adminMedia";
+import {
+  absUrl,
+  normalizeAviso,
+  normalizeTestimonio,
+} from "../../api/adminMedia";
 
 const API_BASE = (import.meta?.env?.VITE_API_BASE || "http://localhost:5000/api")
   .replace(/\/$/, "");
@@ -18,19 +23,27 @@ const normalizeUser = (u) => ({
   isActiveBool: toBool(u?.isActive ?? u?.activo ?? u?.active),
 });
 
+const normalizeProducto = (p) => ({
+  ...p,
+  imgSrc: absUrl(p.imagenurl ?? ""),
+});
+
 export default function AdminPanelContainer() {
   const [active, setActive] = useState("avisos");
 
   const [avisos, setAvisos] = useState([]);
   const [testimonios, setTestimonios] = useState([]);
   const [usuarios, setUsuarios] = useState([]);
+  const [productos, setProductos] = useState([]);
 
   const [tStatus, setTStatus] = useState("pending");
+  const [pStatus, setPStatus] = useState("pending");
 
   const [loading, setLoading] = useState({
     avisos: true,
     testimonios: true,
     usuarios: true,
+    tienda: true,
     estadisticas: true,
   });
 
@@ -38,6 +51,7 @@ export default function AdminPanelContainer() {
     avisos: null,
     testimonios: null,
     usuarios: null,
+    tienda: null,
     estadisticas: null,
   });
 
@@ -45,6 +59,8 @@ export default function AdminPanelContainer() {
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [editTipo, setEditTipo] = useState(null);
   const [editId, setEditId] = useState(null);
+
+  // Avisos / Testimonios
   const [formTitulo, setFormTitulo] = useState("");
   const [formTexto, setFormTexto] = useState("");
   const [formNombre, setFormNombre] = useState("");
@@ -54,13 +70,19 @@ export default function AdminPanelContainer() {
   const [file, setFile] = useState(null);
   const [formPreview, setFormPreview] = useState(null);
 
+  // Tienda (initialData para modal)
+  const [productoInicial, setProductoInicial] = useState(null);
+
   // MODAL USUARIOS
   const [isUserOpen, setIsUserOpen] = useState(false);
   const [userId, setUserId] = useState(null);
   const [userNombre, setUserNombre] = useState("");
   const [userApellidos, setUserApellidos] = useState("");
   const [userActivo, setUserActivo] = useState(true);
-  const [userReadonly, setUserReadonly] = useState({ email: "", rol: "" });
+  const [userReadonly, setUserReadonly] = useState({
+    email: "",
+    rol: "",
+  });
 
   // Estadísticas
   const [stats, setStats] = useState([]);
@@ -79,6 +101,7 @@ export default function AdminPanelContainer() {
     setFormLocalidad("");
     setFormComentario("");
     setFormRating(5);
+    setProductoInicial(null);
   };
 
   // ========== Fetch JSON helper ==========
@@ -94,7 +117,9 @@ export default function AdminPanelContainer() {
       body: opts.body,
     });
 
-    const isJSON = (res.headers.get("content-type") || "").includes("application/json");
+    const isJSON = (res.headers.get("content-type") || "").includes(
+      "application/json"
+    );
     const data = isJSON ? await res.json().catch(() => null) : await res.text();
 
     if (!res.ok) {
@@ -152,6 +177,23 @@ export default function AdminPanelContainer() {
     }
   }, [fetchJSON]);
 
+  const loadTienda = useCallback(async () => {
+    setLoading((s) => ({ ...s, tienda: true }));
+    setError((s) => ({ ...s, tienda: null }));
+
+    try {
+      const resp = await fetchJSON(
+        `${API_BASE}/tienda/admin?status=${encodeURIComponent(pStatus)}`
+      );
+      const items = Array.isArray(resp?.data) ? resp.data : resp;
+      setProductos((items || []).map(normalizeProducto));
+    } catch (e) {
+      setError((s) => ({ ...s, tienda: String(e?.message || e) }));
+    } finally {
+      setLoading((s) => ({ ...s, tienda: false }));
+    }
+  }, [fetchJSON, pStatus]);
+
   const loadStats = useCallback(async () => {
     setLoading((s) => ({ ...s, estadisticas: true }));
     setError((s) => ({ ...s, estadisticas: null }));
@@ -172,16 +214,18 @@ export default function AdminPanelContainer() {
     loadAvisos();
     loadTestimonios();
     loadUsuarios();
+    loadTienda();
     loadStats();
-  }, []);
+  }, [loadAvisos, loadTestimonios, loadUsuarios, loadTienda, loadStats]);
 
-  // Recargar al cambiar tab o estatus de testimonios
+  // Recargar al cambiar tab o estatus de testimonios/tienda
   useEffect(() => {
     if (active === "avisos") loadAvisos();
     if (active === "usuarios") loadUsuarios();
     if (active === "estadisticas") loadStats();
     if (active === "testimonios") loadTestimonios();
-  }, [active, tStatus]);
+    if (active === "tienda") loadTienda();
+  }, [active, tStatus, pStatus, loadAvisos, loadUsuarios, loadStats, loadTestimonios, loadTienda]);
 
   // ========== EDICIÓN ==========
   const fetchItemForEdit = async (tipo, id) => {
@@ -189,7 +233,10 @@ export default function AdminPanelContainer() {
       const r = await fetchJSON(`${API_BASE}/${tipo}/${id}`);
       return r?.data ?? r;
     } catch {
-      const list = tipo === "avisos" ? avisos : testimonios;
+      let list = [];
+      if (tipo === "avisos") list = avisos;
+      else if (tipo === "testimonios") list = testimonios;
+      else if (tipo === "tienda") list = productos;
       return list.find((x) => String(x.id) === String(id)) || null;
     }
   };
@@ -210,17 +257,37 @@ export default function AdminPanelContainer() {
         setFormTitulo(data.titulo || "");
         setFormTexto(data.texto || "");
         setFormPreview(absUrl(data.imgurl || data.imagen || data.image_url));
-      } else {
+        setFile(null);
+        setIsEditOpen(true);
+      } else if (tipo === "testimonios") {
         setFormNombre(data.nombre || "");
         setFormLocalidad(data.localidad || "");
         setFormComentario(data.comentario || "");
         setFormRating(Number(data.rating || 5));
-        setFormPreview(absUrl(data.imagenurl || data.imagen_url || data.imgurl));
+        setFormPreview(
+          absUrl(data.imagenurl || data.imagen_url || data.imgurl)
+        );
+        setFile(null);
+        setIsEditOpen(true);
+      } else if (tipo === "tienda") {
+        setProductoInicial({
+          id: data.id,
+          nombre: data.nombre || "",
+          name: data.nombre || "",
+          precio: data.precio,
+          price: data.precio,
+          categoria: data.categoria || "Otros",
+          category: data.categoria || "Otros",
+          stock: data.stock,
+          ubicacion: data.ubicacion || "",
+          location: data.ubicacion || "",
+          telefono: data.telefono || "",
+          imagenurl: absUrl(data.imagenurl || ""),
+          imgSrc: absUrl(data.imagenurl || ""),
+          status: data.status,
+        });
+        setIsEditOpen(true);
       }
-
-      setFile(null);
-      setIsEditOpen(true);
-
     } catch (e) {
       alert("Error al cargar datos: " + (e?.message || e));
       resetEdit();
@@ -240,7 +307,7 @@ export default function AdminPanelContainer() {
 
       if (tipo === "avisos") loadAvisos();
       if (tipo === "testimonios") loadTestimonios();
-
+      if (tipo === "tienda") loadTienda();
     } catch (e) {
       alert("Error eliminando: " + (e?.message || e));
     }
@@ -257,24 +324,57 @@ export default function AdminPanelContainer() {
       fd.append("titulo", formTitulo);
       fd.append("texto", formTexto);
       if (file) fd.append("imagen", file);
-    } else {
+    } else if (editTipo === "testimonios") {
       fd.append("nombre", formNombre);
       fd.append("localidad", formLocalidad || "");
       fd.append("comentario", formComentario);
       fd.append("rating", String(formRating));
       if (file) fd.append("imagen", file);
+    } else {
+      return;
     }
 
     try {
       await fetch(url, { method: "PUT", body: fd, credentials: "include" });
 
       if (editTipo === "avisos") loadAvisos();
-      else loadTestimonios();
+      else if (editTipo === "testimonios") loadTestimonios();
 
       resetEdit();
-
     } catch (e2) {
       alert("Error guardando cambios: " + (e2?.message || e2));
+    }
+  };
+
+  // ========== TIENDA (EDITAR) ==========
+  const submitTiendaEdit = async (payload) => {
+    if (!editId) throw new Error("ID inválido");
+
+    const url = `${API_BASE}/tienda/${editId}`;
+    const fd = new FormData();
+
+    fd.append("nombre", payload.name);
+    fd.append("precio", String(payload.price));
+    fd.append("stock", String(payload.stock));
+    fd.append("categoria", payload.category);
+    fd.append("ubicacion", payload.location);
+    fd.append("telefono", payload.telefono);
+
+    if (payload.imageFile) {
+      fd.append("imagen", payload.imageFile);
+    }
+
+    try {
+      await fetch(url, {
+        method: "PUT",
+        body: fd,
+        credentials: "include",
+      });
+      await loadTienda();
+      resetEdit();
+    } catch (e) {
+      console.error(e);
+      throw e;
     }
   };
 
@@ -340,7 +440,9 @@ export default function AdminPanelContainer() {
     if (!ok) return;
 
     try {
-      await fetchJSON(`${API_BASE}/users/${id}?hard=true`, { method: "DELETE" });
+      await fetchJSON(`${API_BASE}/users/${id}?hard=true`, {
+        method: "DELETE",
+      });
       loadUsuarios();
     } catch (e) {
       alert("No se pudo eliminar: " + (e?.message || e));
@@ -374,8 +476,22 @@ export default function AdminPanelContainer() {
   // ========== APROBAR TESTIMONIOS ==========
   const approveTestimonio = async (id) => {
     try {
-      await fetchJSON(`${API_BASE}/testimonios/admin/${id}`, { method: "PATCH" });
+      await fetchJSON(`${API_BASE}/testimonios/admin/${id}`, {
+        method: "PATCH",
+      });
       loadTestimonios();
+    } catch (e) {
+      alert("No se pudo aprobar: " + (e?.message || e));
+    }
+  };
+
+  // ========== APROBAR PRODUCTO ==========
+  const approveProducto = async (id) => {
+    try {
+      await fetchJSON(`${API_BASE}/tienda/admin/${id}`, {
+        method: "PATCH",
+      });
+      loadTienda();
     } catch (e) {
       alert("No se pudo aprobar: " + (e?.message || e));
     }
@@ -386,30 +502,31 @@ export default function AdminPanelContainer() {
       <AdminPanel
         active={active}
         onSelect={setActive}
-
         // DATOS
         avisos={avisos}
         testimonios={testimonios}
         usuarios={usuarios}
+        productos={productos}
         loading={loading}
         error={error}
-
         // EDICIÓN
         onEdit={handleEdit}
         onDelete={handleDelete}
         onSuspend={handleSuspendUser}
-
-        // RECARGAS — CORRECTAS
+        // RECARGAS
         onRefreshAvisos={loadAvisos}
         onRefreshUsuarios={loadUsuarios}
         onRefreshStats={loadStats}
         onRefreshTestimonios={loadTestimonios}
-
+        onRefreshTienda={loadTienda}
         // Testimonios
         tStatus={tStatus}
         onChangeStatus={setTStatus}
         onApprove={approveTestimonio}
-
+        // Tienda
+        pStatus={pStatus}
+        onChangePStatus={setPStatus}
+        onApproveProducto={approveProducto}
         // Estadísticas
         stats={stats}
         statsLoading={!!loading.estadisticas}
@@ -420,7 +537,7 @@ export default function AdminPanelContainer() {
         dirtyCount={Object.keys(dirtyStats).length}
       />
 
-      {/* Modales */}
+      {/* Modales Avisos / Testimonios */}
       {isEditOpen && editTipo === "avisos" && (
         <AvisosModal
           isOpen={true}
@@ -460,6 +577,18 @@ export default function AdminPanelContainer() {
         />
       )}
 
+      {/* Modal Tienda */}
+      {isEditOpen && editTipo === "tienda" && productoInicial && (
+        <TiendaCreatePublication
+          isOpen={true}
+          onClose={resetEdit}
+          onSubmit={submitTiendaEdit}
+          editMode={true}
+          initialData={productoInicial}
+        />
+      )}
+
+      {/* Modal Usuarios */}
       {isUserOpen && (
         <UsuariosModal
           isOpen={isUserOpen}

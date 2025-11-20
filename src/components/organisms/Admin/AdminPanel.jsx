@@ -1,7 +1,7 @@
 import React, { useMemo } from "react";
 import {
   Quote, Users, Bell, MessageSquare, BarChart2, Trash2, Pencil,
-  Calendar, MapPin, Check
+  Calendar, MapPin, Check, Package
 } from "lucide-react";
 import { absUrl } from "../../../api/adminMedia";
 
@@ -12,6 +12,8 @@ export default function AdminPanel({
   avisos = [],
   testimonios = [],
   usuarios = [],
+  productos = [],
+
   loading = {},
   error = {},
   onEdit = () => {},
@@ -23,6 +25,12 @@ export default function AdminPanel({
   onChangeStatus = () => {},
   onApprove = () => {},
   onRefreshTestimonios = () => {},
+
+  // Moderación tienda
+  pStatus = "pending",
+  onChangePStatus = () => {},
+  onApproveProducto = () => {},
+  onRefreshTienda = () => {},
 
   // Recarga datos
   onRefreshAvisos = () => {},
@@ -46,16 +54,14 @@ export default function AdminPanel({
           <span className="text-[#0833a2]">Administrativo</span>
         </h1>
         <p className="text-slate-500 mt-2">
-          Gestiona usuarios, avisos, testimonios y estadísticas.
+          Gestiona usuarios, avisos, testimonios, tienda y estadísticas.
         </p>
       </header>
 
       <div className="max-w-7xl mx-auto px-4 md:px-6 pb-12 grid grid-cols-1 sm:grid-cols-[200px,1fr] md:grid-cols-[260px,1fr] gap-6">
-        
         <Sidebar active={active} onSelect={onSelect} />
 
         <main className="min-w-0">
-
           {active === "usuarios" && (
             <UsuariosList
               usuarios={usuarios}
@@ -64,7 +70,7 @@ export default function AdminPanel({
               onEdit={(item) => onEdit("usuarios", item)}
               onSuspend={(id) => onSuspend(id)}
               onDelete={(id) => onDelete("usuarios", id)}
-              onRefresh={onRefreshUsuarios}     
+              onRefresh={onRefreshUsuarios}
             />
           )}
 
@@ -75,7 +81,7 @@ export default function AdminPanel({
               error={error.avisos}
               onEdit={(item) => onEdit("avisos", item)}
               onDelete={(id) => onDelete("avisos", id)}
-              onRefresh={onRefreshAvisos}       
+              onRefresh={onRefreshAvisos}
             />
           )}
 
@@ -89,7 +95,21 @@ export default function AdminPanel({
               tStatus={tStatus}
               onChangeStatus={onChangeStatus}
               onApprove={onApprove}
-              onRefresh={onRefreshTestimonios}  
+              onRefresh={onRefreshTestimonios}
+            />
+          )}
+
+          {active === "tienda" && (
+            <TiendaList
+              data={productos}
+              loading={!!loading.tienda}
+              error={error.tienda}
+              pStatus={pStatus}
+              onChangePStatus={onChangePStatus}
+              onApprove={onApproveProducto}
+              onEdit={(item) => onEdit("tienda", item)}
+              onDelete={(id) => onDelete("tienda", id)}
+              onRefresh={onRefreshTienda}
             />
           )}
 
@@ -102,10 +122,9 @@ export default function AdminPanel({
               onSave={onStatsSave}
               saving={statsSaving}
               dirtyCount={dirtyCount}
-              onRefresh={onRefreshStats}        
+              onRefresh={onRefreshStats}
             />
           )}
-
         </main>
       </div>
     </div>
@@ -118,6 +137,7 @@ function Sidebar({ active, onSelect }) {
     { id: "usuarios", label: "Usuarios", icon: Users },
     { id: "avisos", label: "Avisos", icon: Bell },
     { id: "testimonios", label: "Testimonios", icon: MessageSquare },
+    { id: "tienda", label: "Tienda", icon: Package },
     { id: "estadisticas", label: "Estadísticas", icon: BarChart2 },
   ];
 
@@ -180,20 +200,25 @@ function UsuariosList({
           const apellidos = u.apellidos || u.apellido || "";
           const email = u.email || u.correo || "";
           const rol = u.rol || u.role || "usuario";
-          const activo = u.isActiveBool ?? toBool(u.isActive ?? u.activo ?? u.active);
+          const activo =
+            u.isActiveBool ?? toBool(u.isActive ?? u.activo ?? u.active);
 
           return (
-            <li key={u.id} className="bg-white border border-slate-200 rounded-2xl overflow-hidden">
+            <li
+              key={u.id}
+              className="bg-white border border-slate-200 rounded-2xl overflow-hidden"
+            >
               <div className="flex flex-col sm:flex-row gap-4 p-4 items-start">
-
                 <div className="w-16 h-16 rounded-xl border bg-slate-50 grid place-items-center">
                   <svg viewBox="0 0 24 24" className="w-9 h-9 text-slate-400">
-                    <path fill="currentColor" d="M12 12a5 5 0 1 0-5-5 5 5 0 0 0 5 5Zm0 2c-5 0-9 2.5-9 5.5A1.5 1.5 0 0 0 4.5 21h15A1.5 1.5 0 0 0 21 19.5C21 16.5 17 14 12 14Z" />
+                    <path
+                      fill="currentColor"
+                      d="M12 12a5 5 0 1 0-5-5 5 5 0 0 0 5 5Zm0 2c-5 0-9 2.5-9 5.5A1.5 1.5 0 0 0 4.5 21h15A1.5 1.5 0 0 0 21 19.5C21 16.5 17 14 12 14Z"
+                    />
                   </svg>
                 </div>
 
                 <div className="flex-1 min-w-0">
-
                   <div className="sm:flex sm:items-start sm:justify-between">
                     <h3 className="text-lg font-semibold text-slate-900 truncate">
                       {nombre} {apellidos}
@@ -215,7 +240,6 @@ function UsuariosList({
                   </div>
 
                   <div className="mt-3 flex flex-wrap items-center gap-2">
-
                     <button
                       className="inline-flex gap-2 px-3 py-1.5 rounded-lg bg-blue-600 text-white hover:bg-blue-700"
                       onClick={() => onEdit(u)}
@@ -236,11 +260,8 @@ function UsuariosList({
                     >
                       Eliminar
                     </button>
-
                   </div>
-
                 </div>
-
               </div>
             </li>
           );
@@ -278,10 +299,11 @@ function AvisosList({ data = [], loading, error, onEdit, onDelete, onRefresh }) 
             absUrl(aviso.imgurl ?? aviso.imagen ?? aviso.image_url);
 
           return (
-            <li key={aviso.id} className="bg-white border border-slate-200 rounded-2xl overflow-hidden">
-
+            <li
+              key={aviso.id}
+              className="bg-white border border-slate-200 rounded-2xl overflow-hidden"
+            >
               <div className="flex flex-col sm:flex-row gap-4 p-4 items-start">
-
                 {src ? (
                   <img
                     src={src}
@@ -295,7 +317,6 @@ function AvisosList({ data = [], loading, error, onEdit, onDelete, onRefresh }) 
                 )}
 
                 <div className="flex-1 min-w-0">
-
                   <div className="flex-col sm:flex-row sm:justify-between">
                     <h3 className="text-lg font-semibold truncate">
                       {aviso.titulo}
@@ -315,7 +336,6 @@ function AvisosList({ data = [], loading, error, onEdit, onDelete, onRefresh }) 
                   )}
 
                   <div className="mt-3 flex gap-2">
-
                     <button
                       className="inline-flex gap-2 px-3 py-1.5 rounded-lg bg-blue-600 text-white hover:bg-blue-700"
                       onClick={() => onEdit(aviso)}
@@ -329,13 +349,9 @@ function AvisosList({ data = [], loading, error, onEdit, onDelete, onRefresh }) 
                     >
                       <Trash2 className="w-4 h-4" /> Eliminar
                     </button>
-
                   </div>
-
                 </div>
-
               </div>
-
             </li>
           );
         })}
@@ -362,7 +378,6 @@ function TestimoniosList({
 }) {
   return (
     <section>
-
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-2">
         <SectionTitle titleBlack="Gestionar" titlePurple="Testimonios" />
 
@@ -403,34 +418,36 @@ function TestimoniosList({
           const resumeText = getResumeText(t);
 
           return (
-            <li key={t.id} className="bg-white border rounded-2xl overflow-hidden">
-
+            <li
+              key={t.id}
+              className="bg-white border rounded-2xl overflow-hidden"
+            >
               <div className="grid grid-cols-1 sm:grid-cols-[220px,1fr] md:grid-cols-[280px,1fr] gap-4 p-4">
-
                 <div className="w-full rounded-xl overflow-hidden border bg-slate-100">
                   <div className="w-full aspect-[4/3] md:aspect-[16/9]">
-
                     {src ? (
-                      <img// 🔥 recarga real
+                      <img
                         src={src}
                         alt={t.nombre}
                         className="w-full h-full object-cover"
-                        onError={(e) => (e.currentTarget.src = "/placeholder.svg")}
+                        onError={(e) =>
+                          (e.currentTarget.src = "/placeholder.svg")
+                        }
                       />
                     ) : (
                       <div className="w-full h-full grid place-items-center">
                         Sin imagen
                       </div>
                     )}
-
                   </div>
                 </div>
 
                 <div className="pr-0 md:pr-2">
-
                   <div className="flex justify-between">
                     <Quote className="w-6 h-6 text-blue-700" />
-                    <span className={`text-[12px] px-2 py-1 rounded-full border ${statusBadge}`}>
+                    <span
+                      className={`text-[12px] px-2 py-1 rounded-full border ${statusBadge}`}
+                    >
                       {status === "approved" ? "aprobado" : "pendiente"}
                     </span>
                   </div>
@@ -452,7 +469,8 @@ function TestimoniosList({
 
                     {t.fecha && (
                       <span className="flex items-center gap-1">
-                        <Calendar className="w-3.5 h-3.5" /> {formatFecha(t.fecha)}
+                        <Calendar className="w-3.5 h-3.5" />{" "}
+                        {formatFecha(t.fecha)}
                       </span>
                     )}
                   </div>
@@ -467,7 +485,6 @@ function TestimoniosList({
                   )}
 
                   <div className="mt-3 flex flex-wrap gap-2">
-
                     {tStatus === "pending" && (
                       <button
                         className="inline-flex gap-2 px-3 py-1.5 rounded-lg bg-emerald-600 text-white hover:bg-emerald-700"
@@ -490,11 +507,8 @@ function TestimoniosList({
                     >
                       <Trash2 className="w-4 h-4" /> Eliminar
                     </button>
-
                   </div>
-
                 </div>
-
               </div>
             </li>
           );
@@ -504,7 +518,149 @@ function TestimoniosList({
       {!loading && !error && data.length === 0 && (
         <NoData>No hay testimonios para mostrar.</NoData>
       )}
+    </section>
+  );
+}
 
+/* ------------------------ TIENDA ------------------------ */
+function TiendaList({
+  data = [],
+  loading,
+  error,
+  pStatus,
+  onChangePStatus,
+  onApprove,
+  onEdit,
+  onDelete,
+  onRefresh,
+}) {
+  return (
+    <section>
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-2">
+        <SectionTitle titleBlack="Gestionar" titlePurple="Tienda" />
+
+        <div className="flex gap-2">
+          <select
+            value={pStatus}
+            onChange={(e) => onChangePStatus(e.target.value)}
+            className="border rounded-xl px-3 py-2 text-sm"
+          >
+            <option value="pending">Pendientes</option>
+            <option value="approved">Aprobados</option>
+          </select>
+
+          <button
+            onClick={onRefresh}
+            className="border rounded-xl px-3 py-2 text-sm hover:bg-slate-50"
+          >
+            Recargar
+          </button>
+        </div>
+      </div>
+
+      {loading && <ListSkeleton lines={2} />}
+      {error && <ErrorBox msg={error} />}
+
+      <ul className="space-y-4">
+        {data?.map((p) => {
+          const src = p.imgSrc ?? absUrl(p.imagenurl ?? "");
+          const status = p.status || pStatus;
+          const statusBadge =
+            status === "approved"
+              ? "bg-green-50 text-green-700 border-green-200"
+              : "bg-amber-50 text-amber-700 border-amber-200";
+
+          return (
+            <li
+              key={p.id}
+              className="bg-white border rounded-2xl overflow-hidden"
+            >
+              <div className="grid grid-cols-1 sm:grid-cols-[220px,1fr] md:grid-cols-[280px,1fr] gap-4 p-4">
+                <div className="w-full rounded-xl overflow-hidden border bg-slate-100">
+                  <div className="w-full aspect-[4/3] md:aspect-[16/9]">
+                    {src ? (
+                      <img
+                        src={src}
+                        alt={p.nombre}
+                        className="w-full h-full object-cover"
+                        onError={(e) =>
+                          (e.currentTarget.src = "/placeholder.svg")
+                        }
+                      />
+                    ) : (
+                      <div className="w-full h-full grid place-items-center">
+                        Sin imagen
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                <div className="pr-0 md:pr-2">
+                  <div className="flex justify-between items-start gap-2">
+                    <div>
+                      <h3 className="text-lg font-semibold">
+                        {p.nombre ?? p.name}
+                      </h3>
+                      <p className="text-sm text-slate-600 mt-0.5">
+                        ${p.precio ?? p.price} · {p.categoria ?? p.category}
+                      </p>
+                    </div>
+
+                    <span
+                      className={`text-[12px] px-2 py-1 rounded-full border ${statusBadge}`}
+                    >
+                      {status === "approved" ? "aprobado" : "pendiente"}
+                    </span>
+                  </div>
+
+                  <div className="mt-2 flex flex-wrap gap-4 text-sm text-slate-500">
+                    {p.ubicacion && (
+                      <span className="flex items-center gap-1">
+                        <MapPin className="w-3.5 h-3.5" /> {p.ubicacion}
+                      </span>
+                    )}
+                    {p.telefono && (
+                      <span className="flex items-center gap-1">
+                        <PhoneIcon className="w-3.5 h-3.5" /> {p.telefono}
+                      </span>
+                    )}
+                    <span>Stock: {p.stock}</span>
+                  </div>
+
+                  <div className="mt-3 flex flex-wrap gap-2">
+                    {pStatus === "pending" && (
+                      <button
+                        className="inline-flex gap-2 px-3 py-1.5 rounded-lg bg-emerald-600 text-white hover:bg-emerald-700"
+                        onClick={() => onApprove(p.id)}
+                      >
+                        <Check className="w-4 h-4" /> Aprobar
+                      </button>
+                    )}
+
+                    <button
+                      className="inline-flex gap-2 px-3 py-1.5 rounded-lg bg-blue-600 text-white hover:bg-blue-700"
+                      onClick={() => onEdit(p)}
+                    >
+                      <Pencil className="w-4 h-4" /> Editar
+                    </button>
+
+                    <button
+                      className="inline-flex gap-2 px-3 py-1.5 rounded-lg bg-red-600 text-white hover:bg-red-700"
+                      onClick={() => onDelete(p.id)}
+                    >
+                      <Trash2 className="w-4 h-4" /> Eliminar
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </li>
+          );
+        })}
+      </ul>
+
+      {!loading && !error && data.length === 0 && (
+        <NoData>No hay productos para mostrar.</NoData>
+      )}
     </section>
   );
 }
@@ -522,12 +678,10 @@ function EstadisticasEditable({
 }) {
   return (
     <section>
-
       <div className="flex flex-col sm:flex-row sm:justify-between gap-2 mb-4">
         <SectionTitle titleBlack="Gestionar" titlePurple="Estadísticas" />
 
         <div className="flex gap-2">
-
           <button
             onClick={onRefresh}
             className="border rounded-xl px-3 py-2 text-sm hover:bg-slate-50"
@@ -547,7 +701,6 @@ function EstadisticasEditable({
           >
             {saving ? "Guardando…" : "Actualizar"}
           </button>
-
         </div>
       </div>
 
@@ -558,22 +711,21 @@ function EstadisticasEditable({
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {stats.map((s) => (
             <div key={s.slug} className="rounded-2xl border p-4">
-
               <div className="text-sm text-slate-500">{s.slug}</div>
               <div className="text-lg font-semibold mb-2">{s.title}</div>
 
               <input
                 type="number"
                 value={String(s.value ?? "")}
-                onChange={(e) => onChange(s.slug, Number(e.target.value || 0))}
+                onChange={(e) =>
+                  onChange(s.slug, Number(e.target.value || 0))
+                }
                 className="w-full rounded-xl border px-3 py-2 outline-none"
               />
-
             </div>
           ))}
         </div>
       )}
-
     </section>
   );
 }
@@ -640,6 +792,21 @@ function StarRating({ value = 0, max = 5 }) {
         </svg>
       ))}
     </div>
+  );
+}
+
+function PhoneIcon(props) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      className={props.className}
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        fill="currentColor"
+        d="M6.62 10.79a15.053 15.053 0 0 0 6.59 6.59l2.2-2.2a1 1 0 0 1 .96-.26 11.72 11.72 0 0 0 3.68.59 1 1 0 0 1 1 1V20a1 1 0 0 1-1 1A17 17 0 0 1 3 4a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1 11.72 11.72 0 0 0 .59 3.68 1 1 0 0 1-.26.96l-2.2 2.2Z"
+      />
+    </svg>
   );
 }
 
