@@ -11,11 +11,13 @@ export default function AvisosModal({
   onFileChange,
   formPreview
 }) {
-  if (!isOpen) return null;
 
   useEffect(() => {
-    document.body.style.overflow = isOpen ? "hidden" : "auto";
+    if (isOpen) document.body.style.overflow = "hidden";
+    else document.body.style.overflow = "auto";
   }, [isOpen]);
+
+  if (!isOpen) return null; 
 
   return (
     <div className="fixed inset-0 z-[60] grid place-items-center p-4">
