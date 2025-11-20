@@ -1,19 +1,18 @@
 import React, { useState, useMemo } from "react";
 import ProductCard from "../../molecules/ProductCard.jsx";
+import TiendaCreatePublication from "../Tienda/TiendaCrearModal.jsx";
 
 export default function TiendaMyPublications({
   products,
-  onEdit,
+  onEdit,    
   onDelete,
-  onRefresh,       
+  onRefresh,
 }) {
-  const [editingId, setEditingId] = useState(null);
-  const [editData, setEditData] = useState({});
-
   const [showFilters, setShowFilters] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [minPrice, setMinPrice] = useState("");
   const [maxPrice, setMaxPrice] = useState("");
+  const [editingProduct, setEditingProduct] = useState(null);
 
   const userProducts = products || [];
 
@@ -23,39 +22,58 @@ export default function TiendaMyPublications({
   // FILTROS
   const filteredProducts = useMemo(() => {
     return userProducts.filter((p) => {
+      const name = p.name || p.nombre || "";
+      const price = Number(p.price ?? p.precio ?? 0);
+
       const matchesSearch = searchTerm
-        ? p.name.toLowerCase().includes(searchTerm.toLowerCase())
+        ? name.toLowerCase().includes(searchTerm.toLowerCase())
         : true;
 
-      const matchesMin = minPrice !== "" ? p.price >= Number(minPrice) : true;
-      const matchesMax = maxPrice !== "" ? p.price <= Number(maxPrice) : true;
+      const matchesMin = minPrice !== "" ? price >= Number(minPrice) : true;
+      const matchesMax = maxPrice !== "" ? price <= Number(maxPrice) : true;
 
       return matchesSearch && matchesMin && matchesMax;
     });
   }, [userProducts, searchTerm, minPrice, maxPrice]);
 
   const handleEditClick = (product) => {
-    setEditingId(product.id);
-    setEditData(product);
+    const initialData = {
+      ...product,
+
+      id: product.id,
+      nombre: product.nombre ?? product.name ?? "",
+      name: product.name ?? product.nombre ?? "",
+
+      precio: product.precio ?? product.price,
+      price: product.price ?? product.precio,
+
+      categoria: product.categoria ?? product.category ?? "Otros",
+      category: product.category ?? product.categoria ?? "Otros",
+
+      ubicacion: product.ubicacion ?? product.location ?? "",
+      location: product.location ?? product.ubicacion ?? "",
+
+      telefono: product.telefono ?? product.phone ?? "",
+
+      imagenurl:
+        product.imagenurl ?? product.imageUrl ?? product.image ?? "",
+      imgSrc:
+        product.imageUrl ?? product.imagenurl ?? product.image ?? "",
+    };
+
+    setEditingProduct(initialData);
   };
 
-  const handleSaveEdit = async () => {
-    if (!editingId) return;
-    await onEdit(editingId, editData);
-    setEditingId(null);
+  const handleCloseModal = () => {
+    setEditingProduct(null);
   };
 
-  const handleCancel = () => {
-    setEditingId(null);
-    setEditData({});
-  };
+  const handleSubmitEdit = async (payload) => {
+    if (!editingProduct) return;
 
-  const handleFileChange = (e) => {
-    const file = e.target.files && e.target.files[0];
-    setEditData((prev) => ({
-      ...prev,
-      imageFile: file || null,
-    }));
+    await onEdit(editingProduct.id, payload);
+
+
   };
 
   return (
@@ -72,26 +90,27 @@ export default function TiendaMyPublications({
             stroke="currentColor"
             viewBox="0 0 24 24"
           >
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5"
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="1.5"
               d="M3 4h18M6 8h12M9 12h6m-4 4h2m-6 4h10"
             />
           </svg>
           Filtrar
-
           {hasActiveFilters && (
             <span className="absolute top-0 right-0 w-2 h-2 bg-blue-600 rounded-full" />
           )}
         </button>
+
         <button
           type="button"
           onClick={onRefresh}
           className="flex items-center gap-2 px-4 h-10 rounded-lg bg-gray-100 hover:bg-gray-200 
                     transition-colors text-gray-700 text-sm font-medium border border-gray-300"
         >
-
           Recargar
         </button>
-
       </div>
 
       {showFilters && (
@@ -142,118 +161,31 @@ export default function TiendaMyPublications({
 
       {filteredProducts.length === 0 ? (
         <div className="text-center py-12">
-          <p className="text-slate-500 text-lg">No se encontraron publicaciones.</p>
+          <p className="text-slate-500 text-lg">
+            No se encontraron publicaciones.
+          </p>
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredProducts.map((product) => (
-            <div key={product.id}>
-              {editingId === product.id ? (
-                <div className="bg-white border-2 border-blue-600 rounded-lg p-4 space-y-3 text-sm shadow-sm">
-                  
-                  <h3 className="text-base font-semibold mb-1">
-                    Editar publicación
-                  </h3>
-
-                  <div className="grid gap-3">
-                    <input
-                      type="text"
-                      value={editData.name || ""}
-                      onChange={(e) =>
-                        setEditData({ ...editData, name: e.target.value })
-                      }
-                      placeholder="Nombre del producto"
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg"
-                    />
-
-                    <input
-                      type="number"
-                      value={editData.price ?? ""}
-                      onChange={(e) =>
-                        setEditData({ ...editData, price: Number(e.target.value) })
-                      }
-                      placeholder="Precio"
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg"
-                    />
-
-                    <input
-                      type="text"
-                      value={editData.category || ""}
-                      onChange={(e) =>
-                        setEditData({ ...editData, category: e.target.value })
-                      }
-                      placeholder="Categoría"
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg"
-                    />
-
-                    <input
-                      type="number"
-                      value={editData.stock ?? ""}
-                      onChange={(e) =>
-                        setEditData({ ...editData, stock: Number(e.target.value) })
-                      }
-                      placeholder="Stock"
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg"
-                    />
-
-                    <input
-                      type="text"
-                      value={editData.location || ""}
-                      onChange={(e) =>
-                        setEditData({ ...editData, location: e.target.value })
-                      }
-                      placeholder="Ubicación"
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg"
-                    />
-
-                    <div>
-                      <p className="text-xs text-gray-500 mb-1">
-                        Imagen actual:{" "}
-                        <span className="break-all">
-                          {editData.image || "(sin imagen)"}
-                        </span>
-                      </p>
-
-                      <input
-                        type="file"
-                        accept="image/*"
-                        onChange={handleFileChange}
-                        className="w-full text-sm text-gray-700"
-                      />
-                    </div>
-                  </div>
-
-                  <div className="flex gap-2 pt-1">
-                    <button
-                      type="button"
-                      onClick={handleSaveEdit}
-                      className="flex-1 bg-green-600 text-white py-2 rounded-lg hover:bg-green-700 text-sm"
-                    >
-                      ✓ Guardar
-                    </button>
-
-                    <button
-                      type="button"
-                      onClick={handleCancel}
-                      className="flex-1 bg-gray-400 text-white py-2 rounded-lg hover:bg-gray-500 text-sm"
-                    >
-                      Cancelar
-                    </button>
-                  </div>
-
-                </div>
-              ) : (
-                <ProductCard
-                  product={product}
-                  showManageButtons
-                  onEdit={() => handleEditClick(product)}
-                  onDelete={() => onDelete(product.id)}
-                />
-              )}
-            </div>
+            <ProductCard
+              key={product.id}
+              product={product}
+              showManageButtons
+              onEdit={() => handleEditClick(product)}
+              onDelete={() => onDelete(product.id)}
+            />
           ))}
         </div>
       )}
+
+      <TiendaCreatePublication
+        isOpen={!!editingProduct}
+        onClose={handleCloseModal}
+        onSubmit={handleSubmitEdit}
+        editMode={true}
+        initialData={editingProduct}
+      />
     </div>
   );
 }
