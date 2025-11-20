@@ -21,12 +21,10 @@ export default function DestinosLayout({
 }) {
   return (
     <div className="bg-zinc-50 text-slate-900">
-      {/* Banner clonado de Semana Santa */}
       <HeroBanner
         image={heroImage}
         title={title}
         subtitle={subtitle}
-        backTo="/destinos"   // ← vuelve a la lista de destinos
       />
 
       {/* Contenido de la página */}
