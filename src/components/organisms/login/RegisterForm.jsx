@@ -44,24 +44,24 @@ export default function RegisterForm({ onLogin }) {
 
       <CardContent className="space-y-6">
         {error && <div className="rounded-md border border-destructive/30 bg-destructive/10 text-destructive px-3 py-2 text-sm">{error}</div>}
-        {ok &&    <div className="rounded-md border border-green-300 bg-green-50 text-green-700 px-3 py-2 text-sm">{ok}</div>}
+        {ok &&    <div data-testid="register-success" className="rounded-md border border-green-300 bg-green-50 text-green-700 px-3 py-2 text-sm">{ok}</div>}
 
         <form onSubmit={handleSubmit} className="space-y-4">
-          <Field id="nombre" label="Nombre" icon={User}
+          <Field id="nombre" label="Nombre" icon={User} testId="register-nombre"
                  inputProps={{ type:"text", placeholder:"Tu nombre", value:form.nombre, onChange:e=>handle("nombre", e.target.value), required:true }} />
-          <Field id="apellidos" label="Apellidos" icon={User}
+          <Field id="apellidos" label="Apellidos" icon={User} testId="register-apellidos"
                  inputProps={{ type:"text", placeholder:"Tus apellidos", value:form.apellidos, onChange:e=>handle("apellidos", e.target.value), required:true }} />
-          <Field id="email" label="Correo electrónico" icon={Mail}
+          <Field id="email" label="Correo electrónico" icon={Mail} testId="register-email"
                  inputProps={{ type:"email", placeholder:"tu@email.com", value:form.email, onChange:e=>handle("email", e.target.value), required:true }} />
-          <Field id="password" label="Contraseña" icon={Lock}
+          <Field id="password" label="Contraseña" icon={Lock} testId="register-password"
                  inputProps={{ type:"password", placeholder:"••••••••", value:form.password, onChange:e=>handle("password", e.target.value), required:true }} />
-          <Field id="confirmPassword" label="Confirmar contraseña" icon={Lock}
+          <Field id="confirmPassword" label="Confirmar contraseña" icon={Lock} testId="register-confirm"
                  inputProps={{ type:"password", placeholder:"••••••••", value:form.confirmPassword, onChange:e=>handle("confirmPassword", e.target.value), required:true }} />
 
           <Button type="submit" className="w-full py-3 !text-white" disabled={isLoading}>
             {isLoading ? "Creando cuenta..." : "Crear cuenta"}
           </Button>
-        </form>
+        </form>      
 
         <div className="space-y-3">
           <div className="relative">
