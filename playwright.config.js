@@ -27,6 +27,12 @@ export default defineConfig({
       name: 'webkit',
       use: { ...devices['Desktop Safari'] },
     },
+    {
+    name: "admin",
+    use: {
+      storageState: "tests/storage/admin.json",
+    },
+  },
   ],
 
   
@@ -36,3 +42,5 @@ export default defineConfig({
     reuseExistingServer: !process.env.CI,
   },
 });
+
+

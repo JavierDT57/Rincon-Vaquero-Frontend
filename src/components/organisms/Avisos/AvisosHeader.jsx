@@ -74,6 +74,7 @@ export default function AvisosHeader({
               {!isChecking && user?.rol === "admin" && (
                 <button
                   type="button"
+                  data-testid="btn-crear-aviso"
                   onClick={onOpenModal}
                   className={primaryButton}
                 >

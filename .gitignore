@@ -37,3 +37,6 @@ db/
 /blob-report/
 /playwright/.cache/
 /playwright/.auth/
+/tests/storage/
+/tests/assets/
+

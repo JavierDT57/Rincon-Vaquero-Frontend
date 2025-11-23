@@ -43,6 +43,7 @@ export default function AvisosModal({
               <label className="mb-1 block text-sm font-medium">Título</label>
               <input
                 type="text"
+                data-testid="aviso-titulo"
                 value={formTitulo}
                 onChange={(e) => setFormTitulo(e.target.value)}
                 className="w-full rounded-xl border border-slate-200 px-3 py-2.5 focus:ring-2 focus:ring-blue-500"
@@ -54,6 +55,7 @@ export default function AvisosModal({
               <label className="mb-1 block text-sm font-medium">Imagen (opcional)</label>
               <input
                 type="file"
+                data-testid="aviso-imagen"
                 accept="image/*"
                 onChange={(e) => onFileChange(e.target.files?.[0] || null)}
                 className="block w-full text-sm file:bg-blue-600 file:text-white file:px-4 file:py-2 file:rounded-lg"
@@ -70,6 +72,7 @@ export default function AvisosModal({
               <label className="mb-1 block text-sm font-medium">Aviso</label>
               <textarea
                 rows={6}
+                data-testid="aviso-texto"
                 value={formTexto}
                 onChange={(e) => setFormTexto(e.target.value)}
                 className="w-full rounded-xl border border-slate-200 px-3 py-2.5 focus:ring-2 focus:ring-blue-500"
@@ -79,7 +82,7 @@ export default function AvisosModal({
 
             <div className="flex justify-end gap-3 pt-2">
               <button type="button" onClick={onClose} className="border rounded-xl px-4 py-2 text-sm">Cancelar</button>
-              <button type="submit" className="bg-blue-600 text-white rounded-xl px-5 py-2.5">
+              <button type="submit" data-testid="aviso-submit" className="bg-blue-600 text-white rounded-xl px-5 py-2.5">
                 Publicar
               </button>
             </div>

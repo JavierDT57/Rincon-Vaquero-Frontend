@@ -3,29 +3,33 @@ import AvisosHeader from "../../components/organisms/Avisos/AvisosHeader.jsx";
 import AvisosModal from "../../components/organisms/Avisos/AvisosModal.jsx";
 import AvisoCard from "../../components/molecules/AvisoCard.jsx";
 import AvisoCardList from "../../components/molecules/AvisoCardList.jsx";
-import { fetchAvisos, createAviso /*, updateAviso, deleteAviso*/ } from "../../api/avisos.js";
+import { fetchAvisos, createAviso } from "../../api/avisos.js";
 
 export default function AvisosContainer() {
   // Estado principal
   const [avisos, setAvisos] = useState([]);
-  const [layout, setLayout] = useState("grid"); // "grid" | "list"
+  const [layout, setLayout] = useState("grid");
   const [expanded, setExpanded] = useState(new Set());
 
-  // Modal crear
+  // Modal
   const [isOpen, setIsOpen] = useState(false);
   const [formTitulo, setFormTitulo] = useState("");
   const [formTexto, setFormTexto] = useState("");
   const [formImagenFile, setFormImagenFile] = useState(null);
   const [formPreview, setFormPreview] = useState("");
 
-  // Helper: normaliza la respuesta del backend (array directo o {data: [...]})
+  // Mensajes para Playwright
+  const [successMsg, setSuccessMsg] = useState("");
+  const [errorMsg, setErrorMsg] = useState("");
+
+  // Helper
   const asArray = (resp) => {
     if (Array.isArray(resp)) return resp;
     if (Array.isArray(resp?.data)) return resp.data;
     return [];
   };
 
-  // Carga inicial desde el endpoint real
+  // Cargar avisos
   useEffect(() => {
     let mounted = true;
     (async () => {
@@ -36,11 +40,15 @@ export default function AvisosContainer() {
         console.error("Error cargando avisos:", err);
       }
     })();
-    return () => { mounted = false; };
+    return () => {
+      mounted = false;
+    };
   }, []);
 
-  // Handlers UI
-  const toggleLayout = () => setLayout((l) => (l === "grid" ? "list" : "grid"));
+  // Handlers
+  const toggleLayout = () =>
+    setLayout((l) => (l === "grid" ? "list" : "grid"));
+
   const toggleExpand = (id) => {
     setExpanded((prev) => {
       const copy = new Set(prev);
@@ -58,53 +66,73 @@ export default function AvisosContainer() {
     setFormImagenFile(null);
     setFormPreview("");
   };
+
   const onFileChange = (file) => {
     setFormImagenFile(file || null);
     setFormPreview(file ? URL.createObjectURL(file) : "");
   };
 
   // Crear aviso (optimista + POST real + refresh)
-const onSubmitNuevoAviso = async (e) => {
-  e.preventDefault();
-  const titulo = formTitulo.trim();
-  const texto  = formTexto.trim();
-  if (!titulo || !texto) return;
+  const onSubmitNuevoAviso = async (e) => {
+    e.preventDefault();
 
-  // Optimista local
-  const tempId = (crypto?.randomUUID?.() || Math.random().toString(36).slice(2));
-  const nuevoLocal = {
-    id: tempId,
-    titulo,
-    texto,
-    imagenUrl: formPreview || "",
-    fecha: new Date().toISOString(),
+    const titulo = formTitulo.trim();
+    const texto = formTexto.trim();
+
+    // Validación
+    if (!titulo || !texto) {
+      setErrorMsg("Todos los campos son obligatorios.");
+      setSuccessMsg("");
+      return;
+    }
+
+    // Limpia mensajes anteriores
+    setSuccessMsg("");
+    setErrorMsg("");
+
+    // Optimista local
+    const tempId =
+      crypto?.randomUUID?.() ||
+      Math.random().toString(36).slice(2);
+
+    const nuevoLocal = {
+      id: tempId,
+      titulo,
+      texto,
+      imagenUrl: formPreview || "",
+      fecha: new Date().toISOString(),
+    };
+
+    setAvisos((prev) => [nuevoLocal, ...prev]);
+
+    try {
+      // POST real
+      await createAviso({ titulo, texto, imagen: formImagenFile });
+
+      // Refrescar desde BD
+      const data = await fetchAvisos();
+      setAvisos(asArray(data));
+
+      // Mensaje éxito
+      setSuccessMsg("Aviso creado correctamente.");
+      setErrorMsg("");
+
+      // Limpiar modal
+      closeModal();
+    } catch (err) {
+      console.error(err);
+      setErrorMsg("No se pudo publicar el aviso.");
+      setSuccessMsg("");
+
+      // Rollback optimista
+      setAvisos((prev) =>
+        prev.filter((a) => a.id !== tempId)
+      );
+    }
   };
-  setAvisos((prev) => [nuevoLocal, ...prev]);
-
-  try {
-    // ⬅️ POST REAL a http://localhost:5000/avisos (con FormData e imagen opcional)
-    await createAviso({ titulo, texto, imagen: formImagenFile });
-
-    // Refresca lista desde tu BD
-    const data = await fetchAvisos();
-    setAvisos(Array.isArray(data) ? data : (Array.isArray(data?.data) ? data.data : []));
-    // Limpia modal
-    setIsOpen(false);
-    setFormTitulo("");
-    setFormTexto("");
-    setFormImagenFile(null);
-    setFormPreview("");
-  } catch (err) {
-    console.error(err);
-    alert(`No se pudo publicar el aviso: ${err.message || err}`);
-    // rollback del optimista si falla
-    setAvisos((prev) => prev.filter((a) => a.id !== tempId));
-  }
-};
 
   return (
     <>
-      {/* Banner full-width, fuera del card */}
       <AvisosHeader
         layout={layout}
         onToggleLayout={toggleLayout}
@@ -112,7 +140,6 @@ const onSubmitNuevoAviso = async (e) => {
         total={avisos.length}
       />
 
-      {/* Contenido en container y dentro del card blanco */}
       <div className="container mx-auto px-4 pb-12">
         <div className="bg-white text-slate-900 rounded-2xl ring-1 ring-black/5">
           <section className="px-4 sm:px-6 lg:px-8 py-8">
@@ -129,7 +156,9 @@ const onSubmitNuevoAviso = async (e) => {
                     key={a.id || a._id}
                     aviso={a}
                     expanded={expanded.has(a.id || a._id)}
-                    onToggle={() => toggleExpand(a.id || a._id)}
+                    onToggle={() =>
+                      toggleExpand(a.id || a._id)
+                    }
                   />
                 ))}
               </div>
@@ -137,6 +166,7 @@ const onSubmitNuevoAviso = async (e) => {
           </section>
         </div>
 
+        {/* MODAL */}
         <AvisosModal
           isOpen={isOpen}
           onClose={closeModal}
@@ -148,6 +178,25 @@ const onSubmitNuevoAviso = async (e) => {
           onFileChange={onFileChange}
           formPreview={formPreview}
         />
+
+        {/* MENSAJES PARA PLAYWRIGHT */}
+        {successMsg && (
+          <div
+            data-testid="aviso-success"
+            className="mt-6 p-3 bg-green-100 border border-green-300 text-green-700 rounded-xl"
+          >
+            {successMsg}
+          </div>
+        )}
+
+        {errorMsg && (
+          <div
+            data-testid="aviso-error"
+            className="mt-6 p-3 bg-red-100 border border-red-300 text-red-700 rounded-xl"
+          >
+            {errorMsg}
+          </div>
+        )}
       </div>
     </>
   );
