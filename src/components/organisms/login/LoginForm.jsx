@@ -42,14 +42,14 @@ export default function LoginForm({ onRegister, onForgotPassword }) {
       </CardHeader>
 
       <CardContent className="space-y-6">
-        {error && <div className="rounded-md border border-destructive/30 bg-destructive/10 text-destructive px-3 py-2 text-sm">{error}</div>}
+        {error && <div data-testid="login-error" className="rounded-md border border-destructive/30 bg-destructive/10 text-destructive px-3 py-2 text-sm">{error}</div>}
 
         <form onSubmit={handleSubmit} className="space-y-4">
-          <Field id="email" label="Correo electrónico" icon={Mail}
+          <Field id="email" label="Correo electrónico" icon={Mail} testId="login-email"
                  inputProps={{ type:"email", placeholder:"tu@email.com", value:email, onChange:e=>setEmail(e.target.value), required:true }} />
-          <Field id="password" label="Contraseña" icon={Lock}
+          <Field id="password" label="Contraseña" icon={Lock} testId="login-password"
                  inputProps={{ type:"password", placeholder:"••••••••", value:password, onChange:e=>setPassword(e.target.value), required:true }} />
-          <Button type="submit" className="w-full py-3 !text-white" disabled={isLoading}>
+          <Button type="submit" data-testid="login-submit" className="w-full py-3 !text-white" disabled={isLoading}>
             {isLoading ? "Iniciando sesión..." : "Iniciar sesión"}
           </Button>
         </form>
