@@ -43,7 +43,7 @@ export default function RegisterForm({ onLogin }) {
       </CardHeader>
 
       <CardContent className="space-y-6">
-        {error && <div className="rounded-md border border-destructive/30 bg-destructive/10 text-destructive px-3 py-2 text-sm">{error}</div>}
+        {error && <div data-testid="register-error" className="rounded-md border border-destructive/30 bg-destructive/10 text-destructive px-3 py-2 text-sm">{error}</div>}
         {ok &&    <div data-testid="register-success" className="rounded-md border border-green-300 bg-green-50 text-green-700 px-3 py-2 text-sm">{ok}</div>}
 
         <form onSubmit={handleSubmit} className="space-y-4">
