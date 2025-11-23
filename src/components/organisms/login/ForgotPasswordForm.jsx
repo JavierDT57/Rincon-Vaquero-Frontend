@@ -90,8 +90,8 @@ export default function ForgotPasswordForm({ onBackToLogin }) {
       </CardHeader>
 
       <CardContent className="space-y-6">
-        {err && <div className="rounded-md border border-destructive/30 bg-destructive/10 text-destructive px-3 py-2 text-sm">{err}</div>}
-        {msg && <div className="rounded-md border border-green-300 bg-green-50 text-green-700 px-3 py-2 text-sm">{msg}</div>}
+        {err && <div data-testid="reset-error" className="rounded-md border border-destructive/30 bg-destructive/10 text-destructive px-3 py-2 text-sm">{err}</div>}
+        {msg && <div data-testid="reset-success" className="rounded-md border border-green-300 bg-green-50 text-green-700 px-3 py-2 text-sm">{msg}</div>}
 
         {step === 1 && (
           <form onSubmit={handleRequest} className="space-y-4">
@@ -99,6 +99,7 @@ export default function ForgotPasswordForm({ onBackToLogin }) {
               id="email"
               label="Correo electrónico"
               icon={Mail}
+              testId="reset-email"
               inputProps={{
                 type: "email",
                 placeholder: "tu@email.com",
@@ -107,7 +108,7 @@ export default function ForgotPasswordForm({ onBackToLogin }) {
                 required: true
               }}
             />
-            <Button type="submit" className="w-full py-3 !text-white" disabled={isLoading}>
+            <Button type="submit" data-testid="reset-send" className="w-full py-3 !text-white" disabled={isLoading}>
               {isLoading ? "Enviando..." : "Enviar código"}
             </Button>
           </form>
@@ -131,6 +132,7 @@ export default function ForgotPasswordForm({ onBackToLogin }) {
               id="token"
               label="Código de verificación"
               icon={KeyRound}
+              testId="reset-token"
               inputProps={{
                 type: "text",
                 placeholder: "Ingresa el código de 6 dígitos",
@@ -144,7 +146,7 @@ export default function ForgotPasswordForm({ onBackToLogin }) {
                       onClick={() => { setStep(1); resetAlerts(); }}>
                 Cambiar correo
               </Button>
-              <Button type="submit" className="w-1/2 bg-secondary" disabled={isLoading}>
+              <Button type="submit" data-testid="reset-verify" className="w-1/2 bg-secondary" disabled={isLoading}>
                 {isLoading ? "Verificando..." : "Verificar código"}
               </Button>
             </div>
@@ -157,6 +159,7 @@ export default function ForgotPasswordForm({ onBackToLogin }) {
               id="newPassword"
               label="Nueva contraseña"
               icon={Lock}
+              testId="reset-newpass"
               inputProps={{
                 type: "password",
                 placeholder: "••••••••",
@@ -169,6 +172,7 @@ export default function ForgotPasswordForm({ onBackToLogin }) {
               id="confirmPassword"
               label="Confirmar contraseña"
               icon={Lock}
+              testId="reset-confirmpass"
               inputProps={{
                 type: "password",
                 placeholder: "••••••••",
@@ -182,7 +186,7 @@ export default function ForgotPasswordForm({ onBackToLogin }) {
                       onClick={() => { setStep(2); resetAlerts(); }}>
                 Atrás
               </Button>
-              <Button type="submit" className="w-2/3 bg-secondary" disabled={isLoading}>
+              <Button type="submit" data-testid="reset-save" className="w-2/3 bg-secondary" disabled={isLoading}>
                 {isLoading ? "Guardando..." : "Guardar contraseña"}
               </Button>
             </div>
