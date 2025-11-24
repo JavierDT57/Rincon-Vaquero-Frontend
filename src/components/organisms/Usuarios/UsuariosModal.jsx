@@ -1,19 +1,31 @@
 import React, { useEffect } from "react";
 
 export default function UsuariosModal({
-  isOpen, onClose, onSubmit,
-  formNombre, setFormNombre,
-  formApellidos, setFormApellidos,
-  formActivo, setFormActivo,
-  readEmail, readRol,
+  isOpen,
+  onClose,
+  onSubmit,
+  formNombre,
+  setFormNombre,
+  formApellidos,
+  setFormApellidos,
+  formActivo,
+  setFormActivo,
+  readEmail,
+  readRol,
 }) {
-
+  // 👇 NUEVA LÓGICA DE BLOQUEO SCROLL
   useEffect(() => {
-    if (isOpen) document.body.style.overflow = "hidden";
-    else document.body.style.overflow = "auto";
+    if (!isOpen) return;
+
+    const prevOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+
+    return () => {
+      document.body.style.overflow = prevOverflow || "";
+    };
   }, [isOpen]);
 
-  if (!isOpen) return null; 
+  if (!isOpen) return null;
 
   return (
     <div className="fixed inset-0 z-[60] grid place-items-center p-4">
@@ -24,7 +36,6 @@ export default function UsuariosModal({
 
       <div className="relative w-full max-w-xl rounded-2xl p-[1px] bg-gradient-to-br from-purple-500/40 to-fuchsia-500/40 shadow-2xl max-h-[90vh] overflow-y-auto">
         <div className="rounded-2xl bg-white ring-1 ring-black/5 p-6">
-
           {/* Header */}
           <div className="mb-4 flex items-center justify-between">
             <h2 className="text-xl font-semibold">Editar usuario</h2>
@@ -37,7 +48,6 @@ export default function UsuariosModal({
           </div>
 
           <form onSubmit={onSubmit} className="space-y-5">
-
             {/* Nombre y Apellidos */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
@@ -45,7 +55,7 @@ export default function UsuariosModal({
                 <input
                   type="text"
                   value={formNombre}
-                  onChange={(e)=>setFormNombre(e.target.value)}
+                  onChange={(e) => setFormNombre(e.target.value)}
                   className="mt-1 w-full rounded-xl border border-slate-200 px-3 py-2 outline-none focus:ring-2 focus:ring-purple-500"
                   required
                 />
@@ -56,7 +66,7 @@ export default function UsuariosModal({
                 <input
                   type="text"
                   value={formApellidos}
-                  onChange={(e)=>setFormApellidos(e.target.value)}
+                  onChange={(e) => setFormApellidos(e.target.value)}
                   className="mt-1 w-full rounded-xl border border-slate-200 px-3 py-2 outline-none focus:ring-2 focus:ring-purple-500"
                   required
                 />
@@ -65,10 +75,11 @@ export default function UsuariosModal({
 
             {/* Correo / Rol / Estatus */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-
               {/* Correo */}
               <div>
-                <label className="block text-xs font-medium text-slate-500">Correo</label>
+                <label className="block text-xs font-medium text-slate-500">
+                  Correo
+                </label>
                 <div className="mt-1 rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-slate-700 overflow-hidden text-ellipsis whitespace-nowrap shadow-sm">
                   {readEmail}
                 </div>
@@ -76,7 +87,9 @@ export default function UsuariosModal({
 
               {/* Rol */}
               <div>
-                <label className="block text-xs font-medium text-slate-500">Rol</label>
+                <label className="block text-xs font-medium text-slate-500">
+                  Rol
+                </label>
                 <div className="mt-1 rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-slate-700 overflow-hidden text-ellipsis whitespace-nowrap shadow-sm">
                   {readRol}
                 </div>
@@ -84,9 +97,10 @@ export default function UsuariosModal({
 
               {/* Estatus */}
               <div>
-                <label className="block text-xs font-medium text-slate-500">Estatus</label>
+                <label className="block text-xs font-medium text-slate-500">
+                  Estatus
+                </label>
                 <div className="mt-1 flex items-center gap-3">
-
                   <button
                     type="button"
                     onClick={() => setFormActivo(!formActivo)}
@@ -111,10 +125,8 @@ export default function UsuariosModal({
                   >
                     {formActivo ? "Activo" : "Suspendido"}
                   </span>
-
                 </div>
               </div>
-
             </div>
 
             {/* Botones */}
@@ -134,9 +146,7 @@ export default function UsuariosModal({
                 Guardar cambios
               </button>
             </div>
-
           </form>
-
         </div>
       </div>
     </div>
