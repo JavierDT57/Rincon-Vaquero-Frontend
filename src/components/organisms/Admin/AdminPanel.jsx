@@ -541,6 +541,7 @@ function TestimoniosList({
                   <div className="mt-3 flex flex-wrap gap-2">
                     {tStatus === "pending" && (
                       <button
+                        data-testid="btn-aprobar-testimonio"
                         className="inline-flex gap-2 px-3 py-1.5 rounded-lg bg-emerald-600 text-white hover:bg-emerald-700"
                         onClick={() => onApprove(t.id)}
                       >
@@ -549,6 +550,7 @@ function TestimoniosList({
                     )}
 
                     <button
+                      data-testid="btn-editar-testimonio"
                       className="inline-flex gap-2 px-3 py-1.5 rounded-lg bg-blue-600 text-white hover:bg-blue-700"
                       onClick={() => onEdit(t)}
                     >
@@ -556,6 +558,7 @@ function TestimoniosList({
                     </button>
 
                     <button
+                      data-testid="btn-eliminar-testimonio"
                       className="inline-flex gap-2 px-3 py-1.5 rounded-lg bg-red-600 text-white hover:bg-red-700"
                       onClick={() => onDelete(t.id)}
                     >
@@ -684,6 +687,7 @@ function TiendaList({
                   <div className="mt-3 flex flex-wrap gap-2">
                     {pStatus === "pending" && (
                       <button
+                        data-testid="btn-aprobar-producto"
                         className="inline-flex gap-2 px-3 py-1.5 rounded-lg bg-emerald-600 text-white hover:bg-emerald-700"
                         onClick={() => onApprove(p.id)}
                       >
@@ -692,6 +696,7 @@ function TiendaList({
                     )}
 
                     <button
+                      data-testid="btn-editar-producto"
                       className="inline-flex gap-2 px-3 py-1.5 rounded-lg bg-blue-600 text-white hover:bg-blue-700"
                       onClick={() => onEdit(p)}
                     >
@@ -699,6 +704,7 @@ function TiendaList({
                     </button>
 
                     <button
+                      data-testid="btn-eliminar-producto"
                       className="inline-flex gap-2 px-3 py-1.5 rounded-lg bg-red-600 text-white hover:bg-red-700"
                       onClick={() => onDelete(p.id)}
                     >

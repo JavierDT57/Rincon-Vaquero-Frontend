@@ -52,6 +52,7 @@ export default function TestimoniosModal({
               <div>
                 <label className="text-sm">Nombre</label>
                 <input
+                  data-testid="input-nombre"
                   value={formNombre}
                   onChange={(e) => setFormNombre(e.target.value)}
                   required
@@ -61,6 +62,7 @@ export default function TestimoniosModal({
               <div>
                 <label className="text-sm">Localidad</label>
                 <input
+                  data-testid="input-localidad"
                   value={formLocalidad}
                   onChange={(e) => setFormLocalidad(e.target.value)}
                   className="w-full rounded-xl border px-3 py-2"
@@ -72,6 +74,7 @@ export default function TestimoniosModal({
               <div>
                 <label className="text-sm">Calificación</label>
                 <select
+                  data-testid="select-calificacion"
                   value={formRating}
                   onChange={(e) => setFormRating(e.target.value)}
                   className="w-full rounded-xl border px-3 py-2"
@@ -85,6 +88,7 @@ export default function TestimoniosModal({
               <div>
                 <label className="text-sm">Imagen</label>
                 <input
+                  data-testid="input-imagen"
                   type="file"
                   accept="image/*"
                   onChange={onFileChange}
@@ -106,6 +110,7 @@ export default function TestimoniosModal({
             <div>
               <label className="text-sm">Comentario</label>
               <textarea
+                data-testid="textarea-comentario"
                 value={formComentario}
                 onChange={(e) => setFormComentario(e.target.value)}
                 rows={4}
@@ -116,6 +121,7 @@ export default function TestimoniosModal({
 
             <div className="flex justify-end gap-3 pt-2">
               <button
+                data-testid="btn-cancelar"
                 type="button"
                 onClick={onClose}
                 className="px-4 py-2 rounded-xl bg-slate-100"
@@ -124,6 +130,7 @@ export default function TestimoniosModal({
               </button>
 
               <button
+                data-testid="btn-publicar"
                 type="submit"
                 className="px-4 py-2 rounded-xl bg-blue-600 text-white"
               >

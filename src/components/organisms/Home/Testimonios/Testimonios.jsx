@@ -307,7 +307,7 @@ const handleImgLoad = (e) => {
                 Comparte tu experiencia y fotos con otros viajeros
               </p>
               {!isChecking && (user && (user.rol === "usuario" || user.rol === "admin") ? (
-                <Button className="w-full hover:bg-blue-700 !text-white" onClick={() => setIsOpen(true)}>
+                <Button  data-testid="btn-compartir-experiencia" className="w-full hover:bg-blue-700 !text-white" onClick={() => setIsOpen(true)}>
                   Compartir mi experiencia
                 </Button>
               ) : (
