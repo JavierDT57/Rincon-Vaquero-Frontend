@@ -746,6 +746,7 @@ function EstadisticasEditable({
           <button
             onClick={onSave}
             disabled={saving || dirtyCount === 0}
+            data-testid="btn-guardar-estadisticas"
             className={
               "rounded-xl px-4 py-2 text-white font-medium shadow " +
               (dirtyCount === 0
@@ -770,6 +771,7 @@ function EstadisticasEditable({
 
               <input
                 type="number"
+                data-testid={`input-estadistica-${s.slug}`}
                 value={String(s.value ?? "")}
                 onChange={(e) =>
                   onChange(s.slug, Number(e.target.value || 0))
