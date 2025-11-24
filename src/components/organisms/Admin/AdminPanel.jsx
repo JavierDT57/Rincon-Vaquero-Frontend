@@ -397,6 +397,7 @@ function AvisosList({ data = [], loading, error, onEdit, onDelete, onRefresh }) 
                     </button>
 
                     <button
+                      data-testid="btn-eliminar-aviso"
                       className="inline-flex gap-2 px-3 py-1.5 rounded-lg bg-red-600 text-white hover:bg-red-700"
                       onClick={() => onDelete(aviso.id)}
                     >
