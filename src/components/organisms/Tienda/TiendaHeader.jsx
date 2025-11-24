@@ -50,6 +50,7 @@ export default function TiendaHeader({
             <button
               type="button"
               onClick={onCreateClick}
+              data-testid="btn-crear-publicacion"
               className={
                 activeView === "create" ? primaryButton : ghostButton
               }

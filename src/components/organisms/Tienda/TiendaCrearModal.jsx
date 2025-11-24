@@ -179,6 +179,7 @@ export default function TiendaCreatePublication({
               <input
                 type="text"
                 value={formData.name}
+                data-testid="input-nombre"
                 onChange={handleChange("name")}
                 required
                 className="w-full rounded-xl border border-slate-200 px-3 py-2.5 focus:ring-2 focus:ring-blue-500"
@@ -193,6 +194,7 @@ export default function TiendaCreatePublication({
                   type="number"
                   required
                   value={formData.price}
+                  data-testid="input-precio"
                   onChange={handleChange("price")}
                   className="w-full rounded-xl border border-slate-200 px-3 py-2.5 focus:ring-2 focus:ring-blue-500"
                 />
@@ -204,6 +206,7 @@ export default function TiendaCreatePublication({
                   type="number"
                   required
                   value={formData.stock}
+                  data-testid="input-stock"
                   onChange={handleChange("stock")}
                   className="w-full rounded-xl border border-slate-200 px-3 py-2.5 focus:ring-2 focus:ring-blue-500"
                 />
@@ -216,6 +219,7 @@ export default function TiendaCreatePublication({
               <select
                 value={formData.category}
                 onChange={handleChange("category")}
+                data-testid="select-categoria"
                 className="w-full rounded-xl border border-slate-200 px-3 py-2.5 focus:ring-2 focus:ring-blue-500"
               >
                 <option>Electrónica</option>
@@ -233,6 +237,7 @@ export default function TiendaCreatePublication({
                 type="text"
                 required
                 value={formData.location}
+                data-testid="input-ubicacion"
                 onChange={handleChange("location")}
                 className="w-full rounded-xl border border-slate-200 px-3 py-2.5 focus:ring-2 focus:ring-blue-500"
               />
@@ -246,12 +251,14 @@ export default function TiendaCreatePublication({
                   type="text"
                   value={formData.lada}
                   onChange={handleChange("lada")}
+                  data-testid="input-lada"
                   className="w-24 rounded-xl border border-slate-200 px-3 py-2.5 focus:ring-2 focus:ring-blue-500"
                 />
                 <input
                   type="text"
                   maxLength="10"
                   value={formData.phone}
+                  data-testid="input-telefono"
                   placeholder="10 dígitos"
                   onChange={handleChange("phone")}
                   className="flex-1 rounded-xl border border-slate-200 px-3 py-2.5 focus:ring-2 focus:ring-blue-500"
@@ -266,6 +273,7 @@ export default function TiendaCreatePublication({
                 type="file"
                 accept="image/*"
                 onChange={handleFileChange}
+                data-testid="input-imagen"
                 className="block w-full text-sm file:mr-4 file:rounded-lg file:border-0 file:bg-blue-600 file:px-4 file:py-2 file:text-white file:font-medium file:hover:opacity-90"
               />
 
@@ -288,6 +296,7 @@ export default function TiendaCreatePublication({
               <button
                 type="submit"
                 disabled={submitting}
+                data-testid="btn-submit-publicacion"
                 className="rounded-xl bg-blue-600 px-5 py-2.5 text-white font-medium shadow hover:opacity-90 disabled:opacity-60"
               >
                 {buttonText}
