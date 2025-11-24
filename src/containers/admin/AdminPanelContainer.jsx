@@ -55,6 +55,25 @@ export default function AdminPanelContainer() {
     estadisticas: null,
   });
 
+  // ✅ Mensajes globales para AdminPanel (para todas las secciones)
+  const [adminSuccessMsg, setAdminSuccessMsg] = useState("");
+  const [adminErrorMsg, setAdminErrorMsg] = useState("");
+
+  const clearAdminMessages = () => {
+    setAdminSuccessMsg("");
+    setAdminErrorMsg("");
+  };
+
+  const showAdminSuccess = (msg) => {
+    setAdminSuccessMsg(msg);
+    setAdminErrorMsg("");
+  };
+
+  const showAdminError = (msg) => {
+    setAdminErrorMsg(msg);
+    setAdminSuccessMsg("");
+  };
+
   // MODALES
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [editTipo, setEditTipo] = useState(null);
@@ -140,6 +159,7 @@ export default function AdminPanelContainer() {
       setAvisos((items || []).map(normalizeAviso));
     } catch (e) {
       setError((s) => ({ ...s, avisos: String(e?.message || e) }));
+      showAdminError("Error al cargar avisos.");
     } finally {
       setLoading((s) => ({ ...s, avisos: false }));
     }
@@ -157,6 +177,7 @@ export default function AdminPanelContainer() {
       setTestimonios((items || []).map(normalizeTestimonio));
     } catch (e) {
       setError((s) => ({ ...s, testimonios: String(e?.message || e) }));
+      showAdminError("Error al cargar testimonios.");
     } finally {
       setLoading((s) => ({ ...s, testimonios: false }));
     }
@@ -172,6 +193,7 @@ export default function AdminPanelContainer() {
       setUsuarios((list || []).map(normalizeUser));
     } catch (e) {
       setError((s) => ({ ...s, usuarios: String(e?.message || e) }));
+      showAdminError("Error al cargar usuarios.");
     } finally {
       setLoading((s) => ({ ...s, usuarios: false }));
     }
@@ -189,6 +211,7 @@ export default function AdminPanelContainer() {
       setProductos((items || []).map(normalizeProducto));
     } catch (e) {
       setError((s) => ({ ...s, tienda: String(e?.message || e) }));
+      showAdminError("Error al cargar productos de tienda.");
     } finally {
       setLoading((s) => ({ ...s, tienda: false }));
     }
@@ -204,6 +227,7 @@ export default function AdminPanelContainer() {
       setDirtyStats({});
     } catch (e) {
       setError((s) => ({ ...s, estadisticas: String(e?.message || e) }));
+      showAdminError("Error al cargar estadísticas.");
     } finally {
       setLoading((s) => ({ ...s, estadisticas: false }));
     }
@@ -242,6 +266,8 @@ export default function AdminPanelContainer() {
   };
 
   const handleEdit = async (tipo, itemOrId) => {
+    clearAdminMessages();
+
     if (tipo === "usuarios") return handleUserEdit(itemOrId);
 
     const id = typeof itemOrId === "object" ? itemOrId.id : itemOrId;
@@ -289,12 +315,14 @@ export default function AdminPanelContainer() {
         setIsEditOpen(true);
       }
     } catch (e) {
-      alert("Error al cargar datos: " + (e?.message || e));
+      showAdminError("Error al cargar datos para edición.");
       resetEdit();
     }
   };
 
   const handleDelete = async (tipo, id) => {
+    clearAdminMessages();
+
     if (tipo === "usuarios") return handleDeleteUser(id);
     if (!id) return;
 
@@ -305,81 +333,106 @@ export default function AdminPanelContainer() {
       const url = `${API_BASE}/${tipo}/${id}`;
       await fetchJSON(url, { method: "DELETE" });
 
-      if (tipo === "avisos") loadAvisos();
-      if (tipo === "testimonios") loadTestimonios();
-      if (tipo === "tienda") loadTienda();
+      if (tipo === "avisos") {
+        await loadAvisos();
+        showAdminSuccess("Aviso eliminado correctamente.");
+      }
+      if (tipo === "testimonios") {
+        await loadTestimonios();
+        showAdminSuccess("Testimonio eliminado correctamente.");
+      }
+      if (tipo === "tienda") {
+        await loadTienda();
+        showAdminSuccess("Producto eliminado correctamente.");
+      }
     } catch (e) {
-      alert("Error eliminando: " + (e?.message || e));
+      showAdminError("Error al eliminar el registro.");
     }
   };
 
-  const submitEdit = async (e) => {
-    e.preventDefault();
-    if (!editTipo || !editId) return;
+ const submitEdit = async (e) => {
+  e.preventDefault();
+  if (!editTipo || !editId) return;
 
-    const url = `${API_BASE}/${editTipo}/${editId}`;
-    const fd = new FormData();
+  clearAdminMessages();
+
+  const url = `${API_BASE}/${editTipo}/${editId}`;
+  const fd = new FormData();
+
+  if (editTipo === "avisos") {
+    fd.append("titulo", formTitulo);
+    fd.append("texto", formTexto);
+    if (file) fd.append("imagen", file);
+  } else if (editTipo === "testimonios") {
+    fd.append("nombre", formNombre);
+    fd.append("localidad", formLocalidad || "");
+    fd.append("comentario", formComentario);
+    fd.append("rating", String(formRating));
+    if (file) fd.append("imagen", file);
+  } else {
+    return;
+  }
+
+  try {
+    // 🔥 AHORA usamos fetchJSON que lanza si el backend devuelve 4xx/5xx
+    await fetchJSON(url, { method: "PUT", body: fd });
 
     if (editTipo === "avisos") {
-      fd.append("titulo", formTitulo);
-      fd.append("texto", formTexto);
-      if (file) fd.append("imagen", file);
+      await loadAvisos();
+      showAdminSuccess("Aviso actualizado correctamente.");
     } else if (editTipo === "testimonios") {
-      fd.append("nombre", formNombre);
-      fd.append("localidad", formLocalidad || "");
-      fd.append("comentario", formComentario);
-      fd.append("rating", String(formRating));
-      if (file) fd.append("imagen", file);
-    } else {
-      return;
+      await loadTestimonios();
+      showAdminSuccess("Testimonio actualizado correctamente.");
     }
 
-    try {
-      await fetch(url, { method: "PUT", body: fd, credentials: "include" });
+    resetEdit();
+  } catch (e2) {
+    console.error(e2);
+    showAdminError("Error guardando cambios.");
+  }
+};
 
-      if (editTipo === "avisos") loadAvisos();
-      else if (editTipo === "testimonios") loadTestimonios();
-
-      resetEdit();
-    } catch (e2) {
-      alert("Error guardando cambios: " + (e2?.message || e2));
-    }
-  };
 
   // ========== TIENDA (EDITAR) ==========
-  const submitTiendaEdit = async (payload) => {
-    if (!editId) throw new Error("ID inválido");
+const submitTiendaEdit = async (payload) => {
+  clearAdminMessages();
 
-    const url = `${API_BASE}/tienda/${editId}`;
-    const fd = new FormData();
+  if (!editId) {
+    showAdminError("ID de producto inválido.");
+    throw new Error("ID inválido");
+  }
 
-    fd.append("nombre", payload.name);
-    fd.append("precio", String(payload.price));
-    fd.append("stock", String(payload.stock));
-    fd.append("categoria", payload.category);
-    fd.append("ubicacion", payload.location);
-    fd.append("telefono", payload.telefono);
+  const url = `${API_BASE}/tienda/${editId}`;
+  const fd = new FormData();
 
-    if (payload.imageFile) {
-      fd.append("imagen", payload.imageFile);
-    }
+  fd.append("nombre", payload.name);
+  fd.append("precio", String(payload.price));
+  fd.append("stock", String(payload.stock));
+  fd.append("categoria", payload.category);
+  fd.append("ubicacion", payload.location);
+  fd.append("telefono", payload.telefono);
 
-    try {
-      await fetch(url, {
-        method: "PUT",
-        body: fd,
-        credentials: "include",
-      });
-      await loadTienda();
-      resetEdit();
-    } catch (e) {
-      console.error(e);
-      throw e;
-    }
-  };
+  if (payload.imageFile) {
+    fd.append("imagen", payload.imageFile);
+  }
+
+  try {
+    // 🔥 Igual que arriba, usamos fetchJSON
+    await fetchJSON(url, { method: "PUT", body: fd });
+    await loadTienda();
+    resetEdit();
+    showAdminSuccess("Producto de tienda actualizado correctamente.");
+  } catch (e) {
+    console.error(e);
+    showAdminError("Error al actualizar el producto.");
+    throw e;
+  }
+};
 
   // ========== USUARIOS ==========
   async function handleUserEdit(itemOrId) {
+    clearAdminMessages();
+
     const id = typeof itemOrId === "object" ? itemOrId.id : itemOrId;
 
     try {
@@ -397,13 +450,15 @@ export default function AdminPanelContainer() {
 
       setIsUserOpen(true);
     } catch (e) {
-      alert("No se pudo cargar el usuario: " + (e?.message || e));
+      showAdminError("No se pudo cargar el usuario.");
     }
   }
 
   async function submitUserEdit(e) {
     e.preventDefault();
     if (!userId) return;
+
+    clearAdminMessages();
 
     try {
       await fetchJSON(`${API_BASE}/users/${userId}`, {
@@ -416,26 +471,32 @@ export default function AdminPanelContainer() {
         }),
       });
 
-      loadUsuarios();
+      await loadUsuarios();
       setIsUserOpen(false);
+      showAdminSuccess("Usuario actualizado correctamente.");
     } catch (e) {
-      alert("No se pudo actualizar: " + (e?.message || e));
+      showAdminError("No se pudo actualizar el usuario.");
     }
   }
 
   async function handleSuspendUser(id) {
+    clearAdminMessages();
+
     const ok = confirm("¿Suspender usuario?");
     if (!ok) return;
 
     try {
       await fetchJSON(`${API_BASE}/users/${id}`, { method: "DELETE" });
-      loadUsuarios();
+      await loadUsuarios();
+      showAdminSuccess("Usuario suspendido correctamente.");
     } catch (e) {
-      alert("No se pudo suspender: " + (e?.message || e));
+      showAdminError("No se pudo suspender el usuario.");
     }
   }
 
   async function handleDeleteUser(id) {
+    clearAdminMessages();
+
     const ok = confirm("¿Eliminar usuario DEFINITIVAMENTE?");
     if (!ok) return;
 
@@ -443,9 +504,10 @@ export default function AdminPanelContainer() {
       await fetchJSON(`${API_BASE}/users/${id}?hard=true`, {
         method: "DELETE",
       });
-      loadUsuarios();
+      await loadUsuarios();
+      showAdminSuccess("Usuario eliminado correctamente.");
     } catch (e) {
-      alert("No se pudo eliminar: " + (e?.message || e));
+      showAdminError("No se pudo eliminar el usuario.");
     }
   }
 
@@ -458,6 +520,8 @@ export default function AdminPanelContainer() {
   };
 
   const saveAllStats = async () => {
+    clearAdminMessages();
+
     const toUpdate = stats.filter((it) => dirtyStats[it.slug]);
 
     setSavingStats(true);
@@ -466,34 +530,40 @@ export default function AdminPanelContainer() {
         toUpdate.map((it) => updateDashboardItem(it.slug, it.value))
       );
       await loadStats();
-      alert("Estadísticas actualizadas.");
+      showAdminSuccess("Estadísticas actualizadas correctamente.");
     } catch (e) {
-      alert("No se pudieron actualizar: " + (e?.message || e));
+      showAdminError("No se pudieron actualizar las estadísticas.");
     }
     setSavingStats(false);
   };
 
   // ========== APROBAR TESTIMONIOS ==========
   const approveTestimonio = async (id) => {
+    clearAdminMessages();
+
     try {
       await fetchJSON(`${API_BASE}/testimonios/admin/${id}`, {
         method: "PATCH",
       });
-      loadTestimonios();
+      await loadTestimonios();
+      showAdminSuccess("Testimonio aprobado correctamente.");
     } catch (e) {
-      alert("No se pudo aprobar: " + (e?.message || e));
+      showAdminError("No se pudo aprobar el testimonio.");
     }
   };
 
   // ========== APROBAR PRODUCTO ==========
   const approveProducto = async (id) => {
+    clearAdminMessages();
+
     try {
       await fetchJSON(`${API_BASE}/tienda/admin/${id}`, {
         method: "PATCH",
       });
-      loadTienda();
+      await loadTienda();
+      showAdminSuccess("Producto aprobado correctamente.");
     } catch (e) {
-      alert("No se pudo aprobar: " + (e?.message || e));
+      showAdminError("No se pudo aprobar el producto.");
     }
   };
 
@@ -535,6 +605,10 @@ export default function AdminPanelContainer() {
         onStatsSave={saveAllStats}
         statsSaving={savingStats}
         dirtyCount={Object.keys(dirtyStats).length}
+        // ✅ Mensajes globales
+        adminSuccessMsg={adminSuccessMsg}
+        adminErrorMsg={adminErrorMsg}
+        onClearMessages={clearAdminMessages}
       />
 
       {/* Modales Avisos / Testimonios */}

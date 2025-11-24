@@ -1,7 +1,16 @@
 import React, { useMemo } from "react";
 import {
-  Quote, Users, Bell, MessageSquare, BarChart2, Trash2, Pencil,
-  Calendar, MapPin, Check, Package
+  Quote,
+  Users,
+  Bell,
+  MessageSquare,
+  BarChart2,
+  Trash2,
+  Pencil,
+  Calendar,
+  MapPin,
+  Check,
+  Package,
 } from "lucide-react";
 import { absUrl } from "../../../api/adminMedia";
 
@@ -19,6 +28,11 @@ export default function AdminPanel({
   onEdit = () => {},
   onSuspend = () => {},
   onDelete = () => {},
+
+  // ✅ Mensajes globales para todo el panel admin
+  adminSuccessMsg = "",
+  adminErrorMsg = "",
+  onClearMessages = () => {},
 
   // Moderación testimonios
   tStatus = "pending",
@@ -61,7 +75,44 @@ export default function AdminPanel({
       <div className="max-w-7xl mx-auto px-4 md:px-6 pb-12 grid grid-cols-1 sm:grid-cols-[200px,1fr] md:grid-cols-[260px,1fr] gap-6">
         <Sidebar active={active} onSelect={onSelect} />
 
-        <main className="min-w-0">
+        <main className="min-w-0 space-y-4">
+          {/* ✅ Banner global de mensajes para TODO el panel */}
+          {(adminSuccessMsg || adminErrorMsg) && (
+            <div className="mb-2">
+              {adminSuccessMsg && (
+                <div
+                  data-testid="admin-success"
+                  className="mb-2 p-3 bg-green-100 border border-green-300 text-green-700 rounded-xl flex justify-between items-center"
+                >
+                  <span>{adminSuccessMsg}</span>
+                  <button
+                    type="button"
+                    className="text-sm underline"
+                    onClick={onClearMessages}
+                  >
+                    Cerrar
+                  </button>
+                </div>
+              )}
+
+              {adminErrorMsg && (
+                <div
+                  data-testid="admin-error"
+                  className="mb-2 p-3 bg-red-100 border border-red-300 text-red-700 rounded-xl flex justify-between items-center"
+                >
+                  <span>{adminErrorMsg}</span>
+                  <button
+                    type="button"
+                    className="text-sm underline"
+                    onClick={onClearMessages}
+                  >
+                    Cerrar
+                  </button>
+                </div>
+              )}
+            </div>
+          )}
+
           {active === "usuarios" && (
             <UsuariosList
               usuarios={usuarios}
@@ -150,6 +201,7 @@ function Sidebar({ active, onSelect }) {
             <button
               key={id}
               onClick={() => onSelect(id)}
+              data-testid="btn-sidebar-item"
               className={
                 "w-full flex items-center gap-3 rounded-xl px-3 py-2 transition border " +
                 (selected
@@ -337,6 +389,7 @@ function AvisosList({ data = [], loading, error, onEdit, onDelete, onRefresh }) 
 
                   <div className="mt-3 flex gap-2">
                     <button
+                      data-testid="btn-editar-aviso"
                       className="inline-flex gap-2 px-3 py-1.5 rounded-lg bg-blue-600 text-white hover:bg-blue-700"
                       onClick={() => onEdit(aviso)}
                     >
