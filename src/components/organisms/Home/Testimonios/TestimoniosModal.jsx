@@ -1,40 +1,53 @@
 import React, { useEffect } from "react";
 
 export default function TestimoniosModal({
-  isOpen, onClose, onSubmit,
-  formNombre, setFormNombre,
-  formLocalidad, setFormLocalidad,
-  formComentario, setFormComentario,
-  formRating, setFormRating,
-  onFileChange, formPreview,
+  isOpen,
+  onClose,
+  onSubmit,
+  formNombre,
+  setFormNombre,
+  formLocalidad,
+  setFormLocalidad,
+  formComentario,
+  setFormComentario,
+  formRating,
+  setFormRating,
+  onFileChange,
+  formPreview,
 }) {
-  
   useEffect(() => {
-    if (isOpen) document.body.style.overflow = "hidden";
-    else document.body.style.overflow = "auto";
+    if (!isOpen) return;
+
+    const prevOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+
+    return () => {
+      document.body.style.overflow = prevOverflow || "";
+    };
   }, [isOpen]);
 
-  if (!isOpen) return null; 
+  if (!isOpen) return null;
 
   return (
     <div className="fixed inset-0 z-[60] grid place-items-center p-4">
+      <div
+        className="absolute inset-0 bg-black/50 backdrop-blur-sm"
+        onClick={onClose}
+      />
 
-      <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" onClick={onClose} />
-
-      <div className="relative w-full max-w-xl
-                      max-h-[90vh] overflow-y-auto">
-
+      <div className="relative w-full max-w-xl max-h-[90vh] overflow-y-auto">
         <div className="rounded-2xl bg-white p-6 shadow-xl ring-1 ring-black/5">
-
           <div className="mb-4 flex justify-between">
             <h3 className="text-xl font-semibold">Compartir experiencia</h3>
-            <button onClick={onClose} className="px-2 py-1 rounded-lg hover:bg-slate-100">
+            <button
+              onClick={onClose}
+              className="px-2 py-1 rounded-lg hover:bg-slate-100"
+            >
               Cerrar
             </button>
           </div>
 
           <form className="space-y-4" onSubmit={onSubmit}>
-
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <label className="text-sm">Nombre</label>
@@ -63,7 +76,9 @@ export default function TestimoniosModal({
                   onChange={(e) => setFormRating(e.target.value)}
                   className="w-full rounded-xl border px-3 py-2"
                 >
-                  {[5,4,3,2,1].map(n => <option key={n}>{n}</option>)}
+                  {[5, 4, 3, 2, 1].map((n) => (
+                    <option key={n}>{n}</option>
+                  ))}
                 </select>
               </div>
 
@@ -80,7 +95,11 @@ export default function TestimoniosModal({
 
             {formPreview && (
               <div className="rounded-xl overflow-hidden border">
-                <img src={formPreview} className="w-full max-h-60 object-cover" />
+                <img
+                  src={formPreview}
+                  className="w-full max-h-60 object-cover"
+                  alt="Preview"
+                />
               </div>
             )}
 
@@ -111,9 +130,7 @@ export default function TestimoniosModal({
                 Publicar
               </button>
             </div>
-
           </form>
-
         </div>
       </div>
     </div>
