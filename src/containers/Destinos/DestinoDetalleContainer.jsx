@@ -34,16 +34,46 @@ const base = {
       zoom: 18,        
     },
 
-    sections: {
+    sections : {
       queEs:
-        "El campo comunitario de Rincón Vaquero es considerado uno de los más bonitos del municipio...",
+        "El campo comunitario de Rincón Vaquero, ubicado en el barrio de la Soledad, es considerado uno de los más bonitos y amplios del municipio. Cuenta con una cancha de pasto delimitada y espacio alrededor para que las familias se sienten a ver los partidos. No solo es un espacio deportivo, sino también un punto de reunión para la comunidad, donde se convive, se organizan torneos y se celebran fechas especiales. Aquí entrena y juega La Ola Verde, el equipo representativo del pueblo, que por generaciones ha llevado los colores y el orgullo de Rincón Vaquero a otros campos de la región.",
+
       historia:
-        "Desde 1950, el campo ha sido el lugar de entrenamiento del equipo local...",
+        "Desde 1950, el campo ha sido el lugar de entrenamiento del equipo Ola Verde y el escenario de partidos amistosos, torneos que la gente aún recuerda. Con el tiempo, la comunidad fue mejorando el espacio: se niveló el terreno, se colocaron porterías más resistentes y se marcaron las líneas de juego. La Ola Verde se ha mantenido como el equipo del pueblo por varias generaciones; padres, hijos y hasta nietos han vestido el uniforme. Una de las tradiciones más queridas es el partido del 31 de diciembre, donde cada año se enfrentan los jóvenes contra los veteranos, en un partido de nostalgia y convivencia. Hoy en día, el campo sigue siendo un símbolo vivo del pueblo, donde nuevas generaciones continúan la tradición de jugar, entrenar y reunirse alrededor del fútbol.",
+
       curiosos: [
-        { k: "Todos los sábados", v: "La Ola Verde disputa partidos..." },
-        { k: "Mantenimiento constante", v: "La comunidad se organiza..." },
-        { k: "Softball ocasional", v: "También se juega softball" },
-        { k: "Más de 40 años", v: "Promoviendo tradición futbolera" },
+        {
+          k: "Clásico del 31 de diciembre",
+          v: "Cada 31 de diciembre se juega el tradicional partido Jóvenes vs Veteranos, donde La Ola Verde se divide por generaciones. Es un encuentro lleno de emociones y recuerdos, que se ha convertido en parte de las fiestas de fin de año."
+        },
+        {
+          k: "Partidos",
+          v: "Cada sábado, el campo se llena de vida con los partidos de La Ola Verde y otros equipos locales, creando un ambiente de emoción, porras y convivencia entre familias y amigos."
+        },
+        {
+          k: "Mantenimiento comunitario",
+          v: "La comunidad se organiza para darle mantenimiento constante al campo: se limpia la cancha, se corta el pasto, se reparan porterías y se revisan las líneas, todo de manera colaborativa."
+        },
+        {
+          k: "Softball ocasional",
+          v: "Además del fútbol, el campo también se adapta para jugar softball de vez en cuando, aprovechando su tamaño y la buena visibilidad para los espectadores."
+        },
+        {
+          k: "Más de 40 años",
+          v: "El campo lleva más de cuatro décadas siendo testigo de la tradición futbolera del pueblo, viendo pasar generaciones de jugadores que comenzaron a entrenar desde niños."
+        },
+        {
+          k: "Días de fiesta",
+          v: "En días de fiesta patronal o celebraciones importantes, el campo suele ser sede de torneos relámpago y partidos especiales que atraen a equipos de otros pueblos."
+        },
+        {
+          k: "Ambiente familiar",
+          v: "Alrededor del campo es común ver familias completas, niños corriendo y personas mayores recordando anécdotas de partidos antiguos, lo que crea un ambiente seguro y familiar."
+        },
+        {
+          k: "Atardeceres",
+          v: "Por su ubicación, desde el campo se pueden apreciar atardeceres muy vistosos, lo que hace que los entrenamientos de la tarde tengan un paisaje especial de fondo."
+        }
       ],
     },
   },
