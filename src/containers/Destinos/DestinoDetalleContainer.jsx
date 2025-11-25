@@ -104,16 +104,37 @@ const base = {
 
     sections: {
       queEs:
-        "La Escuela Primaria de Rincón Vaquero es una de las instituciones educativas más antiguas...",
+        "La Escuela Primaria de Rincón Vaquero es una escuela rural ubicada en el corazón de la comunidad. Es una de las instituciones educativas más antiguas del pueblo y, al mismo tiempo, uno de sus pilares más importantes. Ofrece el máximo grado de estudios disponible dentro de Rincón Vaquero, por lo que representa una oportunidad clave para que niñas y niños puedan iniciar y completar su educación básica sin salir de la comunidad. Cuenta con aulas remodeladas, un domo muy bonito que protege de sol y lluvia durante los actos cívicos y actividades deportivas, y un ambiente cercano entre alumnos, maestros y familias.",
+
       historia:
-        "Fundada hace más de siete décadas, ha formado generaciones completas...",
+        "Fundada hace alrededor de 70 años, la escuela primaria surgió como respuesta a la necesidad de darle continuidad a los estudios de los niños de la comunidad, especialmente porque el preescolar también se encuentra en Rincón Vaquero. Desde entonces, ha formado generaciones completas de estudiantes que más tarde han continuado con la secundaria, el bachillerato y hasta la universidad. A lo largo de las décadas, la escuela ha pasado por varias etapas de mejora: primero con aulas sencillas y techos básicos, después con la construcción de salones más amplios, y recientemente con remodelaciones apoyadas por el gobierno y la buena administración de la comunidad. El domo, la modernización de las aulas y el cuidado constante han hecho que la escuela luzca más ordenada, cómoda y digna para el aprendizaje. Para muchos profesionistas del pueblo, esta primaria fue el primer paso y la base fundamental de su formación académica y personal.",
+
       curiosos: [
-        { k: "70+ años", v: "Formando generaciones del pueblo" },
-        { k: "Concursos ganados", v: "Oratoria, fútbol, olimpiadas" },
-        { k: "Administración comunitaria", v: "Padres y tutores involucrados" },
-        { k: "Profesionales egresados", v: "Muchos han llegado a universidades" },
-        { k: "Mejoras constantes", v: "Modernización de aulas y canchas" },
-      ],
+        {
+          k: "70+ años de historia",
+          v: "Tiene más de siete décadas formando generaciones de niñas y niños de Rincón Vaquero, muchos de los cuales hoy son profesionistas."
+        },
+        {
+          k: "Domo y remodelaciones",
+          v: "Gracias a los apoyos del gobierno y a una buena administración, la escuela cuenta con un domo muy bonito y aulas remodeladas que mejoran el ambiente de estudio."
+        },
+        {
+          k: "Concursos ganados",
+          v: "Alumnos de la escuela han participado y ganado en concursos de oratoria, fútbol y conocimiento, poniendo en alto el nombre de la comunidad."
+        },
+        {
+          k: "Base para profesionistas",
+          v: "De esta primaria han egresado jóvenes que después estudiaron licenciaturas y carreras técnicas."
+        },
+        {
+          k: "Administración comunitaria",
+          v: "Padres de familia y tutores se involucran activamente en comités y actividades, apoyando la gestión de recursos y las mejoras constantes."
+        },
+        {
+          k: "Apoyo indispensable",
+          v: "Para muchas familias, la escuela es un apoyo indispensable, pues les permite ofrecer educación a sus hijos sin tener que enviarlos a otras localidades."
+        }
+      ]
     },
   },
 
