@@ -285,17 +285,39 @@ const base = {
       zoom: 20,        
     },
 
-    sections: {
+    sections:  {
       queEs:
-        "El salón es el principal espacio cubierto del pueblo, usado para fiestas y eventos culturales...",
+        "El salón comunitario de Rincón Vaquero es el principal espacio del pueblo y uno de los puntos más importantes para la convivencia social. Es un lugar amplio y multifuncional donde se celebran desde cumpleaños y 15 años, hasta reuniones de la comunidad y eventos oficiales. También se utiliza para asambleas en donde el agente municipal da sus informes, así como para actividades culturales, bailes y eventos religiosos relacionados con las fiestas del pueblo. Gracias a sus dimensiones y a que está techado, se ha convertido en el lugar ideal para reunir a muchas personas en un ambiente cómodo y protegido del clima.",
+
       historia:
-        "Construido hace más de 60 años, con varias remodelaciones importantes...",
+        "Construido hace varias décadas, el salón comunitario ha sido testigo de innumerables festejos y momentos importantes para Rincón Vaquero. Con el paso del tiempo, el edificio ha recibido diversas mejoras: desde una reconstrucción estructural, cambio de techo y refuerzo de columnas, hasta la remodelación de áreas interiores y exteriores. Estas mejoras han permitido que el salón sea más seguro, funcional y agradable para quienes lo usan. Año con año, la comunidad lo aprovecha para sus tradiciones: en abril se realiza el planchado de la ropa del Niño Dios, en mayo se celebra el tradicional baile de la fiesta de la Santa Cruz, y en septiembre se convierte en el escenario principal del Grito de Independencia. Con una capacidad aproximada de 200 personas, el salón se ha consolidado como un punto clave para la organización, la fiesta y la identidad del pueblo.",
+
       curiosos: [
-        { k: "Grito de Septiembre", v: "Sede principal del evento" },
-        { k: "Capacidad", v: "Hasta 300 personas" },
-        { k: "Remodelaciones", v: "Tres renovaciones grandes" },
-        { k: "Multifuncional", v: "Cursos, asambleas y cine" },
-      ],
+        {
+          k: "Corazón de las fiestas",
+          v: "Es el lugar favorito para celebrar cumpleaños, 15 años, bautizos y convivios familiares gracias a su tamaño y a que está techado."
+        },
+        {
+          k: "Punto de reunión",
+          v: "Ahí se realizan asambleas y reuniones donde las autoridades municipales y locales comparten información e informes con la comunidad."
+        },
+        {
+          k: "Planchado del Niño Dios",
+          v: "Cada abril se lleva a cabo la tradición del planchado de la ropa del Niño Dios en el salón, reuniendo a devotos y familias en un ambiente de fe y convivencia."
+        },
+        {
+          k: "Baile de la Santa Cruz",
+          v: "Durante la fiesta de mayo en honor a la Santa Cruz, el salón es sede del tradicional baile, uno de los eventos más esperados del año."
+        },
+        {
+          k: "Grito de septiembre",
+          v: "En las fiestas patrias, el salón se convierte en escenario del Grito de Independencia y de las celebraciones del 15 de septiembre."
+        },
+        {
+          k: "Capacidad y mejoras",
+          v: "Tiene capacidad para aproximadamente 200 personas y ha sido reforzado y remodelado con nuevos techos y áreas mejoradas para ofrecer mayor comodidad y seguridad."
+        }
+      ]
     },
   },
 
