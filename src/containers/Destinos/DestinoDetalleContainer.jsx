@@ -163,15 +163,37 @@ const base = {
 
     sections: {
       queEs:
-        "La cancha comunitaria es un espacio recreativo usado para voleibol, fútbol y eventos...",
+        "La cancha comunitaria de Rincón Vaquero es un espacio recreativo para el pueblo. Es una cancha multiusos donde se puede jugar fútbol, básquetbol y, más recientemente, voleibol, especialmente entre jóvenes de la comunidad. Casi todos los días se juegan partidos improvisados y pláticas. En el mismo punto se encuentra una tienda DICONSA, pensada para ofrecer productos de la canasta básica a precios más accesibles para las familias. A un costado también se localiza un pequeño dispensario de salud, donde los habitantes pueden acudir en caso de malestar y donde llegan brigadas de vacunación.",
+
       historia:
-        "Nació como un terreno deportivo y se convirtió en el eje de la vida comunitaria...",
+        "La cancha nació como un terreno deportivo sencillo, donde al inicio solo se trazaban las porterías y las líneas de juego con cal o incluso con piedras. Con el paso del tiempo, y gracias al esfuerzo de la comunidad, el espacio fue mejorando: se niveló el piso, se colocó firme, se pintaron las líneas para fútbol y básquetbol, y se instalaron tableros y porterías más resistentes. Más adelante, con apoyo de programas del gobierno y la gestión de las autoridades locales, se construyó una tienda Diconsa cerca de la cancha para acercar productos de la canasta básica a la población. Poco después se habilitó un dispensario de salud con atención básica y espacio para jornadas de vacunación. Además de ser un punto deportivo, la cancha empezó a usarse para fiestas del pueblo, convivios familiares y eventos privados, convirtiéndose en un lugar conmemorativo y lleno de recuerdos para personas de distintas edades. Hoy en día, sigue siendo uno de los espacios más vivos y representativos de Rincón Vaquero.",
+
       curiosos: [
-        { k: "Tardes deportivas", v: "Voleibol y fútbol infantil diario" },
-        { k: "Fiestas", v: "Ideal para eventos comunitarios" },
-        { k: "Conasupo", v: "Tienda subsidiada cercana" },
-        { k: "Clínica", v: "Atención primaria disponible" },
-      ],
+        {
+          k: "Tardes deportivas",
+          v: "Casi todos los días, niños y jóvenes se reúnen para jugar fútbol, básquetbol o voleibol, haciendo de la cancha el punto más activo de la comunidad por las tardes."
+        },
+        {
+          k: "Punto de reunión",
+          v: "Además de los partidos, la cancha es un lugar donde la gente se sienta a platicar, convivir y ver pasar el día, creando un ambiente de confianza y amistad."
+        },
+        {
+          k: "Tienda Diconsa",
+          v: "A un costado se encuentra una tienda Diconsa, pensada para ofrecer productos de la canasta básica a precios accesibles para las familias del pueblo."
+        },
+        {
+          k: "Dispensario de salud",
+          v: "En la misma zona hay un dispensario de salud con atención básica y espacio para brigadas de vacunación, al que acuden los habitantes cuando se les convoca."
+        },
+        {
+          k: "Escenario de fiestas",
+          v: "Durante fiestas del pueblo y eventos privados, la cancha se adapta para recibir a mucha gente, colocarse música, mesas y servicios, convirtiéndose en un gran salón al aire libre."
+        },
+        {
+          k: "Lugar conmemorativo",
+          v: "Es un lugar muy recordado por personas de diferentes generaciones que han jugado, convivido o festejado ahí, acumulando historias y recuerdos de muchos años."
+        }
+      ]
     },
   },
 
