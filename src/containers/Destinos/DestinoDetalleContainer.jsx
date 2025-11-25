@@ -220,19 +220,40 @@ const base = {
       zoom: 19,        
     },
 
-    sections: {
-      queEs:
-        "La Iglesia de Rincón Vaquero es el centro espiritual del pueblo, donde se celebran ceremonias...",
-      historia:
-        "Construida hace décadas, ha sido restaurada con apoyo de la comunidad...",
-      curiosos: [
-        { k: "Misa dominical", v: "Cada domingo se llena la iglesia" },
-        { k: "Sacramentos", v: "Bautizos, bodas y más" },
-        { k: "Fiestas patronales", v: "Procesiones y novenas" },
-        { k: "Decoración", v: "Retablos y vitrales destacados" },
-        { k: "Obras sociales", v: "Colectas y voluntariado" },
-      ],
+  sections: {
+  queEs:
+    "La Iglesia de Rincón Vaquero es el centro religioso de la comunidad, reconocida como el principal referente de la fe católica en el pueblo. Es una capilla muy cuidada, con una fachada sencilla pero llamativa y detalles en su interior que la hacen acogedora. Cada domingo se celebran misas a las que acuden familias de distintas edades, y también se imparten clases de catecismo para preparación a la Primera Comunión y la Confirmación. Además de ser un lugar de oración, es un espacio donde se fortalecen los lazos comunitarios a través de celebraciones, convivencias y tradiciones que se han mantenido vivas con el paso del tiempo.",
+
+  historia:
+    "Construida hace varias décadas, la iglesia de Rincón Vaquero ha sido restaurada y conservada gracias al esfuerzo conjunto de la comunidad y el apoyo de distintas administraciones. Con el tiempo se han ido mejorando sus muros, techo, altar y detalles decorativos, manteniendo siempre el respeto por su diseño original. En ella se han celebrado misas importantes para el pueblo: desde bautizos, bodas y misas de difunto, hasta fiestas patronales y celebraciones especiales. Una de las festividades más importantes es la dedicada a la Santa Cruz, considerada la fiesta local, donde se enaltece al santo con misas, procesiones y ofrendas. También es escenario de las celebraciones de Nochebuena, especialmente el 24 de diciembre, cuando se recuerda el nacimiento del Niño Jesús y gran parte de la comunidad acude a la misa y a las posadas. Gracias al cuidado de los fieles y a las actividades organizadas por grupos de la iglesia, se ha mantenido como un lugar limpio, adornado y muy apreciado, incluso por visitantes que la consideran una capilla ejemplar para la región.",
+
+  curiosos: [
+    {
+      k: "Misa dominical",
+      v: "Cada domingo se celebra la misa, a la que acuden numerosas familias de la comunidad para escuchar la palabra, dar gracias y convivir al final de la celebración."
     },
+    {
+      k: "Catecismo y sacramentos",
+      v: "En la iglesia se ofrecen clases de catecismo para la Primera Comunión y la Confirmación, además de celebrarse sacramentos como bautizos, bodas y misas privadas."
+    },
+    {
+      k: "Fiesta de la Santa Cruz",
+      v: "Es el punto central de la fiesta local en honor a la Santa Cruz, con misas especiales, arreglos florales, procesiones y gran participación de la comunidad."
+    },
+    {
+      k: "Nochebuena y nacimiento",
+      v: "El 24 de diciembre se celebra el nacimiento del Niño Jesús con misa, cantos y posadas, convirtiéndose en una de las noches más concurridas y emotivas del año."
+    },
+    {
+      k: "Siempre adornada",
+      v: "La iglesia suele estar decorada con flores, telas y detalles alusivos al tiempo litúrgico, lo que la hace lucir bonita y acogedora durante todo el año."
+    },
+    {
+      k: "Apoyo comunitario",
+      v: "Diversos integrantes de la comunidad realizan actividades y cooperaciones para mantener la iglesia en buen estado, mostrando el cariño que le tienen."
+    }
+  ]
+},
   },
 
   salon: {
