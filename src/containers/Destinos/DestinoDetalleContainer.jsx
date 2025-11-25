@@ -27,6 +27,13 @@ const base = {
 
     galleryVideos: [],
 
+    coords: {
+       
+      lat: 16.765906647515752,  
+      lng: -95.0277525291214,
+      zoom: 18,        
+    },
+
     sections: {
       queEs:
         "El campo comunitario de Rincón Vaquero es considerado uno de los más bonitos del municipio...",
@@ -57,6 +64,13 @@ const base = {
     ],
 
     galleryVideos: [],
+
+    coords: {
+        
+      lat: 16.764252054034742, 
+      lng: -95.0266958730034, 
+      zoom: 19,        
+    },
 
     sections: {
       queEs:
@@ -90,6 +104,12 @@ const base = {
 
     galleryVideos: [],
 
+    coords: {
+      lat: 16.762573410011736, 
+      lng: -95.03027459503166, 
+      zoom: 19,        
+    },
+
     sections: {
       queEs:
         "La cancha comunitaria es un espacio recreativo usado para voleibol, fútbol y eventos...",
@@ -120,6 +140,12 @@ const base = {
     ],
 
     galleryVideos: [],
+
+    coords: {
+      lat: 16.7625879297972,  
+      lng: -95.03102629787227,
+      zoom: 19,        
+    },
 
     sections: {
       queEs:
@@ -159,6 +185,12 @@ const base = {
 
     galleryVideos: [],
 
+    coords: {
+      lat: 16.762347799524,   
+      lng: -95.03106250769545, 
+      zoom: 20,        
+    },
+
     sections: {
       queEs:
         "El salón es el principal espacio cubierto del pueblo, usado para fiestas y eventos culturales...",
@@ -190,6 +222,12 @@ const base = {
 
     galleryVideos: [],
 
+    coords: {
+
+      lat: 16.760147412706495, 
+      lng: -95.03083157690325 , 
+      zoom: 18 ,        
+    },
     sections: {
       queEs:
         "El río es un ícono natural del pueblo, con nacederos y pozas que atraen visitantes...",

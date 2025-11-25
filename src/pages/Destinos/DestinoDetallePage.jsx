@@ -2,6 +2,8 @@ import { useDestinoDetalleData } from "../../containers/Destinos/DestinoDetalleC
 import DestinosLayout from "../../components/organisms/Destinos/DestinosLayout";
 import { CarouselFotos } from "../../components/molecules/CarouselFotos";
 import { CarouselVideos } from "../../components/molecules/CarouselVideos";
+import { MapaPunto } from "../../components/molecules/MapaPunto";
+
 
 export default function DestinoDetallePage() {
   const { data } = useDestinoDetalleData();
@@ -49,6 +51,23 @@ export default function DestinoDetallePage() {
             <h2 className="text-3xl font-medium mb-8">Galería de Videos</h2>
             <CarouselVideos videos={data.galleryVideos} />
           </section>
+
+          {data.coords && (
+            <section>
+              <h2 className="text-3xl font-medium mb-8">Ubicación en el mapa</h2>
+              <p className="text-muted-foreground mb-4">
+                Usa el mapa para explorar la zona y pulsa el botón para abrir la
+                ubicación en Google Maps.
+              </p>
+              <MapaPunto
+                nombre={data.title}
+                lat={data.coords.lat}
+                lng={data.coords.lng}
+                zoom={data.coords.zoom ?? 17}
+              />
+            </section>
+          )}
+
       </div>
     </DestinosLayout>
   );
