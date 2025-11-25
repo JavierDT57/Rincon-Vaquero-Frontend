@@ -344,18 +344,39 @@ const base = {
       lng: -95.03083157690325 , 
       zoom: 18 ,        
     },
-    sections: {
+    sections:  {
       queEs:
-        "El río es un ícono natural del pueblo, con nacederos y pozas que atraen visitantes...",
+        "El río Paso del Mango es el lugar turístico y natural más emblemático de Rincón Vaquero. Es un río de aguas cristalinas, rodeado de vegetación y pequeñas pozas donde las familias pueden bañarse, descansar y convivir. Muchas personas de otras localidades visitan este sitio para disfrutar del paisaje, refrescarse y pasar un día de campo en contacto con la naturaleza. Además de ser un espacio recreativo, el río es fundamental para la comunidad, ya que cuenta con varios nacederos que abastecen de agua potable al pueblo.",
+
       historia:
-        "Desde tiempos ancestrales ha sido vital para el asentamiento y vida del pueblo...",
+        "Desde hace muchos años, el río Paso del Mango ha sido vital para la vida de la comunidad de Rincón Vaquero. Sus nacederos han permitido contar con agua limpia para el uso diario y, al mismo tiempo, han convertido el lugar en un punto de reunión y esparcimiento. Con el paso del tiempo, la tradición de visitarlo en fechas especiales, como Semana Santa, se ha fortalecido. Días antes de estas festividades, la comunidad se organiza para colocar la famosa ‘tapada’, que consiste en contener parcialmente el flujo del agua con paredes de hule y otras estructuras, elevando el nivel de las pozas para hacerlas más profundas y atractivas para los visitantes. Durante el fin de semana de Semana Santa, la directiva de festividades organiza vendimia de comida, cobra una entrada simbólica y ofrece un ambiente ordenado para que las familias disfruten del río. El resto del año, la entrada es gratuita y el lugar sigue siendo un espacio tranquilo para bañarse, pescár y convivir. Otra tradición importante es la ‘lavada de ornamentos’, cuando el 3 de mayo se lleva la ropa del Niño Dios al río para lavarla, combinando la fe con el respeto a este entorno natural tan especial.",
+
       curiosos: [
-        { k: "4 nacederos", v: "Mantienen el caudal estable" },
-        { k: "Tapada", v: "Tradición para profundizar pozas" },
-        { k: "Lavada de ornamentos", v: "Ritual del 3 de mayo" },
-        { k: "Bombeo", v: "Agua potable para la comunidad" },
-        { k: "Semana Santa", v: "Mayor afluencia del año" },
-      ],
+        {
+          k: "Aguas cristalinas",
+          v: "El río cuenta con pozas de agua muy clara y fresca, ideales para nadar y relajarse en familia."
+        },
+        {
+          k: "Nacederos vitales",
+          v: "Alrededor de tres nacederos alimentan el caudal del río y sirven como fuente de agua potable para la comunidad."
+        },
+        {
+          k: "La famosa tapada",
+          v: "Días antes de Semana Santa, la comunidad coloca la ‘tapada’ para elevar el nivel del agua y hacer las pozas más profundas y atractivas para los visitantes."
+        },
+        {
+          k: "Semana Santa en el río",
+          v: "Durante el fin de semana de Semana Santa se cobra la entrada, se organiza vendimia de comida y el río se convierte en el principal punto turístico del pueblo."
+        },
+        {
+          k: "Lavada de ornamentos",
+          v: "Cada 3 de mayo se realiza la lavada de los ornamentos y la ropa del Niño Dios en el río, una tradición que mezcla devoción y respeto por el agua."
+        },
+        {
+          k: "Pesca y recreación",
+          v: "Además de bañarse, algunos habitantes aprovechan el río para pescar y pasar tardes tranquilas disfrutando de la naturaleza."
+        }
+      ]
     },
   },
 };
