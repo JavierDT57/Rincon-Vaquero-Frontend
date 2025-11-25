@@ -1,14 +1,22 @@
-const API = import.meta.env.VITE_API_BASE;   // http://localhost:5000
-const BASE_URL = `${API}/api/tienda`;        // http://localhost:5000/api/tienda
+// src/api/tienda.js
+import { apiUrl, absUrl } from "./config";
 
+// Base para este módulo
+const BASE_URL = apiUrl("/tienda");
+
+/**
+ * Wrapper con credenciales + manejo de errores
+ */
 async function authFetch(path, options = {}) {
-  const res = await fetch(`${BASE_URL}${path}`, {
+  const url = `${BASE_URL}${path}`;
+  const res = await fetch(url, {
     credentials: "include",
     ...options,
   });
 
   const text = await res.text();
   let data = null;
+
   try {
     data = text ? JSON.parse(text) : null;
   } catch (_) {
@@ -21,34 +29,47 @@ async function authFetch(path, options = {}) {
       `Error ${res.status}`;
     const err = new Error(msg);
     err.status = res.status;
+    err.data = data;
     throw err;
   }
 
   return data;
 }
 
-/* Normalizar */
+/**
+ * Normalizador de productos
+ */
 function normalizeProduct(raw) {
+  if (!raw || typeof raw !== "object") return null;
+
+  const imagenUrl =
+    raw.imagenurl ??
+    raw.imgurl ??
+    raw.imagen ??
+    raw.image ??
+    null;
+
   return {
-    id: raw.id,
+    id: raw.id ?? raw._id ?? null,
     userId: raw.userId ?? raw.usuarioId ?? null,
     owner: raw.owner ?? raw.usuarioNombre ?? "Vendedor",
 
     name: raw.nombre ?? raw.name ?? "",
-    image: raw.imagenurl ? `${API}${raw.imagenurl}` : "",
+    image: absUrl(imagenUrl),
 
     price: Number(raw.precio ?? raw.price ?? 0),
     category: raw.categoria ?? raw.category ?? "",
     stock: Number(raw.stock ?? raw.existencias ?? 0),
     location: raw.ubicacion ?? raw.location ?? "",
 
-    // ✔ AQUI ESTABA EL PROBLEMA
     telefono: raw.telefono ?? "",
-
     status: raw.status ?? raw.estado ?? "",
   };
 }
 
+/**
+ * Convierte un producto a FormData para enviar archivos
+ */
 function productToFormData(product) {
   const fd = new FormData();
 
@@ -58,7 +79,6 @@ function productToFormData(product) {
   fd.append("stock", String(product.stock ?? ""));
   fd.append("ubicacion", product.location ?? "");
 
-  // ✔ AQUI ESTABA EL PROBLEMA
   if (product.telefono) {
     fd.append("telefono", product.telefono);
   }
@@ -70,40 +90,42 @@ function productToFormData(product) {
   return fd;
 }
 
-/* GET /api/tienda */
+/* -------------------------------------------------------------------------- */
+/*                                 ENDPOINTS                                  */
+/* -------------------------------------------------------------------------- */
+
+/** GET /api/tienda */
 export async function fetchPublicProducts() {
   const json = await authFetch("", { method: "GET" });
 
-  const list = Array.isArray(json?.data)
-    ? json.data
-    : Array.isArray(json)
-    ? json
-    : [];
+  const list =
+    Array.isArray(json?.data) ? json.data :
+    Array.isArray(json) ? json :
+    [];
 
   return list.map(normalizeProduct).filter(Boolean);
 }
 
-/* GET /api/tienda/mis */
+/** GET /api/tienda/mis */
 export async function fetchMyProducts() {
   const json = await authFetch("/mis", { method: "GET" });
 
-  const list = Array.isArray(json?.data)
-    ? json.data
-    : Array.isArray(json)
-    ? json
-    : [];
+  const list =
+    Array.isArray(json?.data) ? json.data :
+    Array.isArray(json) ? json :
+    [];
 
   return list.map(normalizeProduct).filter(Boolean);
 }
 
-/* GET /api/tienda/:id */
+/** GET /api/tienda/:id */
 export async function fetchProductById(id) {
   const json = await authFetch(`/${id}`, { method: "GET" });
   const raw = json?.data ?? json;
   return normalizeProduct(raw);
 }
 
-/* POST /api/tienda */
+/** POST /api/tienda */
 export async function createProduct(product) {
   const formData = productToFormData(product);
 
@@ -116,7 +138,7 @@ export async function createProduct(product) {
   return normalizeProduct(raw);
 }
 
-/* PUT /api/tienda/:id */
+/** PUT /api/tienda/:id */
 export async function updateProduct(id, product) {
   const formData = productToFormData(product);
 
@@ -129,10 +151,9 @@ export async function updateProduct(id, product) {
   return normalizeProduct(raw);
 }
 
-/* DELETE /api/tienda/:id */
+/** DELETE /api/tienda/:id */
 export async function deleteProduct(id) {
-  const json = await authFetch(`/${id}`, {
+  return authFetch(`/${id}`, {
     method: "DELETE",
   });
-  return json;
 }

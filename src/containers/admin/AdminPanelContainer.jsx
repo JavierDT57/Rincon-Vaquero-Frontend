@@ -7,10 +7,12 @@ import TiendaCreatePublication from "../../components/organisms/Tienda/TiendaCre
 
 import { fetchDashboard, updateDashboardItem } from "../../api/adminDashboard";
 import {
-  absUrl,
   normalizeAviso,
   normalizeTestimonio,
 } from "../../api/adminMedia";
+
+import { absUrl } from "../../api/config.js";
+
 
 const API_BASE = (import.meta?.env?.VITE_API_BASE || "http://localhost:5000/api")
   .replace(/\/$/, "");

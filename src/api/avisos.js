@@ -1,55 +1,82 @@
 // src/api/avisos.js
-const RAW = (import.meta.env?.VITE_API_BASE || window.location.origin).replace(/\/$/, "");
-let API_BASE = /\/api$/i.test(RAW) ? RAW : RAW + "/api";
+import { apiUrl } from "./config";
 
-// Fetch helper con credenciales 
+/**
+ * Helper fetch con cookies + manejo de JSON
+ */
 async function http(path, opts = {}) {
-  const url = API_BASE + (path.startsWith("/") ? path : "/" + path);
+  const url = apiUrl(path); // → https://api.rinconvaquero.org/api/avisos
   const init = {
     credentials: "include",
     ...opts,
   };
- 
+
   if (!(init.body instanceof FormData)) {
-    init.headers = { Accept: "application/json", ...(init.headers || {}) };
+    init.headers = {
+      Accept: "application/json",
+      ...(init.headers || {}),
+    };
   }
+
   const res = await fetch(url, init);
   const ct = res.headers.get("content-type") || "";
-  const data = ct.includes("application/json") ? await res.json().catch(() => null) : await res.text().catch(() => null);
+
+  const data = ct.includes("application/json")
+    ? await res.json().catch(() => null)
+    : await res.text().catch(() => null);
+
   if (!res.ok) {
-    const msg = (data && (data.message || data.error)) || `Error ${res.status} en ${url}`;
+    const msg =
+      (data && (data.message || data.error)) ||
+      `Error ${res.status} en ${url}`;
     const err = new Error(msg);
-    err.status = res.status; err.data = data;
+    err.status = res.status;
+    err.data = data;
     throw err;
   }
+
   return data;
 }
 
-// GET /avisos
+/* -------------------------------------------------------------------------- */
+/*                                  ENDPOINTS                                 */
+/* -------------------------------------------------------------------------- */
+
+/** GET /api/avisos */
 export async function fetchAvisos() {
   return http("/avisos");
 }
 
-// POST /avisos 
+/** POST /api/avisos  (con archivo opcional) */
 export async function createAviso({ titulo, texto, imagen = null }) {
   const fd = new FormData();
   fd.append("titulo", titulo);
   fd.append("texto", texto);
-  if (imagen instanceof File) fd.append("imagen", imagen); // debe coincidir con multer.single('imagen')
-  return http("/avisos", { method: "POST", body: fd });
+
+  if (imagen instanceof File) {
+    fd.append("imagen", imagen); // multer.single("imagen")
+  }
+
+  return http("/avisos", {
+    method: "POST",
+    body: fd,
+  });
 }
 
-// PUT /avisos/:id 
+/** PUT /api/avisos/:id */
 export async function updateAviso(id, { titulo, texto, imagen = null }) {
-  
   const fd = new FormData();
   if (titulo != null) fd.append("titulo", titulo);
   if (texto != null) fd.append("texto", texto);
   if (imagen instanceof File) fd.append("imagen", imagen);
-  return http(`/avisos/${id}`, { method: "PUT", body: fd });
+
+  return http(`/avisos/${id}`, {
+    method: "PUT",
+    body: fd,
+  });
 }
 
-// DELETE /avisos/:id
+/** DELETE /api/avisos/:id */
 export async function deleteAviso(id) {
   return http(`/avisos/${id}`, { method: "DELETE" });
 }

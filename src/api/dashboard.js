@@ -1,70 +1,35 @@
+// src/api/dashboard.js
+import { apiUrl } from "./config";
+
 export async function getDashboardComputed() {
-
-
-  const base = import.meta.env?.VITE_API_BASE || "";
-
-
-  const url = `${base}/api/dashboard/computed`;
-
-
-
-
+  // URL final: https://api.rinconvaquero.org/api/dashboard/computed
+  const url = apiUrl("/dashboard/computed");
 
   const res = await fetch(url, {
-
-
     headers: { Accept: "application/json" },
-
-
     cache: "no-store",
-
-
   });
 
-
-
-
-
   const ct = res.headers.get("content-type") || "";
+  const raw = await res.text(); // solo una lectura
 
-
-  const raw = await res.text();             // lee una sola vez
-
-
-
-
-
+  // Si Render envía HTML → error (ej. 404 → index.html)
   if (!ct.includes("application/json")) {
-
-
-    // ← Aquí verás si está llegando HTML (index.html/404)
-
-
-    throw new Error(`No-JSON (${res.status}) desde ${url}: ${raw.slice(0,200)}...`);
-
-
+    throw new Error(
+      `No-JSON (${res.status}) desde ${url}: ${raw.slice(0, 200)}...`
+    );
   }
 
-
-
-
-
   let json;
+  try {
+    json = JSON.parse(raw);
+  } catch (e) {
+    throw new Error(`JSON inválido al parsear /dashboard/computed: ${String(e)}`);
+  }
 
-
-  try { json = JSON.parse(raw); }
-
-
-  catch (e) { throw new Error(`JSON inválido: ${String(e)}`); }
-
-
-
-
-
-  if (!json.ok) throw new Error(json.error || "Error en API");
-
+  if (!json.ok) {
+    throw new Error(json.error || "Error desconocido en /dashboard/computed");
+  }
 
   return json.data; // { charts, derivados, porcentajes, textos }
-
-
 }

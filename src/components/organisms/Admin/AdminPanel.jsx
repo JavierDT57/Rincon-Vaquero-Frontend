@@ -12,7 +12,8 @@ import {
   Check,
   Package,
 } from "lucide-react";
-import { absUrl } from "../../../api/adminMedia";
+import { absUrl } from "../../../api/config";
+
 
 export default function AdminPanel({
   active,

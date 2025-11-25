@@ -1,29 +1,32 @@
 // src/api/users.js
-const base = import.meta.env?.VITE_API_BASE || "";
+import { apiUrl } from "./config";
 
-const RAW_BASE =
-  (typeof import.meta !== "undefined" && import.meta.env && import.meta.env.VITE_API_BASE) ||
-  (typeof process !== "undefined" && process.env && process.env.REACT_APP_API_BASE) ||
-  ""; // usa proxy si está vacío
+/**
+ * Helper principal para peticiones JSON con cookies (JWT en cookie httpOnly)
+ */
+async function request(
+  path,
+  { method = "GET", body, headers = {}, query } = {}
+) {
+  // URL completa tipo: https://api.rinconvaquero.org/api/users/...
+  const url = new URL(apiUrl(path), window.location.href);
 
-function joinUrl(base, path) {
-  if (!base) return path;
-  const b = String(base).replace(/\/+$/, "");
-  const p = String(path).startsWith("/") ? path : `/${path}`;
-  if (b.endsWith("/api") && p.startsWith("/api")) return b + p.replace(/^\/api/, "");
-  return b + p;
-}
-
-async function request(path, { method = "GET", body, headers = {}, query } = {}) {
-  const url = new URL(joinUrl(RAW_BASE, path), window.location.href);
-  if (query) Object.entries(query).forEach(([k, v]) => v != null && url.searchParams.append(k, String(v)));
+  if (query) {
+    Object.entries(query).forEach(([k, v]) => {
+      if (v != null) url.searchParams.append(k, String(v));
+    });
+  }
 
   const init = {
     method,
     mode: "cors",
-    credentials: "include",            
-    headers: { Accept: "application/json", ...headers },
+    credentials: "include", // importante para manejar la cookie
+    headers: {
+      Accept: "application/json",
+      ...headers,
+    },
   };
+
   if (body !== undefined) {
     init.headers["Content-Type"] = "application/json";
     init.body = JSON.stringify(body);
@@ -32,71 +35,112 @@ async function request(path, { method = "GET", body, headers = {}, query } = {})
   const res = await fetch(url.toString(), init);
 
   let data = null;
-  try { data = await res.json(); } catch {}
+  try {
+    data = await res.json();
+  } catch (_) {
+    data = null;
+  }
 
   if (!res.ok) {
-    const msg = (data && (data.mensaje || data.error || data.message)) || `Error ${res.status}`;
+    const msg =
+      (data && (data.mensaje || data.error || data.message)) ||
+      `Error ${res.status}`;
     throw new Error(msg);
   }
-  return data && Object.prototype.hasOwnProperty.call(data, "data") ? data.data : data;
+
+  return data?.data ?? data;
 }
 
-async function jsonFetch(url, opts = {}) {
+/**
+ * Helper para endpoints tipo POST directo sin necesidad de `apiUrl` manual.
+ */
+async function jsonPost(path, body) {
+  const url = apiUrl(path);
+
   const res = await fetch(url, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', ...(opts.headers || {}) },
-    body: JSON.stringify(opts.body || {}),
-    credentials: 'include', // por si usas cookies en otros endpoints
+    method: "POST",
+    credentials: "include",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(body),
   });
+
   const data = await res.json().catch(() => ({}));
+
   if (!res.ok) {
-    const msg = data?.message || data?.error || 'Error en la petición';
+    const msg = data?.message || data?.error || "Error en la petición";
     throw new Error(msg);
   }
+
   return data;
 }
 
-/* --------- AUTH */
+/* -------------------------------------------------------------------------- */
+/*                                  AUTH                                      */
+/* -------------------------------------------------------------------------- */
+
 export function registerUser(payload) {
-  return request("/api/users/register", { method: "POST", body: payload });
-}
-export function loginUser(payload) {
-  return request("/api/users/login", { method: "POST", body: payload });
-}
-export function requestPasswordReset({ email }) {
-  return jsonFetch(`${base}/api/users/recover/request`, { body: { email } });
-}
-export function verifyPasswordToken({ email, token }) {
-  return jsonFetch(`${base}/api/users/recover/verify`, { body: { email, token } });
-}
-export function confirmPasswordReset({ email, token, newPassword, confirmPassword }) {
-  return jsonFetch(`${base}/api/users/recover/confirm`, {
-    body: { email, token, newPassword, confirmPassword },
-  });
-}
-export function createAdmin(payload) {
-  return request("/api/users/create-admin", { method: "POST", body: payload });
-}
-export function logoutUser() {
-  return request("/api/users/logout", { method: "POST" });
-}
-export function me() {
-  return request("/api/users/me", { method: "GET" });
+  return request("/users/register", { method: "POST", body: payload });
 }
 
-/* --------- ADMIN: usuarios --------- */
+export function loginUser(payload) {
+  return request("/users/login", { method: "POST", body: payload });
+}
+
+export function logoutUser() {
+  return request("/users/logout", { method: "POST" });
+}
+
+export function me() {
+  return request("/users/me");
+}
+
+/* ------------------------- Password Reset Flow ----------------------------- */
+
+export function requestPasswordReset({ email }) {
+  return jsonPost("/users/recover/request", { email });
+}
+
+export function verifyPasswordToken({ email, token }) {
+  return jsonPost("/users/recover/verify", { email, token });
+}
+
+export function confirmPasswordReset({
+  email,
+  token,
+  newPassword,
+  confirmPassword,
+}) {
+  return jsonPost("/users/recover/confirm", {
+    email,
+    token,
+    newPassword,
+    confirmPassword,
+  });
+}
+
+/* -------------------------------------------------------------------------- */
+/*                         ADMIN: Gestión de usuarios                         */
+/* -------------------------------------------------------------------------- */
+
 export function fetchUsers() {
-  return request("/api/users");
+  return request("/users");
 }
+
 export function fetchUserById(id) {
-  return request(`/api/users/${id}`);
+  return request(`/users/${id}`);
 }
+
 export function updateUser(id, { nombre, apellidos }) {
-  return request(`/api/users/${id}`, { method: "PUT", body: { nombre, apellidos } });
+  return request(`/users/${id}`, {
+    method: "PUT",
+    body: { nombre, apellidos },
+  });
 }
+
 export function suspendUser(id) {
-  return request(`/api/users/${id}`, { method: "DELETE" });
+  return request(`/users/${id}`, { method: "DELETE" });
 }
+
 export function deleteUserHard(id) {
-  return request(`/api/users/${id}?hard=true`, { method: "DELETE" });
+  return request(`/users/${id}?hard=true`, { method: "DELETE" });
 }

@@ -4,18 +4,14 @@ import Button from "../../../atoms/Button";
 import { Badge } from "../../../atoms/badge";
 import { ChevronLeft, ChevronRight, Star, Quote, MapPin, Calendar } from "lucide-react";
 
-import { fetchTestimonios, createTestimonio, API_ORIGIN } from "../../../../api/testimonios.js";
+import { fetchTestimonios, createTestimonio } from "../../../../api/testimonios.js";
 import TestimoniosModal from "../../Home/Testimonios/TestimoniosModal.jsx";
 import { useNavigate, useLocation } from "react-router-dom";
 import useAuth from "../../../../hooks/useAuth.js";
-
+import { absUrl } from "../../../../api/config.js";
 
 /* ---------------- helpers ---------------- */
-const absUrl = (p) => {
-  if (!p || typeof p !== "string") return null;
-  if (/^https?:\/\//i.test(p)) return p;
-  return `${API_ORIGIN}${p.startsWith("/") ? p : `/${p}`}`;
-};
+
 
 function StarRating({ value = 0, max = 5 }) {
   const items = useMemo(() => Array.from({ length: max }), [max]);

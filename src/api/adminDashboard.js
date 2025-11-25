@@ -1,26 +1,21 @@
-// API para el panel admin (listar y actualizar stats del dashboard)
+// src/api/adminDashboard.js
+import { apiUrl } from "./config";
 
-const VITE = (typeof import.meta !== "undefined" && import.meta.env) || {};
-const RAW_BASE = (VITE.VITE_API_BASE || "").trim(); // puede ser "http://localhost:5000" O "http://localhost:5000/api"
-
-// Normaliza el base y asegura que las rutas vayan a /api/...
-const BASE = RAW_BASE.replace(/\/$/, "");                 // sin slash al final
-const BASE_HAS_API = /\/api$/i.test(BASE);                // true si termina en /api
-
-function buildUrl(pathUnderApi) {
-  // pathUnderApi debe empezar con "/dashboard" o "/dashboard/:slug"
-  // y aquí le añadimos el prefijo /api si el BASE no lo trae
-  const prefix = BASE_HAS_API ? "" : "/api";
-  const origin = BASE || ""; // si está vacío, será relativo al mismo origen
-  return `${origin}${prefix}${pathUnderApi}`;
-}
-
-async function req(pathUnderApi, { method = "GET", body, headers = {} } = {}) {
-  const url = buildUrl(pathUnderApi);
+/**
+ * Helper para peticiones JSON con cookies
+ */
+async function req(
+  pathUnderApi,
+  { method = "GET", body, headers = {} } = {}
+) {
+  // Construimos la URL final:
+  // apiUrl("/dashboard") → http://localhost:5000/api/dashboard
+  // apiUrl("/dashboard") → https://api.rinconvaquero.org/api/dashboard
+  const url = apiUrl(pathUnderApi);
 
   const res = await fetch(url, {
     method,
-    credentials: "include", // usa la cookie del login
+    credentials: "include",
     headers: {
       Accept: "application/json",
       ...(body ? { "Content-Type": "application/json" } : {}),
@@ -33,29 +28,50 @@ async function req(pathUnderApi, { method = "GET", body, headers = {} } = {}) {
   const raw = await res.text();
   let data = null;
 
+  // Intentar JSON si corresponde
   if (ct.includes("application/json")) {
-    try { data = JSON.parse(raw); } catch { /* noop */ }
+    try {
+      data = JSON.parse(raw);
+    } catch {
+      /* ignore */
+    }
   }
 
+  // Manejo de error
   if (!res.ok) {
-    const msg = (data && (data.message || data.error)) || raw || `HTTP ${res.status}`;
+    const msg =
+      (data && (data.message || data.error)) || raw || `HTTP ${res.status}`;
     throw new Error(msg);
   }
 
-  // backend puede responder {ok, data} o directamente []
-  return data && Object.prototype.hasOwnProperty.call(data, "data") ? data.data : (data ?? raw);
+  // El backend puede responder { ok, data } o un array directamente
+  return data && Object.prototype.hasOwnProperty.call(data, "data")
+    ? data.data
+    : data ?? raw;
 }
 
-/** GET /api/dashboard  ->  [{ slug, title, value, type }, ...] */
+/**
+ * GET /api/dashboard
+ * Devuelve todos los items del dashboard
+ */
 export function fetchDashboard() {
   return req("/dashboard");
 }
 
-/** PUT /api/dashboard/:slug  body { value } */
+/**
+ * PUT /api/dashboard/:slug
+ * Body: { value }
+ */
 export function updateDashboardItem(slug, value) {
   if (!slug) throw new Error("slug requerido");
-  const vNum = typeof value === "string" && value.trim() !== "" ? Number(value) : value;
-  const payload = Number.isFinite(vNum) ? { value: vNum } : { value };
+
+  const num =
+    typeof value === "string" && value.trim() !== ""
+      ? Number(value)
+      : value;
+
+  const payload = Number.isFinite(num) ? { value: num } : { value };
+
   return req(`/dashboard/${encodeURIComponent(slug)}`, {
     method: "PUT",
     body: payload,
