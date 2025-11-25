@@ -293,6 +293,7 @@ function UsuariosList({
 
                   <div className="mt-3 flex flex-wrap items-center gap-2">
                     <button
+                      data-testid="btn-editar-usuario"
                       className="inline-flex gap-2 px-3 py-1.5 rounded-lg bg-blue-600 text-white hover:bg-blue-700"
                       onClick={() => onEdit(u)}
                     >
@@ -300,6 +301,7 @@ function UsuariosList({
                     </button>
 
                     <button
+                      data-testid="btn-suspender-usuario"
                       className="inline-flex gap-2 px-3 py-1.5 rounded-lg bg-orange-500 text-white hover:bg-orange-600"
                       onClick={() => onSuspend(u.id)}
                     >
@@ -307,6 +309,7 @@ function UsuariosList({
                     </button>
 
                     <button
+                      data-testid="btn-eliminar-usuario"
                       className="inline-flex gap-2 px-3 py-1.5 rounded-lg bg-red-600 text-white hover:bg-red-700"
                       onClick={() => onDelete(u.id)}
                     >

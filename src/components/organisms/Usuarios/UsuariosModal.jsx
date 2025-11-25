@@ -13,7 +13,7 @@ export default function UsuariosModal({
   readEmail,
   readRol,
 }) {
-  // 👇 NUEVA LÓGICA DE BLOQUEO SCROLL
+  
   useEffect(() => {
     if (!isOpen) return;
 
@@ -55,6 +55,7 @@ export default function UsuariosModal({
                 <input
                   type="text"
                   value={formNombre}
+                  data-testid="input-nombre"
                   onChange={(e) => setFormNombre(e.target.value)}
                   className="mt-1 w-full rounded-xl border border-slate-200 px-3 py-2 outline-none focus:ring-2 focus:ring-purple-500"
                   required
@@ -66,6 +67,7 @@ export default function UsuariosModal({
                 <input
                   type="text"
                   value={formApellidos}
+                  data-testid="input-apellidos"
                   onChange={(e) => setFormApellidos(e.target.value)}
                   className="mt-1 w-full rounded-xl border border-slate-200 px-3 py-2 outline-none focus:ring-2 focus:ring-purple-500"
                   required
@@ -80,7 +82,7 @@ export default function UsuariosModal({
                 <label className="block text-xs font-medium text-slate-500">
                   Correo
                 </label>
-                <div className="mt-1 rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-slate-700 overflow-hidden text-ellipsis whitespace-nowrap shadow-sm">
+                <div data-testid="label-correo" className="mt-1 rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-slate-700 overflow-hidden text-ellipsis whitespace-nowrap shadow-sm">
                   {readEmail}
                 </div>
               </div>
@@ -90,7 +92,7 @@ export default function UsuariosModal({
                 <label className="block text-xs font-medium text-slate-500">
                   Rol
                 </label>
-                <div className="mt-1 rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-slate-700 overflow-hidden text-ellipsis whitespace-nowrap shadow-sm">
+                <div data-testid="label-rol" className="mt-1 rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-slate-700 overflow-hidden text-ellipsis whitespace-nowrap shadow-sm">
                   {readRol}
                 </div>
               </div>
@@ -103,6 +105,7 @@ export default function UsuariosModal({
                 <div className="mt-1 flex items-center gap-3">
                   <button
                     type="button"
+                    data-testid="btn-toggle-estatus"
                     onClick={() => setFormActivo(!formActivo)}
                     className={
                       "relative w-12 h-6 rounded-full transition " +
@@ -141,6 +144,7 @@ export default function UsuariosModal({
 
               <button
                 type="submit"
+                data-testid="btn-guardar-cambios"
                 className="rounded-xl bg-blue-600 px-5 py-2.5 text-white font-medium shadow hover:opacity-90"
               >
                 Guardar cambios
